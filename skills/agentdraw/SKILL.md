@@ -14,6 +14,7 @@ Prefer the npm runtime. Use the globally installed `agentdraw` command when pres
 ```bash
 npx @aidraw/agentdraw@latest --help
 npx @aidraw/agentdraw@latest guide --format text
+npx @aidraw/agentdraw@latest guide quality --format text
 npx @aidraw/agentdraw@latest guide styles --json
 ```
 
@@ -31,12 +32,29 @@ agentdraw doctor --json
 3. Run `agentdraw guide style <style-id> --format text` and follow that design system. Do not use styles as palette swaps.
 4. Create or patch a `.agentdraw.json` scene using editable primitives.
 5. Run `agentdraw validate <file> --format json` and repair reported element ids until validation passes.
-6. Run `agentdraw open <file> --no-open` and return the printed local URL to the user.
+6. Run `agentdraw guide quality --format text` and self-check the board.
+7. Run `agentdraw open <file> --no-open` and return the printed local URL to the user.
+
+## Quality Bar
+
+A successful board is editable, structured, readable, visually intentional, and validated.
+
+Before delivering:
+
+- The board has a clear title and reading path.
+- Major sections are grouped into visible regions.
+- The selected style changes layout, typography, spacing, and components, not only colors.
+- Connectors attach to meaningful shapes and avoid crossing labels.
+- Text fits inside containers.
+- `agentdraw validate <file> --format json` reports zero errors.
+
+If the result looks generic or weak, run `agentdraw guide quality --format text`, choose a better style, and revise before opening.
 
 ## Useful Commands
 
 ```bash
 agentdraw schema --json
+agentdraw guide quality
 agentdraw guide scene
 agentdraw guide rules
 agentdraw guide style system-formal --format text

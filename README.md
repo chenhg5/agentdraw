@@ -331,7 +331,14 @@ for version-matched guidance:
 ```bash
 agentdraw guide styles --json
 agentdraw guide style system-formal --format text
+agentdraw guide quality --format text
 ```
+
+## Evaluation
+
+Use [`evals/`](./evals) to check whether the skill produces boards that are useful, editable, and
+visually intentional. The first eval set includes prompts and a 24-point rubric for task fit,
+structure, visual design, readability, connector quality, and validation.
 
 Run the web app and API in development mode:
 

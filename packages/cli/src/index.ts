@@ -601,15 +601,81 @@ const guidePayload = (topic: string, detail?: string) => {
           "Run agentdraw guide style <style-id> to load the selected design system.",
           "Create or patch a .agentdraw.json scene with editable primitives.",
           "Run agentdraw validate <file> --format json and repair reported element ids.",
+          "Run agentdraw guide quality and self-check the board against the quality bar.",
           "Run agentdraw open <file> --no-open and return the printed local URL.",
         ],
         commands: {
           help: "agentdraw --help",
           schema: "agentdraw schema --json",
+          quality: "agentdraw guide quality",
           styles: "agentdraw guide styles --json",
           style: "agentdraw guide style system-formal",
           validate: "agentdraw validate .agentdraw/board.agentdraw.json --format json",
           open: "agentdraw open .agentdraw/board.agentdraw.json --no-open",
+        },
+      };
+    case "quality":
+      return {
+        topic,
+        goal:
+          "Produce an editable, structured, readable, visually intentional board that a user can inspect, manually edit, or export without major repair.",
+        dimensions: [
+          {
+            id: "task_fit",
+            name: "Task fit",
+            pass:
+              "The board type, content, and structure match the user's request instead of becoming a generic flowchart.",
+            check: "Can the user understand the requested system, journey, process, roadmap, or research wall in 30 seconds?",
+          },
+          {
+            id: "structure",
+            name: "Structure",
+            pass:
+              "The board has a clear title, grouped regions, reading path, meaningful hierarchy, and purposeful connectors.",
+            check: "Are sections, lanes, clusters, tables, or paths visible without needing explanation?",
+          },
+          {
+            id: "visual_design",
+            name: "Visual design",
+            pass:
+              "The selected style affects typography, spacing, geometry, components, and layout, not only colors.",
+            check: "Would a reviewer recognize the chosen design system from the output?",
+          },
+          {
+            id: "readability",
+            name: "Readability",
+            pass:
+              "Text is editable, generously sized, centered when intended, and contained inside its shapes.",
+            check: "No label looks clipped, cramped, off-center, or hidden by another element.",
+          },
+          {
+            id: "connector_quality",
+            name: "Connector quality",
+            pass:
+              "Connectors attach to meaningful shapes, avoid labels and table headers, and do not create visual tangles.",
+            check: "Following the arrows should make the system easier to understand, not harder.",
+          },
+          {
+            id: "validation",
+            name: "Validation",
+            pass:
+              "agentdraw validate <file> --format json reports zero errors before the board is delivered.",
+            check: "Warnings are either repaired or intentionally accepted with a clear reason.",
+          },
+        ],
+        selfCheck: [
+          "If validation fails, repair the reported element ids before opening the board.",
+          "If the result looks like a generic diagram, load a stronger style with agentdraw guide styles --json and agentdraw guide style <style-id> --format text.",
+          "If the scene is dense, add visible groups, section headers, or lanes before adding more detail.",
+          "If text is long, resize the container or split the content; do not rely on tiny text.",
+          "If connectors cross text, reroute or change the layout.",
+        ],
+        scorecard: {
+          pass: "All dimensions pass and validation has zero errors.",
+          revise:
+            "One or two dimensions are weak but repairable without changing the concept.",
+          fail:
+            "The board is generic, unreadable, not editable, not validated, or does not match the user's requested diagram type.",
         },
       };
     case "scene":
@@ -710,6 +776,44 @@ const formatGuideText = (topic: string, detail?: string) => {
       "- Playful roadmap or maker energy: `mint-brut`, `crayon-stack`, `block-frame`, `pin-and-paper`.",
       "- Bold launch or campaign board: `riso-brut`, `bold-poster`, `riptide-cobalt`, `burst-panel`.",
       "- Research synthesis: `violet-marker`, `reading-room`, `soft-editorial`, `jade-lens`.",
+    ].join("\n");
+  }
+
+  if (topic === "quality") {
+    const qualityGuide = guidePayload("quality") as {
+      goal: string;
+      dimensions: Array<{
+        name: string;
+        pass: string;
+        check: string;
+      }>;
+      selfCheck: string[];
+      scorecard: Record<string, string>;
+    };
+    return [
+      "# AgentDraw Quality Bar",
+      "",
+      qualityGuide.goal,
+      "",
+      "## Dimensions",
+      "",
+      ...qualityGuide.dimensions.flatMap((dimension) => [
+        `### ${dimension.name}`,
+        "",
+        `Pass: ${dimension.pass}`,
+        "",
+        `Check: ${dimension.check}`,
+        "",
+      ]),
+      "## Self-Check",
+      "",
+      ...qualityGuide.selfCheck.map((item) => `- ${item}`),
+      "",
+      "## Scorecard",
+      "",
+      `- Pass: ${qualityGuide.scorecard.pass}`,
+      `- Revise: ${qualityGuide.scorecard.revise}`,
+      `- Fail: ${qualityGuide.scorecard.fail}`,
     ].join("\n");
   }
 
@@ -833,7 +937,7 @@ const helpText = (command: string | undefined) => {
         "  init       Create a scene file without starting the editor.",
         "  validate   Validate one or more scene files.",
         "  doctor     Check local runtime details.",
-        "  guide      Print agent workflow, scene, rules, styles, or style guides.",
+        "  guide      Print agent workflow, quality bar, scene, rules, styles, or style guides.",
         "  schema     Print command schemas for agents.",
         "  help       Show help for a command.",
         "  version    Print the CLI version.",
@@ -920,13 +1024,14 @@ const helpText = (command: string | undefined) => {
         "",
         "Examples:",
         "  agentdraw guide",
+        "  agentdraw guide quality",
         "  agentdraw guide styles --json",
         "  agentdraw guide style system-formal",
         "  agentdraw guide scene",
         "  agentdraw guide rules",
         "",
         "Usage:",
-        "  agentdraw guide [workflow|styles|style|scene|rules] [style-id]",
+        "  agentdraw guide [workflow|quality|styles|style|scene|rules] [style-id]",
         "",
         "Notes:",
         "  Use this from SKILL.md so the installed skill stays thin and the CLI provides current guidance.",
@@ -1014,14 +1119,14 @@ const commandSchema = (commandPath: string[]) => {
       examples: ["agentdraw schema", "agentdraw schema open --json"],
     },
     guide: {
-      description: "Print agent workflow, scene contract, hard rules, style catalog, or one style guide.",
-      usage: "agentdraw guide [workflow|styles|style|scene|rules] [style-id]",
+      description: "Print agent workflow, quality bar, scene contract, hard rules, style catalog, or one style guide.",
+      usage: "agentdraw guide [workflow|quality|styles|style|scene|rules] [style-id]",
       arguments: [
         {
           name: "topic",
           required: false,
           default: "workflow",
-          values: ["workflow", "styles", "style", "scene", "rules"],
+          values: ["workflow", "quality", "styles", "style", "scene", "rules"],
         },
         { name: "style-id", required: false },
       ],
@@ -1031,6 +1136,7 @@ const commandSchema = (commandPath: string[]) => {
       ],
       examples: [
         "agentdraw guide",
+        "agentdraw guide quality",
         "agentdraw guide styles --json",
         "agentdraw guide style system-formal",
       ],

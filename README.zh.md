@@ -316,7 +316,12 @@ pnpm build
 ```bash
 agentdraw guide styles --json
 agentdraw guide style system-formal --format text
+agentdraw guide quality --format text
 ```
+
+## 评估
+
+可以用 [`evals/`](./evals) 检查这个 skill 是否真的能产出有用、可编辑、有设计感的画板。第一版 eval 包含真实 prompt 和一个 24 分 rubric，覆盖任务命中、结构、视觉设计、可读性、连线质量和校验结果。
 
 开发模式同时启动 web 和 API：
 
