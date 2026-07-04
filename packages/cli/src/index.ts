@@ -524,7 +524,10 @@ const galleryCommand = async (options: GalleryOptions) => {
   const outputPath = options.outputPath
     ? path.resolve(options.cwd, options.outputPath)
     : path.resolve(options.cwd, ".agentdraw/theme-gallery.html");
+  const previewAssetDir = path.resolve(path.dirname(outputPath), "theme-gallery-assets");
   await mkdir(path.dirname(outputPath), { recursive: true });
+  await mkdir(previewAssetDir, { recursive: true });
+  const previewAssets = await writeThemeGalleryAssets(previewAssetDir);
   await writeFile(outputPath, themeGalleryHtml(), "utf8");
   const url = pathToFileURL(outputPath).toString();
 
@@ -540,6 +543,8 @@ const galleryCommand = async (options: GalleryOptions) => {
       url,
       browserOpened: options.openBrowser,
       styleCount: styles.length,
+      previewAssetDir,
+      styles: styles.map((style) => galleryStyleSummary(style, previewAssets.get(style.id))),
     },
     [`Theme gallery: ${outputPath}`, `URL: ${url}`].join("\n"),
     options,
@@ -2343,6 +2348,18 @@ const themeCardHtml = (style: (typeof styles)[number]) => {
   ].join("");
 };
 
+const writeThemeGalleryAssets = async (assetDir: string) => {
+  const assets = new Map<string, string>();
+  await Promise.all(
+    styles.map(async (style) => {
+      const previewPath = path.join(assetDir, `${style.id}.svg`);
+      await writeFile(previewPath, themePreviewSvg(style), "utf8");
+      assets.set(style.id, previewPath);
+    }),
+  );
+  return assets;
+};
+
 const themePreviewSvg = (style: (typeof styles)[number]) => {
   const p = style.palette;
   const rough = style.formality === "low" ? 6 : style.formality === "medium" ? 4 : 2;
@@ -2370,6 +2387,13 @@ const styleSummary = (style: (typeof styles)[number]) => ({
   formality: style.formality,
   vibe: style.vibe,
   palette: style.palette,
+});
+
+const galleryStyleSummary = (style: (typeof styles)[number], previewPath?: string) => ({
+  ...styleSummary(style),
+  designPath: designMarkdownPath(style.id),
+  previewPath,
+  previewUrl: previewPath ? pathToFileURL(previewPath).toString() : null,
 });
 
 const readStyleGuide = (styleId: string) => {
@@ -2400,6 +2424,10 @@ const readDesignContract = (styleId: string) => {
 };
 
 const readDesignMarkdown = (styleId: string) => {
+  return readFileSync(designMarkdownPath(styleId), "utf8");
+};
+
+const designMarkdownPath = (styleId: string) => {
   const packageRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
   const candidates = [
     path.resolve(packageRoot, "designs", styleId, "design.md"),
@@ -2407,7 +2435,8 @@ const readDesignMarkdown = (styleId: string) => {
   ];
   for (const candidate of candidates) {
     try {
-      return readFileSync(candidate, "utf8");
+      readFileSync(candidate, "utf8");
+      return candidate;
     } catch {
       // Try the next candidate; packaged and source layouts differ.
     }
