@@ -142,22 +142,20 @@ is not only a text-to-diagram renderer.
   contracts, validation, local serving, and provider code separated so other canvases can be explored
   later.
 
-## Compared With
+## Similar Projects
 
-AgentDraw is complementary to existing tools:
+AgentDraw is closest to AI diagram applications that combine an editable diagram surface with
+agent- or chat-driven generation, such as
+[`next-ai-draw-io`](https://github.com/DayuanJiang/next-ai-draw-io). That project focuses on
+natural-language creation and editing of draw.io diagrams, including MCP access for agents.
 
-- **Excalidraw / tldraw** are excellent editable canvas engines. AgentDraw adds an agent-facing CLI,
-  scene validation, design contracts, and repeatable local file workflows around a canvas provider.
-- **draw.io / diagrams.net** is strong for mature formal diagramming. AgentDraw focuses on
-  agent-generated local scenes, quality checks, and design guidance rather than a full manual diagram
-  suite.
-- **Mermaid / PlantUML / D2** are great for text-based diagrams in documentation. AgentDraw targets
-  freeform visual boards that still need human editing, spatial layout, styled sections, and exportable
-  whiteboard artifacts.
-- **Miro / FigJam / Boardmix / Jeda / Zoom Whiteboard / Eraser** offer AI-assisted cloud workspaces.
-  AgentDraw is smaller and local-first, intended to be installed by agents inside a coding workflow.
+AgentDraw takes a narrower local-agent workflow:
 
-See [Competitive Landscape](./docs/COMPETITIVE_LANDSCAPE.md) for the initial research notes.
+- install a CLI and skill directly inside a coding environment;
+- generate project-local `.agentdraw.json` files instead of depending on a hosted workspace;
+- load agent-readable design guides and machine-readable style contracts before drawing;
+- validate layout, text, connectors, font choices, and style drift before opening the board;
+- keep the canvas provider boundary explicit so Excalidraw is only the first renderer.
 
 ## Features
 
