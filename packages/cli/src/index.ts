@@ -1280,6 +1280,7 @@ const scoreSceneQuality = (
     "too-many-type-sizes",
     "style-id-mismatch",
   ]);
+  const layoutDiagnostics = analyzeLayoutDiagnostics(shapeElements);
 
   const dimensions: QualityDimensionScore[] = [
     {
@@ -1293,7 +1294,7 @@ const scoreSceneQuality = (
       needsReview: true,
     },
     scoreStructure(scene, shapeElements.length, connectorElements.length, sectionLikeShapes.length),
-    scoreVisualDesign(scene, contractIssueCount),
+    scoreVisualDesign(scene, contractIssueCount, layoutDiagnostics),
     scoreReadability(textIssueCount, hardTextIssueCount),
     scoreConnectorQuality(
       connectorElements.length,
@@ -1356,6 +1357,7 @@ const scoreStructure = (
 const scoreVisualDesign = (
   scene: AgentDrawScene,
   contractIssueCount: number,
+  layoutDiagnostics: LayoutDiagnostics,
 ): QualityDimensionScore => {
   const issues: string[] = [];
   let score = 4;
@@ -1370,13 +1372,20 @@ const scoreVisualDesign = (
     score = Math.min(score, 3);
     issues.push(`${contractIssueCount} style-contract warning(s) should be reviewed.`);
   }
+  if (layoutDiagnostics.issueCount >= 4) {
+    score = Math.min(score, 2);
+    issues.push(...layoutDiagnostics.issues.slice(0, 4));
+  } else if (layoutDiagnostics.issueCount > 0) {
+    score = Math.min(score, 3);
+    issues.push(...layoutDiagnostics.issues);
+  }
   return {
     id: "visual_design",
     name: "Visual design",
     score: qualityScore(score),
     maxScore: 4,
     basis: scene.styleId
-      ? `Scene declares styleId "${scene.styleId}" and has ${contractIssueCount} contract warning(s).`
+      ? `Scene declares styleId "${scene.styleId}", has ${contractIssueCount} contract warning(s), and ${layoutDiagnostics.issueCount} layout warning(s).`
       : "No styleId is declared.",
     issues,
   };
@@ -1476,6 +1485,210 @@ const countIssueCodes = (codes: string[], targets: string[]) => {
   const targetSet = new Set(targets);
   return codes.filter((code) => targetSet.has(code)).length;
 };
+
+type LayoutBounds = {
+  id: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
+type LayoutDiagnostics = {
+  issueCount: number;
+  issues: string[];
+};
+
+const analyzeLayoutDiagnostics = (
+  shapeElements: Array<Record<string, unknown> & { id: string; type?: string }>,
+): LayoutDiagnostics => {
+  const shapes = shapeElements
+    .map(toLayoutBounds)
+    .filter((bounds): bounds is LayoutBounds => Boolean(bounds))
+    .filter((bounds) => bounds.width >= 44 && bounds.height >= 28)
+    .filter((bounds) => !isLikelyOuterFrame(bounds, shapeElements.length));
+  const issues: string[] = [];
+
+  const repeated = shapes.filter((shape) => shape.width >= 80 && shape.height >= 40);
+  const rowIssues = findRowAlignmentIssues(repeated);
+  const columnIssues = findColumnAlignmentIssues(repeated);
+  const widthIssues = findRepeatedWidthIssues(repeated);
+  const whitespaceIssues = findUnderusedContainerIssues(shapes);
+  const gridIssues = findGridDriftIssues(repeated);
+
+  issues.push(...rowIssues, ...columnIssues, ...widthIssues, ...whitespaceIssues, ...gridIssues);
+
+  return {
+    issueCount: issues.length,
+    issues,
+  };
+};
+
+const toLayoutBounds = (
+  element: Record<string, unknown> & { id: string },
+): LayoutBounds | null => {
+  const x = numberValue(element.x);
+  const y = numberValue(element.y);
+  const width = numberValue(element.width);
+  const height = numberValue(element.height);
+  if (width <= 0 || height <= 0) {
+    return null;
+  }
+  return {
+    id: element.id,
+    x,
+    y,
+    width,
+    height,
+  };
+};
+
+const findRowAlignmentIssues = (shapes: LayoutBounds[]) => {
+  const rows = clusterBy(shapes, (shape) => shape.y, 28).filter((row) => row.length >= 3);
+  return rows
+    .map((row) => {
+      const topSpread = spread(row.map((shape) => shape.y));
+      const heightSpread = spread(row.map((shape) => shape.height));
+      const widthSpread = spread(row.map((shape) => shape.width));
+      const medianWidth = median(row.map((shape) => shape.width));
+      const looksLikeRepeatedCards = widthSpread <= Math.max(32, medianWidth * 0.18);
+      if (topSpread <= 12 && (!looksLikeRepeatedCards || heightSpread <= 16)) {
+        return null;
+      }
+      const ids = row.slice(0, 4).map((shape) => shape.id).join(", ");
+      return `Row alignment is loose (${row.length} shapes, top spread ${Math.round(topSpread)}px, height spread ${Math.round(heightSpread)}px): ${ids}. Align repeated cards to a shared y and height.`;
+    })
+    .filter((issue): issue is string => Boolean(issue))
+    .slice(0, 2);
+};
+
+const findColumnAlignmentIssues = (shapes: LayoutBounds[]) => {
+  const columns = clusterBy(shapes, (shape) => shape.x, 28).filter((column) => column.length >= 3);
+  return columns
+    .map((column) => {
+      const leftSpread = spread(column.map((shape) => shape.x));
+      if (leftSpread <= 12) {
+        return null;
+      }
+      const ids = column.slice(0, 4).map((shape) => shape.id).join(", ");
+      return `Column alignment is loose (${column.length} shapes, left spread ${Math.round(leftSpread)}px): ${ids}. Align repeated cards to a shared x.`;
+    })
+    .filter((issue): issue is string => Boolean(issue))
+    .slice(0, 2);
+};
+
+const findRepeatedWidthIssues = (shapes: LayoutBounds[]) => {
+  const cardLike = shapes.filter((shape) => shape.width >= 120 && shape.width <= 700 && shape.height >= 40 && shape.height <= 260);
+  const rows = clusterBy(cardLike, (shape) => centerYOf(shape), 36).filter((row) => row.length >= 3);
+  const issues: string[] = [];
+  for (const row of rows) {
+    const widthSpread = spread(row.map((shape) => shape.width));
+    const medianWidth = median(row.map((shape) => shape.width));
+    if (widthSpread <= Math.max(24, medianWidth * 0.12)) {
+      continue;
+    }
+    issues.push(
+      `Repeated cards in one row have inconsistent widths (spread ${Math.round(widthSpread)}px). Use equal widths unless width encodes meaning.`,
+    );
+    if (issues.length >= 2) {
+      break;
+    }
+  }
+  return issues;
+};
+
+const findUnderusedContainerIssues = (shapes: LayoutBounds[]) => {
+  const issues: string[] = [];
+  const containers = shapes.filter((shape) => shape.width >= 420 && shape.height >= 180);
+  for (const container of containers) {
+    const children = shapes.filter(
+      (shape) =>
+        shape.id !== container.id &&
+        containsLayout(container, shape, 8) &&
+        shape.width >= 60 &&
+        shape.height >= 28,
+    );
+    if (children.length < 2) {
+      continue;
+    }
+    const widestChild = Math.max(...children.map((child) => child.width));
+    const averageChildWidth =
+      children.reduce((sum, child) => sum + child.width, 0) / children.length;
+    const usableWidth = container.width - 48;
+    if (widestChild < usableWidth * 0.55 && averageChildWidth < usableWidth * 0.42) {
+      issues.push(
+        `Large region ${container.id} is underused: inner cards are much narrower than the available lane. Widen or reorganize child cards to use the column deliberately.`,
+      );
+    }
+    if (issues.length >= 2) {
+      break;
+    }
+  }
+  return issues;
+};
+
+const findGridDriftIssues = (shapes: LayoutBounds[]) => {
+  if (shapes.length < 8) {
+    return [];
+  }
+  const drifted = shapes.filter((shape) => {
+    const values = [shape.x, shape.y, shape.width, shape.height];
+    return values.filter((value) => distanceToGrid(value, 4) > 1.25).length >= 3;
+  });
+  if (drifted.length < Math.max(5, shapes.length * 0.35)) {
+    return [];
+  }
+  return [
+    `${drifted.length} structural shapes drift off the 4px grid. Snap SVG coordinates and sizes to a consistent 4/8/16px rhythm before importing.`,
+  ];
+};
+
+const clusterBy = <T>(items: T[], valueOf: (item: T) => number, tolerance: number): T[][] => {
+  const sorted = [...items].sort((left, right) => valueOf(left) - valueOf(right));
+  const clusters: T[][] = [];
+  for (const item of sorted) {
+    const value = valueOf(item);
+    const current = clusters[clusters.length - 1];
+    if (!current) {
+      clusters.push([item]);
+      continue;
+    }
+    const anchor = median(current.map(valueOf));
+    if (Math.abs(value - anchor) <= tolerance) {
+      current.push(item);
+    } else {
+      clusters.push([item]);
+    }
+  }
+  return clusters;
+};
+
+const spread = (values: number[]) => (values.length === 0 ? 0 : Math.max(...values) - Math.min(...values));
+
+const median = (values: number[]) => {
+  if (values.length === 0) {
+    return 0;
+  }
+  const sorted = [...values].sort((left, right) => left - right);
+  const middle = Math.floor(sorted.length / 2);
+  return sorted.length % 2 === 0 ? (sorted[middle - 1] + sorted[middle]) / 2 : sorted[middle];
+};
+
+const centerYOf = (bounds: LayoutBounds) => bounds.y + bounds.height / 2;
+
+const containsLayout = (outer: LayoutBounds, inner: LayoutBounds, padding: number) =>
+  inner.x >= outer.x + padding &&
+  inner.y >= outer.y + padding &&
+  inner.x + inner.width <= outer.x + outer.width - padding &&
+  inner.y + inner.height <= outer.y + outer.height - padding;
+
+const distanceToGrid = (value: number, grid: number) => {
+  const mod = Math.abs(value % grid);
+  return Math.min(mod, grid - mod);
+};
+
+const isLikelyOuterFrame = (bounds: LayoutBounds, shapeCount: number) =>
+  shapeCount > 4 && bounds.width >= 900 && bounds.height >= 500;
 
 const isQualityElement = (
   element: unknown,
@@ -1653,8 +1866,9 @@ const guidePayload = (topic: string, detail?: string) => {
             id: "visual_design",
             name: "Visual design",
             pass:
-              "The selected style affects typography, spacing, geometry, components, and layout, not only colors; hierarchy comes from type scale, contrast, and grouping rather than emoji.",
-            check: "Would a reviewer recognize the chosen design system from the output, and does agentdraw validate report no style-contract warnings that need repair?",
+              "The selected style affects typography, spacing, geometry, components, and layout, not only colors; hierarchy comes from type scale, contrast, grouping, repeated modules, and deliberate whitespace rather than emoji.",
+            check:
+              "Would a reviewer recognize the chosen design system from the output, do equal-rank cards align and share dimensions, and does agentdraw quality report no layout warnings that need repair?",
           },
           {
             id: "readability",
@@ -1682,6 +1896,10 @@ const guidePayload = (topic: string, detail?: string) => {
           "If validation fails, repair the reported element ids before opening the board.",
           "Prefer fixing layout in the source SVG, then re-importing, before hand-editing generated scene JSON.",
           "Run agentdraw quality <file> --style <style-id> --format json. Treat pass as a preflight result, not a substitute for checking the user's prompt.",
+          "Export a PNG preview for important boards and inspect it visually. Check whether the board still looks designed when zoomed out.",
+          "Align repeated cards to shared x/y positions. Equal-rank cards should usually share width and height unless size encodes meaning.",
+          "In columns, lanes, and large panels, inner cards should use the available width deliberately. Tiny centered cards floating in wide regions are usually a weak layout.",
+          "Snap SVG coordinates and dimensions to a consistent 4/8/16px rhythm before importing.",
           "If the result looks like a generic diagram, load a stronger style with agentdraw guide styles --json and agentdraw guide style <style-id> --format text.",
           "If the user did not express a style preference and the choice is not obvious, open the gallery and ask before committing.",
           "If the scene is dense, add visible groups, section headers, or lanes before adding more detail.",
@@ -1737,6 +1955,7 @@ const guidePayload = (topic: string, detail?: string) => {
           "For multiline SVG labels, set the first tspan dy to a negative offset and subsequent lines to roughly 1.2em so the block is vertically centered.",
           "Keep text as real SVG text/tspan. Do not convert text to paths.",
           "For arrows, route from edge center to edge center, keep at least 16px from text boxes, use the contract muted or ink color, and avoid crossing headers.",
+          "Use plain SVG line/polyline without marker-end for dividers, timeline rails, measurement guides, and decorative rules. Only add marker-end when the line should be an arrow.",
           "Use rect rx/ry sparingly. Formal cards should use small radii, not pill-shaped corners.",
         ],
         svgCard: {
@@ -1770,6 +1989,7 @@ const guidePayload = (topic: string, detail?: string) => {
           "Do not rely on saved zoom or scroll state for presentation; AgentDraw fits the board on open.",
           "Run validation before opening or delivering the scene.",
           "Run repair before a second validation pass when text fields, fonts, or connector colors are inconsistent.",
+          "After preview export, check that divider lines and timeline rails stayed as plain lines; unexpected arrowheads usually mean the source SVG used marker-end where it should not.",
           "Mark intentional shadows or decorative shapes with customData.role set to shadow or decoration.",
         ],
       };

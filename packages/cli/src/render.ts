@@ -46,8 +46,8 @@ export const renderScenePng = (scene: AgentDrawScene, options: RenderOptions = {
     font: {
       loadSystemFonts: true,
       fontDirs: systemFontDirs(),
-      defaultFontFamily: "Noto Sans CJK SC",
-      sansSerifFamily: "Noto Sans CJK SC",
+      defaultFontFamily: "DejaVu Sans",
+      sansSerifFamily: "DejaVu Sans",
     },
     languages: ["zh-CN", "en"],
   }).render().asPng();
@@ -220,6 +220,11 @@ const radius = (element: ElementRecord) => {
 const fontWeight = (element: ElementRecord) => (number(element.fontSize, 16) >= 24 ? 700 : 500);
 
 const CJK_FONT_STACK = [
+  "Inter",
+  "Arial",
+  "Helvetica",
+  "DejaVu Sans",
+  "Liberation Sans",
   "Noto Sans CJK SC",
   "Noto Sans SC",
   "Source Han Sans SC",
@@ -232,6 +237,10 @@ const CJK_FONT_STACK = [
 ].join(", ");
 
 const CJK_MONO_FONT_STACK = [
+  "Menlo",
+  "Consolas",
+  "DejaVu Sans Mono",
+  "Liberation Mono",
   "Noto Sans Mono CJK SC",
   "Noto Sans CJK SC",
   "Source Han Sans SC",

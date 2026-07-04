@@ -13,6 +13,7 @@
     "validate:scene": "pnpm agentdraw validate",
     "examples:themes": "node scripts/generate-theme-examples.mjs",
     "examples:previews": "node scripts/render-example-previews.mjs",
+    "eval:design": "node scripts/run-design-eval.mjs",
     "npm:pack": "rm -rf npm/*.tgz && pnpm build && pnpm --filter @aidraw/agentdraw pack --pack-destination npm",
     "npm:publish": "node scripts/publish-npm.mjs"
   },

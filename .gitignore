@@ -3,6 +3,8 @@ dist
 web-dist
 packages/cli/designs
 .agentdraw
+.agentdraw/evals/
+evals/output/
 .DS_Store
 *.log
 .env

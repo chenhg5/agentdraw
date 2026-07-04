@@ -319,7 +319,7 @@ const connectorElement = (
   style: Style,
   arrow: boolean,
 ) =>
-  baseElement("arrow", x, y, pointsWidth(points), pointsHeight(points), style, {
+  baseElement(arrow ? "arrow" : "line", x, y, pointsWidth(points), pointsHeight(points), style, {
     backgroundColor: "transparent",
     points,
     lastCommittedPoint: null,

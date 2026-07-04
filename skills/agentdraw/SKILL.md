@@ -17,7 +17,21 @@ Do not start new boards by hand-writing `.agentdraw.json`. Write a clean SVG fir
 
 ## Runtime
 
-Prefer the npm runtime. Use the globally installed `agentdraw` command when present; otherwise use `npx @aidraw/agentdraw@latest`.
+If you are running inside the AgentDraw source repository, use the repo-local command so you test
+the current checkout:
+
+```bash
+pnpm agentdraw --help
+pnpm agentdraw guide --format text
+pnpm agentdraw guide scene --format text
+pnpm agentdraw guide quality --format text
+pnpm agentdraw guide styles --json
+pnpm agentdraw gallery --open --format json
+pnpm agentdraw guide contract <style-id> --json
+```
+
+For installed usage outside the source repository, prefer the npm runtime. Use the globally
+installed `agentdraw` command when present and recent; otherwise use `npx @aidraw/agentdraw@latest`.
 
 ```bash
 npx @aidraw/agentdraw@latest --help
@@ -86,6 +100,7 @@ Use only this SVG subset for editable imports:
 - Tags: `svg`, `g`, `rect`, `circle`, `ellipse`, `line`, `polyline`, `polygon`, `text`, `tspan`, `defs`, `marker`.
 - Transforms: `translate(x y)` and `translate(x,y)` on `g`.
 - Arrows: use `line` or `polyline` with `marker-end="url(#arrow)"`.
+- Plain rules, dividers, timeline rails, measurement guides, and decorative connector strips must not use `marker-end`; they import as editable lines, not arrows.
 - Text: use real `text` and `tspan`, not paths.
 - Multiline labels: use `tspan x="..." dy="..."` lines.
 - Formal cards: use small `rx`/`ry` values. Avoid pill-shaped rounded rectangles unless the selected design explicitly calls for them.
@@ -98,6 +113,7 @@ Avoid:
 - Emoji as icons, bullets, status markers, or decoration unless the user explicitly requests them.
 - Screenshots when the user expects an editable board.
 - Connector endpoints deep inside shapes. Place arrow endpoints on shape edges or just outside them.
+- Arrowheads on divider lines, underlines, timeline rails, or decorative rules.
 
 ## SVG Patterns
 
@@ -141,6 +157,8 @@ Before delivering:
 - Major sections are grouped into visible regions.
 - In columns, lanes, and comparison panels, inner cards should use the available width deliberately. Avoid tiny centered cards floating inside a large column; target roughly 70-85% of the lane width unless the design intentionally needs small chips.
 - Align repeated cards to a shared x, width, and rhythm. Uneven card widths inside the same lane usually read as weak layout unless they encode data.
+- Equal-rank cards in the same row should usually share the same y, height, and width. Equal-rank cards in the same column should share the same x and width.
+- Snap important SVG coordinates and dimensions to a consistent 4/8/16px rhythm. Random pixel drift makes generated boards look unprofessional even when content is correct.
 - Architecture, layered system, and workflow boards have one outer frame, titled system boundary, or enclosing region unless the selected design guide says to keep the canvas open.
 - The agent states why it selected the theme. If the user has no clear preference, the agent offers `agentdraw gallery` before committing to a style.
 - The selected style changes layout, typography, spacing, components, connector treatment, and geometry, not only colors.
@@ -152,6 +170,7 @@ Before delivering:
 - `agentdraw validate <file> --style <style-id> --format json` reports zero errors, or remaining errors are explicitly explained before delivery.
 - `agentdraw quality <file> --style <style-id> --format json` returns `verdict: "pass"` or the remaining weaknesses are intentionally accepted.
 - For important boards, export a PNG/SVG preview and inspect the rendered result before delivery.
+- When inspecting the preview, zoom out first: the board should still show a deliberate structure, not scattered boxes. Then zoom in for text fit, connector endpoints, and whitespace.
 
 If the result looks generic or weak, revise the source SVG. Do not try to save a weak layout by changing only colors.
 

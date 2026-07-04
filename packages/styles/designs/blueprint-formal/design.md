@@ -45,14 +45,43 @@ Use this style for technical maps where the relationships matter more than decor
 - `backbone`: thick horizontal accent rail with white text.
 - `store`: secondary rectangle below the backbone.
 - `route`: vertical or elbow connector into the backbone.
+- `projection-card`: secondary module aligned to a backbone station. It must share the same center x as the related top module or rail tap.
+- `constraint-strip`: full-width white rule panel near the bottom, aligned to the rail width and frame gutters.
 
 ## Layout
 
-Use a central bus or rail. Producers and consumers sit above; stores and outputs sit below. Keep connector geometry orthogonal.
+Blueprint Formal should read like an engineering drawing: exact stations, repeated dimensions, and visible alignment. Use a central bus or rail only when all related modules snap to it.
+
+Recommended structure:
+
+- Top row: 3-5 equal `module` cards with shared y, width, height, and centerline. Keep the horizontal gap identical between every module.
+- Middle: one `backbone` rail aligned to the same left and right gutters as the module group.
+- Bottom row: 2-4 `projection-card` modules. Each bottom card should either share a center x with a top module or sit on an evenly spaced rail station.
+- Footer: one `constraint-strip` or note aligned to the rail width.
+
+Grid rules:
+
+- Work on an 8px grid. Prefer x/y/width/height values divisible by 8.
+- Major horizontal gutters should match: left frame gutter, rail inset, and footer inset should visually line up.
+- Repeated modules in one row should share width and height. Do not mix 264px, 280px, and 320px cards in the same row unless width encodes data.
+- Vertical bands should have predictable spacing: title -> top modules -> rail -> bottom modules -> footer. Avoid large accidental empty zones.
+- Connector geometry must be orthogonal. Use vertical taps into the rail and short horizontal elbows. Do not draw long diagonal or crowded crossing routes.
+- Arrowheads should appear only on directional process routes. Use plain lines for dividers, rails, and blueprint measurement guides.
+
+Self-check before import:
+
+- Can you draw vertical guide lines through related top and bottom modules?
+- Are all top modules equal size and all bottom cards equal size?
+- Does the rail align with the module group instead of floating wider or narrower?
+- Are connector endpoints on module edges or rail edges, not inside text?
+- When zoomed out, does the page look like a technical blueprint rather than scattered cards?
 
 ## Avoid
 
 - organic shapes;
 - rough hand-drawn styling;
 - large saturated blocks outside the backbone;
-- diagonal routes when an elbow route is clearer.
+- diagonal routes when an elbow route is clearer;
+- uneven station spacing;
+- orphan modules that do not align to the rail;
+- decorative arrowheads on divider lines or measurement guides.
