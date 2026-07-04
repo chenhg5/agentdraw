@@ -96,6 +96,14 @@ pnpm agentdraw open examples/getting-started.agentdraw.json
 pnpm agentdraw open examples/getting-started.agentdraw.json --no-open
 ```
 
+画板打开时默认会 replay 最终场景，让用户看到图一步步被画出来。可以用下面任一 URL 参数关闭：
+
+```text
+?animate=0
+?replay=0
+?instant=1
+```
+
 校验 agent 生成的场景：
 
 ```bash

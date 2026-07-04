@@ -7,7 +7,7 @@ import type {
 } from "@excalidraw/excalidraw/types";
 import type { ExcalidrawElement } from "@excalidraw/excalidraw/element/types";
 import { getStyleRenderProfile, type AgentDrawStyle } from "@agentdraw/styles";
-import { forwardRef, useImperativeHandle, useMemo, useRef } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useMemo, useRef, useState } from "react";
 import {
   downloadBlob,
   type BoardHandle,
@@ -16,16 +16,96 @@ import {
 } from "../types";
 
 export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
-  ({ scene, style, onChange }, ref) => {
+  ({ scene, style, onChange, replay }, ref) => {
     const apiRef = useRef<ExcalidrawImperativeAPI | null>(null);
+    const [apiReady, setApiReady] = useState(false);
+    const replayEnabled = replay?.enabled === true && scene.elements.length > 0;
+    const suppressChangeRef = useRef(replayEnabled);
+    const styledAppState = useMemo(
+      () => applyStyleToAppState(scene.appState as Partial<AppState>, style),
+      [scene.appState, style],
+    );
     const initialData = useMemo(
       (): ExcalidrawInitialDataState => ({
-        elements: scene.elements as readonly ExcalidrawElement[],
-        appState: applyStyleToAppState(scene.appState as Partial<AppState>, style),
+        elements: replayEnabled ? [] : (scene.elements as readonly ExcalidrawElement[]),
+        appState: styledAppState,
         files: scene.files as BinaryFiles,
       }),
-      [scene],
+      [scene.elements, scene.files, replayEnabled, styledAppState],
     );
+
+    useEffect(() => {
+      const api = apiRef.current;
+      if (!api || !apiReady || !replayEnabled) {
+        replay?.onProgress?.({
+          active: false,
+          current: scene.elements.length,
+          total: scene.elements.length,
+        });
+        return;
+      }
+
+      let cancelled = false;
+      let visibleCount = 0;
+      const orderedElements = orderElementsForReplay(scene.elements);
+      const batchSize = replay.batchSize ?? preferredBatchSize(orderedElements.length);
+      const intervalMs = replay.intervalMs ?? 120;
+      suppressChangeRef.current = true;
+
+      api.updateScene({
+        elements: [],
+        appState: styledAppState as AppState,
+      });
+      replay.onProgress?.({
+        active: true,
+        current: 0,
+        total: orderedElements.length,
+      });
+
+      const revealNextBatch = () => {
+        if (cancelled) {
+          return;
+        }
+        visibleCount = Math.min(visibleCount + batchSize, orderedElements.length);
+        api.updateScene({
+          elements: orderedElements.slice(0, visibleCount) as readonly ExcalidrawElement[],
+          appState: styledAppState as AppState,
+        });
+        replay.onProgress?.({
+          active: visibleCount < orderedElements.length,
+          current: visibleCount,
+          total: orderedElements.length,
+        });
+
+        if (visibleCount < orderedElements.length) {
+          window.setTimeout(revealNextBatch, intervalMs);
+          return;
+        }
+
+        api.updateScene({
+          elements: scene.elements as readonly ExcalidrawElement[],
+          appState: styledAppState as AppState,
+        });
+        window.setTimeout(() => {
+          if (!cancelled) {
+            suppressChangeRef.current = false;
+          }
+        }, 500);
+      };
+
+      window.setTimeout(revealNextBatch, 240);
+
+      return () => {
+        cancelled = true;
+        suppressChangeRef.current = false;
+      };
+    }, [
+      apiReady,
+      replayEnabled,
+      replay,
+      scene.elements,
+      styledAppState,
+    ]);
 
     useImperativeHandle(ref, () => ({
       getSnapshot: () => snapshotFromApi(apiRef.current),
@@ -85,9 +165,13 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
       <Excalidraw
         excalidrawAPI={(api) => {
           apiRef.current = api;
+          setApiReady(Boolean(api));
         }}
         initialData={initialData}
         onChange={(elements, appState, files) => {
+          if (suppressChangeRef.current) {
+            return;
+          }
           onChange({
             elements,
             appState: appState as unknown as Record<string, unknown>,
@@ -98,6 +182,51 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
     );
   },
 );
+
+const orderElementsForReplay = (elements: readonly unknown[]) => {
+  const typed = elements.map((element, index) => ({ element, index }));
+  return typed
+    .sort((left, right) => {
+      const stageDiff = replayStage(left.element) - replayStage(right.element);
+      return stageDiff === 0 ? left.index - right.index : stageDiff;
+    })
+    .map(({ element }) => element);
+};
+
+const replayStage = (element: unknown) => {
+  if (!isElementRecord(element)) {
+    return 4;
+  }
+  if (element.type === "arrow" || element.type === "line") {
+    return 4;
+  }
+  if (element.type === "text") {
+    return 3;
+  }
+  if (isLargeFrameElement(element)) {
+    return 0;
+  }
+  if (element.type === "rectangle" || element.type === "diamond" || element.type === "ellipse") {
+    return 1;
+  }
+  return 2;
+};
+
+const isLargeFrameElement = (element: Record<string, unknown>) => {
+  const width = typeof element.width === "number" ? Math.abs(element.width) : 0;
+  const height = typeof element.height === "number" ? Math.abs(element.height) : 0;
+  return width >= 700 && height >= 350;
+};
+
+const preferredBatchSize = (elementCount: number) => {
+  if (elementCount > 120) {
+    return 8;
+  }
+  if (elementCount > 60) {
+    return 5;
+  }
+  return 3;
+};
 
 const snapshotFromApi = (
   api: ExcalidrawImperativeAPI | null,

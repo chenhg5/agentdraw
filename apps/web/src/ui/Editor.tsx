@@ -4,11 +4,12 @@ import {
   type AgentDrawStyle,
 } from "@agentdraw/styles";
 import { Download, FileJson, Image, Palette, Save } from "lucide-react";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { ExcalidrawBoard } from "../board/excalidraw/ExcalidrawBoard";
 import {
   downloadBlob,
   type BoardHandle,
+  type BoardReplayProgress,
   type BoardSnapshot,
 } from "../board/types";
 import type { AgentDrawScene, SaveState } from "../scene/types";
@@ -36,7 +37,20 @@ export const Editor = ({
 }: EditorProps) => {
   const boardRef = useRef<BoardHandle | null>(null);
   const [selectedStyleId, setSelectedStyleId] = useState(() => getStyleById(scene.styleId).id);
+  const [replayProgress, setReplayProgress] = useState<BoardReplayProgress>({
+    active: false,
+    current: scene.elements.length,
+    total: scene.elements.length,
+  });
   const selectedStyle = getStyleById(selectedStyleId);
+  const replayEnabled = useMemo(() => readReplayEnabledFromUrl(), []);
+  const replayOptions = useMemo(
+    () => ({
+      enabled: replayEnabled,
+      onProgress: setReplayProgress,
+    }),
+    [replayEnabled],
+  );
 
   const sceneSnapshot: BoardSnapshot = {
     providerId: scene.providerId,
@@ -98,6 +112,7 @@ export const Editor = ({
           <span title={filePath}>{filePath}</span>
         </div>
         <div className="actions">
+          <ReplayStatus progress={replayProgress} enabled={replayEnabled} />
           <Status saveState={saveState} error={error} />
           <div className="style-picker">
             <Swatches style={selectedStyle} />
@@ -144,10 +159,29 @@ export const Editor = ({
           ref={boardRef}
           scene={sceneSnapshot}
           style={selectedStyle}
+          replay={replayOptions}
           onChange={(snapshot) => saveSnapshot(snapshot)}
         />
       </section>
     </main>
+  );
+};
+
+const ReplayStatus = ({
+  progress,
+  enabled,
+}: {
+  progress: BoardReplayProgress;
+  enabled: boolean;
+}) => {
+  if (!enabled || !progress.active) {
+    return null;
+  }
+  const percent = progress.total > 0 ? Math.round((progress.current / progress.total) * 100) : 100;
+  return (
+    <span className="status status--replay">
+      Drawing {percent}%
+    </span>
   );
 };
 
@@ -177,3 +211,11 @@ const Swatches = ({ style }: { style: AgentDrawStyle }) => (
     <span style={{ background: style.palette.accent3 }} />
   </div>
 );
+
+const readReplayEnabledFromUrl = () => {
+  const params = new URLSearchParams(window.location.search);
+  const animate = params.get("animate");
+  const replay = params.get("replay");
+  const instant = params.get("instant");
+  return animate !== "0" && replay !== "0" && instant !== "1";
+};

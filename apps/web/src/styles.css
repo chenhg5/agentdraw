@@ -143,6 +143,10 @@ button:hover {
   color: #b42318;
 }
 
+.status--replay {
+  color: #1d4ed8;
+}
+
 .canvas {
   min-height: 0;
 }

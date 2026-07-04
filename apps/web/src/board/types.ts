@@ -19,6 +19,20 @@ export type BoardProviderProps = {
   scene: BoardSnapshot;
   style: AgentDrawStyle;
   onChange: (snapshot: BoardSnapshot) => void;
+  replay?: BoardReplayOptions;
+};
+
+export type BoardReplayOptions = {
+  enabled: boolean;
+  batchSize?: number;
+  intervalMs?: number;
+  onProgress?: (progress: BoardReplayProgress) => void;
+};
+
+export type BoardReplayProgress = {
+  active: boolean;
+  current: number;
+  total: number;
 };
 
 export const downloadBlob = (blob: Blob, filename: string) => {

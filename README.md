@@ -105,6 +105,15 @@ Open without launching the system browser:
 pnpm agentdraw open examples/getting-started.agentdraw.json --no-open
 ```
 
+Boards replay their final scene by default when opened, so users can watch the diagram being drawn.
+Disable the replay with any of these URL flags:
+
+```text
+?animate=0
+?replay=0
+?instant=1
+```
+
 Validate a generated scene:
 
 ```bash
