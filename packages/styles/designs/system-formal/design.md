@@ -45,6 +45,7 @@ Use this style when the board should feel like a serious product or systems diag
 - `lane`: thin bordered region with a compact header.
 - `table`: restrained grid lines, 44-56px header row, 52-72px body rows.
 - `connector`: elbow or straight connector, 2px stroke, arrowhead on the target side.
+- `system-frame`: a thin outer boundary or titled region around architecture, layered system, and workflow diagrams so the board feels complete rather than floating on the canvas.
 
 ## Layout
 

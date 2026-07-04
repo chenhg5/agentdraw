@@ -32,6 +32,8 @@ Use this style when the audience needs to scan priority, ownership, status, and 
 
 ## Components
 
+- Use an outer frame, titled canvas boundary, or large enclosing region for architecture, operating-model, and layered diagrams.
+
 - `command-panel`: dark ink fill, white text, one primary status chip.
 - `decision-card`: light panel, 2px border, title plus two fact lines.
 - `timeline`: one compact horizontal row with timestamps.

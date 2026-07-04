@@ -222,6 +222,9 @@ export function getDesignContract(styleOrId: AgentDrawStyle | string): DesignCon
       "The selected style must change layout, typography, geometry, components, and connector treatment.",
       "Use only contract palette colors unless the user explicitly asks for a custom brand color.",
       "Use the contract font family; default AgentDraw themes use sans text for multilingual readability.",
+      ...(formal
+        ? ["For architecture, layered system, and workflow boards, add an outer frame, canvas boundary, or titled system region so the diagram reads as a complete artifact."]
+        : []),
       "Keep every label editable and contained inside its visual region.",
       "Run agentdraw validate before opening or delivering the board.",
     ],

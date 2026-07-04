@@ -27,6 +27,7 @@ type ElementRecord = Record<string, unknown> & {
   text?: string;
   fontSize?: number;
   lineHeight?: number;
+  autoResize?: boolean;
   customData?: Record<string, unknown>;
 };
 
@@ -62,7 +63,7 @@ export const validateScene = (scene: AgentDrawScene): SceneValidationResult => {
   issues.push(...findTextOverflowIssues(textElements, shapeBounds));
   issues.push(...findTextOverlaps(textBounds));
   issues.push(...findShapeOverlaps(shapeBounds));
-  issues.push(...findVerticalCenteringIssues(shapeBounds, textBounds));
+  issues.push(...findVerticalCenteringIssues(shapeBounds, textBounds, textElements));
   issues.push(...findConnectorIssues(connectorElements, shapeBounds, textBounds));
 
   return {
@@ -187,8 +188,10 @@ const isIntentionalOverlap = (id: string) =>
 const findVerticalCenteringIssues = (
   shapes: Bounds[],
   texts: Bounds[],
+  textElements: ElementRecord[],
 ): SceneValidationIssue[] => {
   const issues: SceneValidationIssue[] = [];
+  const textById = new Map(textElements.map((element) => [element.id, element]));
 
   for (const shape of shapes) {
     if (shape.height > 180 || shape.width > 1450) {
@@ -199,7 +202,10 @@ const findVerticalCenteringIssues = (
       continue;
     }
 
-    const textUnion = unionBounds(containedTexts);
+    const visualTexts = containedTexts.map((text) =>
+      visualTextBounds(text, textById.get(text.id)),
+    );
+    const textUnion = unionBounds(visualTexts);
     const offset = Math.abs(centerY(shape) - centerY(textUnion));
     const tolerance = Math.max(7, Math.min(18, shape.height * 0.18));
 
@@ -214,6 +220,18 @@ const findVerticalCenteringIssues = (
   }
 
   return issues;
+};
+
+const visualTextBounds = (bounds: Bounds, element: ElementRecord | undefined): Bounds => {
+  if (!element?.autoResize) {
+    return bounds;
+  }
+  const measured = estimateTextSize(element);
+  const height = Math.min(bounds.height, Math.max(1, measured.height));
+  return {
+    ...bounds,
+    height,
+  };
 };
 
 const findConnectorIssues = (

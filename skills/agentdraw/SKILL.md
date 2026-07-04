@@ -44,6 +44,7 @@ Before delivering:
 
 - The board has a clear title and reading path.
 - Major sections are grouped into visible regions.
+- Architecture, layered system, and workflow boards have an outer frame, titled system boundary, or enclosing region unless the selected design guide says to keep the canvas open.
 - The selected style changes layout, typography, spacing, components, connector treatment, and geometry, not only colors.
 - The board follows `agentdraw guide contract <style-id> --json` for palette, type scale, roughness, stroke width, spacing, and avoid rules.
 - Connectors attach to meaningful shapes and avoid crossing labels.

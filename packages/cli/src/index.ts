@@ -1187,7 +1187,7 @@ const guidePayload = (topic: string, detail?: string) => {
             id: "structure",
             name: "Structure",
             pass:
-              "The board has a clear title, grouped regions, reading path, meaningful hierarchy, and purposeful connectors.",
+              "The board has a clear title, grouped regions, reading path, meaningful hierarchy, purposeful connectors, and an enclosing frame for architecture or layered system diagrams.",
             check: "Are sections, lanes, clusters, tables, or paths visible without needing explanation?",
           },
           {

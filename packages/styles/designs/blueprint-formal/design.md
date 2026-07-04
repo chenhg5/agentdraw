@@ -31,6 +31,8 @@ Use this style for technical maps where the relationships matter more than decor
 
 ## Components
 
+- Use an outer blueprint frame or titled system boundary for architecture, layered system, and workflow diagrams.
+
 - `module`: white rectangle, 2px blue border, centered title and two-line body.
 - `backbone`: thick horizontal accent rail with white text.
 - `store`: secondary rectangle below the backbone.
