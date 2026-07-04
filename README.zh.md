@@ -22,43 +22,43 @@ AgentDraw 示例都是可编辑的真实 scene 文件。下面的图片只是 RE
 
 ### 主题示例
 
-<table>
+<table width="100%">
 <tr>
-<td width="50%" valign="top">
+<td width="50%" valign="top" align="left">
 <a href="./examples/theme-agentdraw-os.agentdraw.json"><img width="100%" src="./assets/examples/theme-agentdraw-os.svg" alt="AgentDraw Operating System preview" /></a><br />
 <sub><a href="./examples/theme-agentdraw-os.agentdraw.json"><b>AgentDraw OS</b></a> · 本地 agent 作图闭环</sub>
 </td>
-<td width="50%" valign="top">
+<td width="50%" valign="top" align="left">
 <a href="./examples/theme-incident-command.agentdraw.json"><img width="100%" src="./assets/examples/theme-incident-command.svg" alt="Incident Command Center preview" /></a><br />
 <sub><a href="./examples/theme-incident-command.agentdraw.json"><b>Incident Command</b></a> · 故障响应和复盘图</sub>
 </td>
 </tr>
 <tr>
-<td width="50%" valign="top">
+<td width="50%" valign="top" align="left">
 <a href="./examples/theme-message-bus.agentdraw.json"><img width="100%" src="./assets/examples/theme-message-bus.svg" alt="Multi-Agent Message Bus preview" /></a><br />
 <sub><a href="./examples/theme-message-bus.agentdraw.json"><b>Message Bus</b></a> · 多 agent 协作图</sub>
 </td>
-<td width="50%" valign="top">
+<td width="50%" valign="top" align="left">
 <a href="./examples/theme-launch-room.agentdraw.json"><img width="100%" src="./assets/examples/theme-launch-room.svg" alt="Launch Room Loop preview" /></a><br />
 <sub><a href="./examples/theme-launch-room.agentdraw.json"><b>Launch Room</b></a> · 增长发布闭环</sub>
 </td>
 </tr>
 <tr>
-<td width="50%" valign="top">
+<td width="50%" valign="top" align="left">
 <a href="./examples/theme-strategy-grove.agentdraw.json"><img width="100%" src="./assets/examples/theme-strategy-grove.svg" alt="Quarterly Strategy Map preview" /></a><br />
 <sub><a href="./examples/theme-strategy-grove.agentdraw.json"><b>Strategy Grove</b></a> · 季度策略图</sub>
 </td>
-<td width="50%" valign="top">
+<td width="50%" valign="top" align="left">
 <a href="./examples/theme-roadmap-mint.agentdraw.json"><img width="100%" src="./assets/examples/theme-roadmap-mint.svg" alt="Creator Tool Roadmap preview" /></a><br />
 <sub><a href="./examples/theme-roadmap-mint.agentdraw.json"><b>Roadmap Mint</b></a> · 创作工具路线图</sub>
 </td>
 </tr>
 <tr>
-<td width="50%" valign="top">
+<td width="50%" valign="top" align="left">
 <a href="./examples/theme-customer-journey.agentdraw.json"><img width="100%" src="./assets/examples/theme-customer-journey.svg" alt="Customer Journey Signals preview" /></a><br />
 <sub><a href="./examples/theme-customer-journey.agentdraw.json"><b>Customer Journey</b></a> · 用户旅程信号图</sub>
 </td>
-<td width="50%" valign="top">
+<td width="50%" valign="top" align="left">
 <a href="./examples/theme-research-synthesis.agentdraw.json"><img width="100%" src="./assets/examples/theme-research-synthesis.svg" alt="Research Synthesis Wall preview" /></a><br />
 <sub><a href="./examples/theme-research-synthesis.agentdraw.json"><b>Research Synthesis</b></a> · 访谈聚类分析图</sub>
 </td>
@@ -199,6 +199,10 @@ Agent 通常生成或修改这些字段：
 ```text
 system-formal
 ```
+
+风格后续应该是设计系统，而不只是换配色。目标架构见
+[`docs/STYLE_SYSTEM.md`](./docs/STYLE_SYSTEM.md)，agent 可读的风格规则会放在
+`packages/styles/designs/*/design.md`。
 
 正式图表风格：
 

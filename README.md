@@ -27,43 +27,43 @@ README; click a preview to open the source `.agentdraw.json`.
 
 ### Theme Examples
 
-<table>
+<table width="100%">
 <tr>
-<td width="50%" valign="top">
+<td width="50%" valign="top" align="left">
 <a href="./examples/theme-agentdraw-os.agentdraw.json"><img width="100%" src="./assets/examples/theme-agentdraw-os.svg" alt="AgentDraw Operating System preview" /></a><br />
 <sub><a href="./examples/theme-agentdraw-os.agentdraw.json"><b>AgentDraw OS</b></a> · local agent diagram loop</sub>
 </td>
-<td width="50%" valign="top">
+<td width="50%" valign="top" align="left">
 <a href="./examples/theme-incident-command.agentdraw.json"><img width="100%" src="./assets/examples/theme-incident-command.svg" alt="Incident Command Center preview" /></a><br />
 <sub><a href="./examples/theme-incident-command.agentdraw.json"><b>Incident Command</b></a> · severity and recovery map</sub>
 </td>
 </tr>
 <tr>
-<td width="50%" valign="top">
+<td width="50%" valign="top" align="left">
 <a href="./examples/theme-message-bus.agentdraw.json"><img width="100%" src="./assets/examples/theme-message-bus.svg" alt="Multi-Agent Message Bus preview" /></a><br />
 <sub><a href="./examples/theme-message-bus.agentdraw.json"><b>Message Bus</b></a> · multi-agent coordination</sub>
 </td>
-<td width="50%" valign="top">
+<td width="50%" valign="top" align="left">
 <a href="./examples/theme-launch-room.agentdraw.json"><img width="100%" src="./assets/examples/theme-launch-room.svg" alt="Launch Room Loop preview" /></a><br />
 <sub><a href="./examples/theme-launch-room.agentdraw.json"><b>Launch Room</b></a> · editorial growth loop</sub>
 </td>
 </tr>
 <tr>
-<td width="50%" valign="top">
+<td width="50%" valign="top" align="left">
 <a href="./examples/theme-strategy-grove.agentdraw.json"><img width="100%" src="./assets/examples/theme-strategy-grove.svg" alt="Quarterly Strategy Map preview" /></a><br />
 <sub><a href="./examples/theme-strategy-grove.agentdraw.json"><b>Strategy Grove</b></a> · quarterly operating map</sub>
 </td>
-<td width="50%" valign="top">
+<td width="50%" valign="top" align="left">
 <a href="./examples/theme-roadmap-mint.agentdraw.json"><img width="100%" src="./assets/examples/theme-roadmap-mint.svg" alt="Creator Tool Roadmap preview" /></a><br />
 <sub><a href="./examples/theme-roadmap-mint.agentdraw.json"><b>Roadmap Mint</b></a> · playful product roadmap</sub>
 </td>
 </tr>
 <tr>
-<td width="50%" valign="top">
+<td width="50%" valign="top" align="left">
 <a href="./examples/theme-customer-journey.agentdraw.json"><img width="100%" src="./assets/examples/theme-customer-journey.svg" alt="Customer Journey Signals preview" /></a><br />
 <sub><a href="./examples/theme-customer-journey.agentdraw.json"><b>Customer Journey</b></a> · activation signal map</sub>
 </td>
-<td width="50%" valign="top">
+<td width="50%" valign="top" align="left">
 <a href="./examples/theme-research-synthesis.agentdraw.json"><img width="100%" src="./assets/examples/theme-research-synthesis.svg" alt="Research Synthesis Wall preview" /></a><br />
 <sub><a href="./examples/theme-research-synthesis.agentdraw.json"><b>Research Synthesis</b></a> · interview clustering board</sub>
 </td>
@@ -210,6 +210,10 @@ Use a style id in the scene file, or switch styles from the toolbar. The default
 ```text
 system-formal
 ```
+
+Styles are intended to become design systems, not simple palette swaps. See
+[`docs/STYLE_SYSTEM.md`](./docs/STYLE_SYSTEM.md) for the target architecture and
+`packages/styles/designs/*/design.md` for agent-readable style rules.
 
 Formal styles:
 
