@@ -18,6 +18,7 @@ import {
 export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
   ({ scene, style, onChange, replay }, ref) => {
     const apiRef = useRef<ExcalidrawImperativeAPI | null>(null);
+    const boardRootRef = useRef<HTMLDivElement | null>(null);
     const [apiReady, setApiReady] = useState(false);
     const replayEnabled = replay?.enabled === true && scene.elements.length > 0;
     const suppressChangeRef = useRef(true);
@@ -42,7 +43,7 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
         elements: replayEnabled ? [] : (normalizedElements as readonly ExcalidrawElement[]),
         appState: styledAppState,
         files: scene.files as BinaryFiles,
-        scrollToContent: !replayEnabled,
+        scrollToContent: false,
       }),
       [normalizedElements, scene.files, replayEnabled, styledAppState],
     );
@@ -100,7 +101,7 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
           elements: normalizedElements as readonly ExcalidrawElement[],
           appState: styledAppState as AppState,
         });
-        fitBoardToContent(api, normalizedElements);
+        fitBoardToContent(api, normalizedElements, boardRootRef.current);
         window.setTimeout(() => {
           if (!cancelled) {
             suppressChangeRef.current = false;
@@ -149,10 +150,10 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
         if (cancelled) {
           return;
         }
-        fitBoardToContent(api, normalizedElements);
+        fitBoardToContent(api, normalizedElements, boardRootRef.current);
       };
       window.requestAnimationFrame(() => window.requestAnimationFrame(fitWhenReady));
-      for (const delay of [160, 480, 900]) {
+      for (const delay of [160, 480, 900, 1500, 2400]) {
         timers.push(window.setTimeout(fitWhenReady, delay));
       }
       timers.push(
@@ -160,7 +161,7 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
           if (!cancelled) {
             suppressChangeRef.current = false;
           }
-        }, 900),
+        }, 1200),
       );
 
       return () => {
@@ -225,23 +226,25 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
     }));
 
     return (
-      <Excalidraw
-        excalidrawAPI={(api) => {
-          apiRef.current = api;
-          setApiReady(Boolean(api));
-        }}
-        initialData={initialData}
-        onChange={(elements, appState, files) => {
-          if (suppressChangeRef.current) {
-            return;
-          }
-          onChange({
-            elements,
-            appState: appState as unknown as Record<string, unknown>,
-            files: files as unknown as Record<string, unknown>,
-          });
-        }}
-      />
+      <div ref={boardRootRef} style={{ width: "100%", height: "100%" }}>
+        <Excalidraw
+          excalidrawAPI={(api) => {
+            apiRef.current = api;
+            setApiReady(Boolean(api));
+          }}
+          initialData={initialData}
+          onChange={(elements, appState, files) => {
+            if (suppressChangeRef.current) {
+              return;
+            }
+            onChange({
+              elements,
+              appState: appState as unknown as Record<string, unknown>,
+              files: files as unknown as Record<string, unknown>,
+            });
+          }}
+        />
+      </div>
     );
   },
 );
@@ -279,11 +282,36 @@ const normalizeElementsForExcalidraw = (
       .filter((element) => typeof element.id === "string")
       .map((element) => [String(element.id), element]),
   );
+  const containedTextIds = new Set(
+    elements
+      .filter(isElementRecord)
+      .filter((element) => element.type === "text" && containedTextBox(element, elementById))
+      .map((element) => String(element.id)),
+  );
   return elements.map((element) => {
     if (!isElementRecord(element)) {
       return element;
     }
     if (element.type !== "text") {
+      if (Array.isArray(element.boundElements)) {
+        const nextBoundElements = element.boundElements.filter(
+          (bound) =>
+            !(
+              bound &&
+              typeof bound === "object" &&
+              containedTextIds.has(String((bound as { id?: unknown }).id))
+            ),
+        );
+        if (nextBoundElements.length !== element.boundElements.length) {
+          return {
+            ...element,
+            boundElements: nextBoundElements,
+            version: bumpNumber(element.version),
+            versionNonce: randomNonce(),
+            updated: now,
+          };
+        }
+      }
       return element;
     }
 
@@ -292,7 +320,7 @@ const normalizeElementsForExcalidraw = (
     const lineHeight = typeof element.lineHeight === "number" ? element.lineHeight : 1.25;
     const containedBox = containedTextBox(element, elementById);
     const normalizedBox = containedBox
-      ? insetBounds(containedBox, defaultTextPadding(containedBox))
+      ? centeredTextBounds(containedBox, text, fontSize, lineHeight)
       : null;
     const width = normalizedBox?.width ?? element.width;
     const height = normalizedBox?.height ?? element.height;
@@ -304,7 +332,8 @@ const normalizeElementsForExcalidraw = (
           numberChanged(element.height, normalizedBox.height) ||
           element.verticalAlign !== "middle" ||
           element.textAlign !== "center" ||
-          element.autoResize !== false),
+          element.autoResize !== false ||
+          element.containerId !== null),
     );
     return {
       ...element,
@@ -328,9 +357,10 @@ const normalizeElementsForExcalidraw = (
           ? element.verticalAlign
           : "middle",
       autoResize: containedBox ? false : typeof element.autoResize === "boolean" ? element.autoResize : false,
+      containerId: containedBox ? null : element.containerId,
       lineHeight,
       baseline: containedBox
-        ? centeredBaseline(text, fontSize, lineHeight, typeof height === "number" ? height : undefined)
+        ? Math.round(fontSize * lineHeight * Math.max(1, text.split("\n").length) * 0.78)
         : typeof element.baseline === "number"
           ? element.baseline
           : Math.round(fontSize * lineHeight * Math.max(1, text.split("\n").length) * 0.78),
@@ -417,6 +447,23 @@ const insetBounds = (box: Box, padding: number): Box => ({
 const defaultTextPadding = (box: Box) =>
   Math.max(8, Math.min(20, Math.round(Math.min(box.width, box.height) * 0.16)));
 
+const centeredTextBounds = (
+  box: Box,
+  text: string,
+  fontSize: number,
+  lineHeight: number,
+): Box => {
+  const padding = defaultTextPadding(box);
+  const lineCount = Math.max(1, text.split("\n").length);
+  const textHeight = Math.max(1, lineCount * fontSize * lineHeight);
+  return {
+    x: box.x + padding,
+    y: box.y + (box.height - textHeight) / 2,
+    width: Math.max(1, box.width - padding * 2),
+    height: textHeight,
+  };
+};
+
 const numberChanged = (left: unknown, right: number) =>
   typeof left !== "number" || Math.abs(left - right) > 0.5;
 
@@ -480,10 +527,18 @@ const sanitizeInitialAppState = (appState: Record<string, unknown>) => {
 const fitBoardToContent = (
   api: ExcalidrawImperativeAPI,
   elements: readonly unknown[],
+  container: HTMLElement | null,
 ) => {
+  if (!container) {
+    return false;
+  }
+  const rect = container.getBoundingClientRect();
+  if (rect.width < 120 || rect.height < 120) {
+    return false;
+  }
   const drawableElements = elements.filter(isElementRecord) as unknown as readonly ExcalidrawElement[];
   if (drawableElements.length === 0) {
-    return;
+    return false;
   }
   api.scrollToContent(drawableElements, {
     animate: false,
@@ -492,6 +547,7 @@ const fitBoardToContent = (
     minZoom: 0.35,
     maxZoom: 1,
   });
+  return true;
 };
 
 const replayStage = (element: unknown) => {
@@ -547,7 +603,6 @@ const applyStyleToAppState = (
     currentItemStrokeStyle: "solid",
     currentItemRoughness: profile.roughness,
     currentItemFontFamily: fontFamilyForProfile(profile.fontFamily),
-    currentItemRoundness: profile.roundness,
     currentItemArrowType: profile.arrowType,
     currentItemStartArrowhead: null,
     currentItemEndArrowhead: "arrow",
