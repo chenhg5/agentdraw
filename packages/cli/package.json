@@ -1,5 +1,5 @@
 {
-  "name": "agentdraw",
+  "name": "@chg80333/agentdraw",
   "version": "0.1.0",
   "type": "module",
   "description": "Local-first editable whiteboard workspace for coding agents.",
@@ -9,18 +9,20 @@
   },
   "files": [
     "dist",
+    "web-dist",
     "README.md"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && esbuild src/index.ts --bundle --platform=node --format=esm --target=node20 --outfile=dist/index.js",
+    "bundle:web": "rm -rf web-dist && cp -R ../../apps/web/dist web-dist",
     "start": "tsx src/index.ts",
     "typecheck": "pnpm --filter @agentdraw/server build && tsc -p tsconfig.json --noEmit"
   },
-  "dependencies": {
-    "@agentdraw/scene": "workspace:*",
-    "@agentdraw/server": "workspace:*"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "@agentdraw/scene": "workspace:*",
+    "@agentdraw/server": "workspace:*",
+    "esbuild": "^0.28.1",
     "tsx": "^4.22.3"
   },
   "engines": {

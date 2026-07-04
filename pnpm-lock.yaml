@@ -11,6 +11,9 @@ importers:
       '@types/node':
         specifier: ^24.0.10
         version: 24.13.2
+      esbuild:
+        specifier: ^0.28.1
+        version: 0.28.1
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -50,14 +53,16 @@ importers:
         version: 5.9.3
 
   packages/cli:
-    dependencies:
+    devDependencies:
       '@agentdraw/scene':
         specifier: workspace:*
         version: link:../scene
       '@agentdraw/server':
         specifier: workspace:*
         version: link:../server
-    devDependencies:
+      esbuild:
+        specifier: ^0.28.1
+        version: 0.28.1
       tsx:
         specifier: ^4.22.3
         version: 4.22.5

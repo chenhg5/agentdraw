@@ -103,6 +103,14 @@ engineering problems:
 
 ## Quick Start
 
+Run directly from npm:
+
+```bash
+npx @chg80333/agentdraw open board.agentdraw.json
+```
+
+Or use the repo:
+
 ```bash
 pnpm install
 pnpm build

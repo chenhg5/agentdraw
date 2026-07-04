@@ -1,6 +1,7 @@
 {
   "name": "@agentdraw/server",
   "version": "0.1.0",
+  "private": true,
   "type": "module",
   "description": "Local HTTP server for AgentDraw.",
   "license": "MIT",
@@ -32,6 +33,6 @@
     "directory": "packages/server"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "restricted"
   }
 }

@@ -6,17 +6,18 @@
   "license": "MIT",
   "packageManager": "pnpm@11.9.0",
   "scripts": {
-    "build": "pnpm --filter @agentdraw/styles build && pnpm --filter @agentdraw/scene build && pnpm --filter @agentdraw/server build && pnpm --filter agentdraw build && pnpm --filter @agentdraw/web build && pnpm --filter @agentdraw/server bundle:web",
+    "build": "pnpm --filter @agentdraw/styles build && pnpm --filter @agentdraw/scene build && pnpm --filter @agentdraw/server build && pnpm --filter @chg80333/agentdraw build && pnpm --filter @agentdraw/web build && pnpm --filter @chg80333/agentdraw bundle:web",
     "dev": "pnpm --parallel --filter @agentdraw/server --filter @agentdraw/web dev",
     "typecheck": "pnpm -r typecheck",
-    "agentdraw": "pnpm --filter agentdraw start",
+    "agentdraw": "pnpm --filter @chg80333/agentdraw start",
     "validate:scene": "pnpm agentdraw validate",
     "examples:themes": "node scripts/generate-theme-examples.mjs",
     "examples:previews": "node scripts/render-example-previews.mjs",
-    "npm:pack": "rm -rf npm/*.tgz && pnpm build && pnpm --filter @agentdraw/scene pack --pack-destination npm && pnpm --filter @agentdraw/server pack --pack-destination npm && pnpm --filter agentdraw pack --pack-destination npm"
+    "npm:pack": "rm -rf npm/*.tgz && pnpm build && pnpm --filter @chg80333/agentdraw pack --pack-destination npm"
   },
   "devDependencies": {
     "@types/node": "^24.0.10",
+    "esbuild": "^0.28.1",
     "typescript": "^5.9.3"
   }
 }

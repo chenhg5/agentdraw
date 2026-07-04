@@ -1,6 +1,7 @@
 {
   "name": "@agentdraw/scene",
   "version": "0.1.0",
+  "private": true,
   "type": "module",
   "description": "Scene IO and validation for AgentDraw.",
   "license": "MIT",
@@ -22,6 +23,6 @@
     "directory": "packages/scene"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "restricted"
   }
 }

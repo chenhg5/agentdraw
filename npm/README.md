@@ -1,10 +1,8 @@
 # npm Release Notes
 
-AgentDraw is prepared as three npm packages:
+AgentDraw is prepared as one public npm package:
 
-- `@agentdraw/scene`: scene IO and validation.
-- `@agentdraw/server`: local HTTP server plus bundled web editor assets.
-- `agentdraw`: user-facing CLI with the `agentdraw` binary.
+- `@chg80333/agentdraw`: user-facing CLI with bundled scene validation, local server, and web editor assets.
 
 Build and create local tarballs:
 
@@ -12,23 +10,21 @@ Build and create local tarballs:
 pnpm npm:pack
 ```
 
-Publish order:
+Publish:
 
 ```bash
-pnpm --filter @agentdraw/scene publish --access public
-pnpm --filter @agentdraw/server publish --access public
-pnpm --filter agentdraw publish --access public
+pnpm --filter @chg80333/agentdraw publish --access public
 ```
 
 Smoke-test the packed CLI tarball:
 
 ```bash
-npm install -g ./npm/agentdraw-0.1.0.tgz
+npm install -g ./npm/chg80333-agentdraw-0.1.0.tgz
 agentdraw open examples/getting-started.agentdraw.json --no-open
 ```
 
-Before publishing, ensure the version is bumped consistently in:
+Before publishing, ensure the public version is bumped in:
 
-- `packages/scene/package.json`
-- `packages/server/package.json`
 - `packages/cli/package.json`
+
+The internal workspace packages `@agentdraw/scene` and `@agentdraw/server` stay private and are bundled into the `agentdraw` tarball.
