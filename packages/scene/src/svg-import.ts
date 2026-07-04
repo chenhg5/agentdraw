@@ -304,7 +304,8 @@ const baseElement = (
   seed += 1;
   const customData = extra.customData as Record<string, unknown> | undefined;
   const role = typeof customData?.role === "string" ? customData.role : null;
-  const idPrefix = role === "shadow" || role === "decoration" ? `svg-${role}` : "svg";
+  const idPrefix =
+    role === "shadow" || role === "decoration" || role === "frame" ? `svg-${role}` : "svg";
   return {
     id: `${idPrefix}-${seed}`,
     type,

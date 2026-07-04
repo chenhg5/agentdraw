@@ -2,7 +2,11 @@ import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 const themeFiles = (await readdir("examples"))
-  .filter((file) => file.startsWith("theme-") && file.endsWith(".agentdraw.json"))
+  .filter(
+    (file) =>
+      (file.startsWith("theme-") || file.startsWith("capability-")) &&
+      file.endsWith(".agentdraw.json"),
+  )
   .sort();
 const examples = [
   ["complex-agentdraw-workbench", "examples/complex-agentdraw-workbench.agentdraw.json"],

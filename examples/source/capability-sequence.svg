@@ -1,0 +1,34 @@
+<svg width="1180" height="720" viewBox="0 0 1180 720" xmlns="http://www.w3.org/2000/svg">
+<rect width="1180" height="720" fill="#FFFFFF" />
+<rect x="52" y="52" width="1076" height="600" rx="6" fill="#FFFFFF" stroke="#182230" stroke-width="2" data-agentdraw-role="frame" />
+<text x="84" y="112" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="36" font-weight="760" fill="#182230">SVG Import Sequence</text>
+<text x="86" y="148" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="16" font-weight="500" fill="#667085">Sequence diagram showing the local generation and editing loop</text>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth"><path d="M 0 0 L 10 5 L 0 10 z" fill="#4053D6" /></marker></defs>
+<rect x="46" y="190" width="148" height="48" rx="4" fill="#F8FAFC" stroke="#BEC1C5" stroke-width="2" />
+<text x="120" y="214" text-anchor="middle" dominant-baseline="middle" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="17" font-weight="750" fill="#182230">Agent</text>
+<line x1="120" y1="238" x2="120" y2="590" stroke="#BEC1C5" stroke-width="1" />
+<rect x="286" y="190" width="148" height="48" rx="4" fill="#F8FAFC" stroke="#BEC1C5" stroke-width="2" />
+<text x="360" y="214" text-anchor="middle" dominant-baseline="middle" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="17" font-weight="750" fill="#182230">SVG source</text>
+<line x1="360" y1="238" x2="360" y2="590" stroke="#BEC1C5" stroke-width="1" />
+<rect x="526" y="190" width="148" height="48" rx="4" fill="#F8FAFC" stroke="#BEC1C5" stroke-width="2" />
+<text x="600" y="214" text-anchor="middle" dominant-baseline="middle" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="17" font-weight="750" fill="#182230">AgentDraw CLI</text>
+<line x1="600" y1="238" x2="600" y2="590" stroke="#BEC1C5" stroke-width="1" />
+<rect x="766" y="190" width="148" height="48" rx="4" fill="#F8FAFC" stroke="#BEC1C5" stroke-width="2" />
+<text x="840" y="214" text-anchor="middle" dominant-baseline="middle" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="17" font-weight="750" fill="#182230">Browser editor</text>
+<line x1="840" y1="238" x2="840" y2="590" stroke="#BEC1C5" stroke-width="1" />
+<rect x="966" y="190" width="148" height="48" rx="4" fill="#F8FAFC" stroke="#BEC1C5" stroke-width="2" />
+<text x="1040" y="214" text-anchor="middle" dominant-baseline="middle" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="17" font-weight="750" fill="#182230">User</text>
+<line x1="1040" y1="238" x2="1040" y2="590" stroke="#BEC1C5" stroke-width="1" />
+<line x1="194" y1="286" x2="286" y2="286" stroke="#4053D6" stroke-width="2" marker-end="url(#arrow)" />
+<text x="212" y="268" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="15" font-weight="650" fill="#182230">write restricted SVG</text>
+<line x1="434" y1="354" x2="526" y2="354" stroke="#4053D6" stroke-width="2" marker-end="url(#arrow)" />
+<text x="452" y="336" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="15" font-weight="650" fill="#182230">import-svg</text>
+<line x1="674" y1="422" x2="766" y2="422" stroke="#4053D6" stroke-width="2" marker-end="url(#arrow)" />
+<text x="692" y="404" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="15" font-weight="650" fill="#182230">open editable board</text>
+<line x1="914" y1="490" x2="966" y2="490" stroke="#4053D6" stroke-width="2" marker-end="url(#arrow)" />
+<text x="932" y="472" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="15" font-weight="650" fill="#182230">manual refinements</text>
+<line x1="766" y1="558" x2="674" y2="558" stroke="#4053D6" stroke-width="2" marker-end="url(#arrow)" />
+<text x="692" y="540" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="15" font-weight="650" fill="#182230">autosave snapshot</text>
+<rect x="84" y="610" width="1010" height="34" rx="4" fill="#E7EEF8" stroke="#BEC1C5" stroke-width="1" />
+<text x="589" y="627" text-anchor="middle" dominant-baseline="middle" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="15" font-weight="700" fill="#182230">All messages stay local; final board remains editable.</text>
+</svg>

@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1252" height="792" viewBox="-36 -36 1252 792" role="img" aria-label="AgentDraw Module Map preview">
+<defs>
+<marker id="arrowhead" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+<path d="M0,0 L10,4 L0,8 Z" fill="context-stroke"/>
+</marker>
+</defs>
+<rect x="-36" y="-36" width="1252" height="792" fill="#FFFFFF"/>
+<rect x="0" y="0" width="1180" height="720" rx="0" fill="#FFFFFF" stroke="#111827" stroke-width="0"/>
+<rect x="52" y="52" width="1076" height="600" rx="0" fill="none" stroke="#0A0A0A" stroke-width="2"/>
+<text x="84" y="120.36" fill="#0A0A0A" font-family="Inter, Arial, sans-serif" font-size="38" font-weight="700" text-anchor="start"><tspan x="84" dy="0">AgentDraw Module Map</tspan></text>
+<text x="86" y="153.52" fill="#5B5B5B" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="start"><tspan x="86" dy="0">Class-diagram style overview of the editable diagram runtime</tspan></text>
+<rect x="86" y="198" width="246" height="150" rx="0" fill="#F8F8F8" stroke="#0A0A0A" stroke-width="2"/>
+<rect x="86" y="198" width="246" height="38" rx="0" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="2"/>
+<text x="209" y="224.75" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="500" text-anchor="middle"><tspan x="209" dy="0">AgentDrawScene</tspan></text>
+<text x="104" y="273.3" fill="#0A0A0A" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="104" dy="0">elements: Element[]</tspan></text>
+<text x="104" y="301.3" fill="#0A0A0A" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="104" dy="0">appState: object</tspan></text>
+<text x="104" y="329.3" fill="#0A0A0A" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="104" dy="0">files: object</tspan></text>
+<rect x="396" y="198" width="246" height="150" rx="0" fill="#F8F8F8" stroke="#0A0A0A" stroke-width="2"/>
+<rect x="396" y="198" width="246" height="38" rx="0" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="2"/>
+<text x="519" y="224.75" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="500" text-anchor="middle"><tspan x="519" dy="0">SvgImporter</tspan></text>
+<text x="414" y="273.3" fill="#0A0A0A" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="414" dy="0">parse(svg)</tspan></text>
+<text x="414" y="301.3" fill="#0A0A0A" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="414" dy="0">toScene()</tspan></text>
+<text x="414" y="329.3" fill="#0A0A0A" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="414" dy="0">warnings[]</tspan></text>
+<rect x="706" y="198" width="246" height="150" rx="0" fill="#F8F8F8" stroke="#0A0A0A" stroke-width="2"/>
+<rect x="706" y="198" width="246" height="38" rx="0" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="2"/>
+<text x="829" y="224.75" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="500" text-anchor="middle"><tspan x="829" dy="0">Validator</tspan></text>
+<text x="724" y="273.3" fill="#0A0A0A" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="724" dy="0">text overflow</tspan></text>
+<text x="724" y="301.3" fill="#0A0A0A" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="724" dy="0">connector edges</tspan></text>
+<text x="724" y="329.3" fill="#0A0A0A" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="724" dy="0">style drift</tspan></text>
+<rect x="396" y="430" width="246" height="150" rx="0" fill="#F8F8F8" stroke="#0A0A0A" stroke-width="2"/>
+<rect x="396" y="430" width="246" height="38" rx="0" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="2"/>
+<text x="519" y="456.75" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="500" text-anchor="middle"><tspan x="519" dy="0">LocalServer</tspan></text>
+<text x="414" y="505.3" fill="#0A0A0A" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="414" dy="0">GET /api/scene</tspan></text>
+<text x="414" y="533.3" fill="#0A0A0A" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="414" dy="0">POST /api/scene</tspan></text>
+<text x="414" y="561.3" fill="#0A0A0A" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="414" dy="0">stale-save guard</tspan></text>
+<rect x="706" y="430" width="246" height="150" rx="0" fill="#F8F8F8" stroke="#0A0A0A" stroke-width="2"/>
+<rect x="706" y="430" width="246" height="38" rx="0" fill="#0A0A0A" stroke="#0A0A0A" stroke-width="2"/>
+<text x="829" y="456.75" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="500" text-anchor="middle"><tspan x="829" dy="0">WebEditor</tspan></text>
+<text x="724" y="505.3" fill="#0A0A0A" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="724" dy="0">Excalidraw provider</tspan></text>
+<text x="724" y="533.3" fill="#0A0A0A" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="724" dy="0">import/export</tspan></text>
+<text x="724" y="561.3" fill="#0A0A0A" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="724" dy="0">manual edits</tspan></text>
+<path d="M 332 273 L 396 273" fill="none" stroke="#BABABA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+<path d="M 642 273 L 706 273" fill="none" stroke="#BABABA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+<path d="M 519 348 L 519 430" fill="none" stroke="#BABABA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+<path d="M 829 348 L 829 430" fill="none" stroke="#BABABA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+<path d="M 642 505 L 706 505" fill="none" stroke="#BABABA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+<rect x="86" y="430" width="246" height="150" rx="0" fill="#F2D4CF" stroke="#0A0A0A" stroke-width="2"/>
+<text x="104" y="475.96" fill="#0A0A0A" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="500" text-anchor="start"><tspan x="104" dy="0">DesignContract</tspan></text>
+<text x="104" y="513.3" fill="#0A0A0A" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="104" dy="0">palette + type</tspan></text>
+<text x="104" y="541.3" fill="#0A0A0A" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="104" dy="0">geometry + rules</tspan></text>
+<path d="M 332 505 L 396 505" fill="none" stroke="#BABABA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+</svg>

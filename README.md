@@ -2,6 +2,13 @@
 
 [中文 README](./README.zh.md)
 
+[![npm version](https://img.shields.io/npm/v/@aidraw/agentdraw?color=182230)](https://www.npmjs.com/package/@aidraw/agentdraw)
+[![license: MIT](https://img.shields.io/badge/license-MIT-1F8A4C.svg)](./LICENSE)
+[![SVG-first](https://img.shields.io/badge/SVG--first-editable%20boards-4053D6)](#svg-first-format)
+[![local-first](https://img.shields.io/badge/local--first-browser%20editor-0B63CE)](#why-agentdraw)
+[![powered by Excalidraw](https://img.shields.io/badge/powered%20by-Excalidraw-6965DB)](https://github.com/excalidraw/excalidraw)
+[![agent ready](https://img.shields.io/badge/agent--ready-Codex%20%7C%20Claude%20Code%20%7C%20Cursor-1E1B16)](./skills/agentdraw/SKILL.md)
+
 AgentDraw is a local-first, SVG-first editable whiteboard workspace for coding agents.
 
 It lets Claude Code, Codex, Cursor, or any other agent draft a clean SVG diagram, convert it into an
@@ -48,8 +55,8 @@ See [INSTALL.md](./INSTALL.md) for agent-specific install options.
 
 ## Gallery
 
-AgentDraw examples are real editable scene files. The images below are generated previews for the
-README; click a preview to open the source `.agentdraw.json`.
+AgentDraw examples are generated previews. Capability previews link to editable `.agentdraw.json`
+scenes. Theme previews link to the `design.md` system that produced the look.
 
 ### Complex Board
 
@@ -57,55 +64,71 @@ README; click a preview to open the source `.agentdraw.json`.
   <img src="./assets/examples/complex-agentdraw-workbench.svg" alt="Complex AgentDraw Workbench preview" />
 </a>
 
+### Diagram Capability Examples
+
+<table>
+<tr>
+<td width="33%"><a href="./examples/capability-flowchart.agentdraw.json"><img src="./assets/examples/capability-flowchart.svg" alt="Agent runtime flowchart preview" /></a><br />
+<sub><a href="./examples/capability-flowchart.agentdraw.json"><b>Flowchart</b></a> · Mermaid-like process map</sub>
+</td>
+<td width="33%"><a href="./examples/capability-sequence.agentdraw.json"><img src="./assets/examples/capability-sequence.svg" alt="SVG import sequence diagram preview" /></a><br />
+<sub><a href="./examples/capability-sequence.agentdraw.json"><b>Sequence Diagram</b></a> · local agent loop</sub>
+</td>
+<td width="33%"><a href="./examples/capability-class-map.agentdraw.json"><img src="./assets/examples/capability-class-map.svg" alt="AgentDraw module class map preview" /></a><br />
+<sub><a href="./examples/capability-class-map.agentdraw.json"><b>Class / Module Map</b></a> · runtime structure</sub>
+</td>
+</tr>
+</table>
+
 ### Theme Examples
 
 <table>
 <tr>
-<td width="50%"><a href="./examples/theme-agentdraw-os.agentdraw.json"><img src="./assets/examples/theme-agentdraw-os.svg" alt="AgentDraw Operating System preview" /></a><br />
-<sub><a href="./examples/theme-agentdraw-os.agentdraw.json"><b>AgentDraw OS</b></a> · local agent diagram loop</sub>
+<td width="50%"><a href="./packages/styles/designs/system-formal/design.md"><img src="./assets/examples/theme-agentdraw-os.svg" alt="AgentDraw Operating System preview" /></a><br />
+<sub><a href="./packages/styles/designs/system-formal/design.md"><b>AgentDraw OS</b></a> · local agent diagram loop</sub>
 </td>
-<td width="50%"><a href="./examples/theme-incident-command.agentdraw.json"><img src="./assets/examples/theme-incident-command.svg" alt="Incident Command Center preview" /></a><br />
-<sub><a href="./examples/theme-incident-command.agentdraw.json"><b>Incident Command</b></a> · severity and recovery map</sub>
-</td>
-</tr>
-<tr>
-<td width="50%"><a href="./examples/theme-message-bus.agentdraw.json"><img src="./assets/examples/theme-message-bus.svg" alt="Multi-Agent Message Bus preview" /></a><br />
-<sub><a href="./examples/theme-message-bus.agentdraw.json"><b>Message Bus</b></a> · multi-agent coordination</sub>
-</td>
-<td width="50%"><a href="./examples/theme-launch-room.agentdraw.json"><img src="./assets/examples/theme-launch-room.svg" alt="Launch Room Loop preview" /></a><br />
-<sub><a href="./examples/theme-launch-room.agentdraw.json"><b>Launch Room</b></a> · editorial growth loop</sub>
+<td width="50%"><a href="./packages/styles/designs/boardroom/design.md"><img src="./assets/examples/theme-incident-command.svg" alt="Incident Command Center preview" /></a><br />
+<sub><a href="./packages/styles/designs/boardroom/design.md"><b>Incident Command</b></a> · severity and recovery map</sub>
 </td>
 </tr>
 <tr>
-<td width="50%"><a href="./examples/theme-strategy-grove.agentdraw.json"><img src="./assets/examples/theme-strategy-grove.svg" alt="Quarterly Strategy Map preview" /></a><br />
-<sub><a href="./examples/theme-strategy-grove.agentdraw.json"><b>Strategy Grove</b></a> · quarterly operating map</sub>
+<td width="50%"><a href="./packages/styles/designs/blueprint-formal/design.md"><img src="./assets/examples/theme-message-bus.svg" alt="Multi-Agent Message Bus preview" /></a><br />
+<sub><a href="./packages/styles/designs/blueprint-formal/design.md"><b>Message Bus</b></a> · multi-agent coordination</sub>
 </td>
-<td width="50%"><a href="./examples/theme-roadmap-mint.agentdraw.json"><img src="./assets/examples/theme-roadmap-mint.svg" alt="Creator Tool Roadmap preview" /></a><br />
-<sub><a href="./examples/theme-roadmap-mint.agentdraw.json"><b>Roadmap Mint</b></a> · playful product roadmap</sub>
-</td>
-</tr>
-<tr>
-<td width="50%"><a href="./examples/theme-customer-journey.agentdraw.json"><img src="./assets/examples/theme-customer-journey.svg" alt="Customer Journey Signals preview" /></a><br />
-<sub><a href="./examples/theme-customer-journey.agentdraw.json"><b>Customer Journey</b></a> · activation signal map</sub>
-</td>
-<td width="50%"><a href="./examples/theme-research-synthesis.agentdraw.json"><img src="./assets/examples/theme-research-synthesis.svg" alt="Research Synthesis Wall preview" /></a><br />
-<sub><a href="./examples/theme-research-synthesis.agentdraw.json"><b>Research Synthesis</b></a> · interview clustering board</sub>
+<td width="50%"><a href="./packages/styles/designs/riso-brut/design.md"><img src="./assets/examples/theme-launch-room.svg" alt="Launch Room Loop preview" /></a><br />
+<sub><a href="./packages/styles/designs/riso-brut/design.md"><b>Launch Room</b></a> · editorial growth loop</sub>
 </td>
 </tr>
 <tr>
-<td width="50%"><a href="./examples/theme-raw-grid.agentdraw.json"><img src="./assets/examples/theme-raw-grid.svg" alt="Scene Quality Matrix preview" /></a><br />
-<sub><a href="./examples/theme-raw-grid.agentdraw.json"><b>Raw Grid</b></a> · strict validation matrix</sub>
+<td width="50%"><a href="./packages/styles/designs/grove/design.md"><img src="./assets/examples/theme-strategy-grove.svg" alt="Quarterly Strategy Map preview" /></a><br />
+<sub><a href="./packages/styles/designs/grove/design.md"><b>Strategy Grove</b></a> · quarterly operating map</sub>
 </td>
-<td width="50%"><a href="./examples/theme-bold-poster.agentdraw.json"><img src="./assets/examples/theme-bold-poster.svg" alt="Design Systems Win preview" /></a><br />
-<sub><a href="./examples/theme-bold-poster.agentdraw.json"><b>Bold Poster</b></a> · high-impact design thesis</sub>
+<td width="50%"><a href="./packages/styles/designs/mint-brut/design.md"><img src="./assets/examples/theme-roadmap-mint.svg" alt="Creator Tool Roadmap preview" /></a><br />
+<sub><a href="./packages/styles/designs/mint-brut/design.md"><b>Roadmap Mint</b></a> · playful product roadmap</sub>
 </td>
 </tr>
 <tr>
-<td width="50%"><a href="./examples/theme-soft-editorial.agentdraw.json"><img src="./assets/examples/theme-soft-editorial.svg" alt="Product Discovery Board preview" /></a><br />
-<sub><a href="./examples/theme-soft-editorial.agentdraw.json"><b>Soft Editorial</b></a> · research and discovery board</sub>
+<td width="50%"><a href="./packages/styles/designs/coral/design.md"><img src="./assets/examples/theme-customer-journey.svg" alt="Customer Journey Signals preview" /></a><br />
+<sub><a href="./packages/styles/designs/coral/design.md"><b>Customer Journey</b></a> · activation signal map</sub>
 </td>
-<td width="50%"><a href="./examples/theme-block-frame.agentdraw.json"><img src="./assets/examples/theme-block-frame.svg" alt="Maker Mode Map preview" /></a><br />
-<sub><a href="./examples/theme-block-frame.agentdraw.json"><b>BlockFrame</b></a> · playful maker workflow</sub>
+<td width="50%"><a href="./packages/styles/designs/violet-marker/design.md"><img src="./assets/examples/theme-research-synthesis.svg" alt="Research Synthesis Wall preview" /></a><br />
+<sub><a href="./packages/styles/designs/violet-marker/design.md"><b>Research Synthesis</b></a> · interview clustering board</sub>
+</td>
+</tr>
+<tr>
+<td width="50%"><a href="./packages/styles/designs/raw-grid/design.md"><img src="./assets/examples/theme-raw-grid.svg" alt="Scene Quality Matrix preview" /></a><br />
+<sub><a href="./packages/styles/designs/raw-grid/design.md"><b>Raw Grid</b></a> · strict validation matrix</sub>
+</td>
+<td width="50%"><a href="./packages/styles/designs/bold-poster/design.md"><img src="./assets/examples/theme-bold-poster.svg" alt="Design Systems Win preview" /></a><br />
+<sub><a href="./packages/styles/designs/bold-poster/design.md"><b>Bold Poster</b></a> · high-impact design thesis</sub>
+</td>
+</tr>
+<tr>
+<td width="50%"><a href="./packages/styles/designs/soft-editorial/design.md"><img src="./assets/examples/theme-soft-editorial.svg" alt="Product Discovery Board preview" /></a><br />
+<sub><a href="./packages/styles/designs/soft-editorial/design.md"><b>Soft Editorial</b></a> · research and discovery board</sub>
+</td>
+<td width="50%"><a href="./packages/styles/designs/block-frame/design.md"><img src="./assets/examples/theme-block-frame.svg" alt="Maker Mode Map preview" /></a><br />
+<sub><a href="./packages/styles/designs/block-frame/design.md"><b>BlockFrame</b></a> · playful maker workflow</sub>
 </td>
 </tr>
 </table>

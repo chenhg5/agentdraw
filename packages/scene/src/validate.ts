@@ -284,7 +284,7 @@ const isExplicitFrameElement = (element: ElementRecord) => {
 };
 
 const isIntentionalOverlap = (id: string) =>
-  id.includes("shadow") || id.includes("decor") || id.includes("overlap");
+  id.includes("shadow") || id.includes("decor") || id.includes("frame") || id.includes("overlap");
 
 const findVerticalCenteringIssues = (
   shapes: Bounds[],

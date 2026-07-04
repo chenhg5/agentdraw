@@ -1,0 +1,62 @@
+<svg width="1180" height="720" viewBox="0 0 1180 720" xmlns="http://www.w3.org/2000/svg">
+<rect width="1180" height="720" fill="#F8FBFF" />
+<line x1="60" y1="60" x2="60" y2="650" stroke="#B9C5D5" stroke-width="1" opacity="0.3" />
+<line x1="140" y1="60" x2="140" y2="650" stroke="#B9C5D5" stroke-width="1" opacity="0.3" />
+<line x1="220" y1="60" x2="220" y2="650" stroke="#B9C5D5" stroke-width="1" opacity="0.3" />
+<line x1="300" y1="60" x2="300" y2="650" stroke="#B9C5D5" stroke-width="1" opacity="0.3" />
+<line x1="380" y1="60" x2="380" y2="650" stroke="#B9C5D5" stroke-width="1" opacity="0.3" />
+<line x1="460" y1="60" x2="460" y2="650" stroke="#B9C5D5" stroke-width="1" opacity="0.3" />
+<line x1="540" y1="60" x2="540" y2="650" stroke="#B9C5D5" stroke-width="1" opacity="0.3" />
+<line x1="620" y1="60" x2="620" y2="650" stroke="#B9C5D5" stroke-width="1" opacity="0.3" />
+<line x1="700" y1="60" x2="700" y2="650" stroke="#B9C5D5" stroke-width="1" opacity="0.3" />
+<line x1="780" y1="60" x2="780" y2="650" stroke="#B9C5D5" stroke-width="1" opacity="0.3" />
+<line x1="860" y1="60" x2="860" y2="650" stroke="#B9C5D5" stroke-width="1" opacity="0.3" />
+<line x1="940" y1="60" x2="940" y2="650" stroke="#B9C5D5" stroke-width="1" opacity="0.3" />
+<line x1="1020" y1="60" x2="1020" y2="650" stroke="#B9C5D5" stroke-width="1" opacity="0.3" />
+<line x1="1100" y1="60" x2="1100" y2="650" stroke="#B9C5D5" stroke-width="1" opacity="0.3" />
+<line x1="60" y1="70" x2="1120" y2="70" stroke="#B9C5D5" stroke-width="1" opacity="0.3" />
+<line x1="60" y1="150" x2="1120" y2="150" stroke="#B9C5D5" stroke-width="1" opacity="0.3" />
+<line x1="60" y1="230" x2="1120" y2="230" stroke="#B9C5D5" stroke-width="1" opacity="0.3" />
+<line x1="60" y1="310" x2="1120" y2="310" stroke="#B9C5D5" stroke-width="1" opacity="0.3" />
+<line x1="60" y1="390" x2="1120" y2="390" stroke="#B9C5D5" stroke-width="1" opacity="0.3" />
+<line x1="60" y1="470" x2="1120" y2="470" stroke="#B9C5D5" stroke-width="1" opacity="0.3" />
+<line x1="60" y1="550" x2="1120" y2="550" stroke="#B9C5D5" stroke-width="1" opacity="0.3" />
+<line x1="60" y1="630" x2="1120" y2="630" stroke="#B9C5D5" stroke-width="1" opacity="0.3" />
+<rect x="52" y="52" width="1076" height="600" rx="0" fill="#F8FBFF" stroke="#163B68" stroke-width="2" data-agentdraw-role="frame" />
+<text x="86" y="116" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="38" font-weight="760" fill="#163B68">Agent Runtime Flowchart</text>
+<text x="88" y="154" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="16" font-weight="500" fill="#5B708A">A Mermaid-like flowchart with editable imported nodes</text>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth"><path d="M 0 0 L 10 5 L 0 10 z" fill="#0B63CE" /></marker></defs>
+<rect x="96" y="206" width="186" height="106" rx="0" fill="#FFFFFF" stroke="#0B63CE" stroke-width="2" />
+<rect x="96" y="206" width="186" height="30" rx="0" fill="#DBEAFE" stroke="#0B63CE" stroke-width="2" />
+<text x="189" y="222" text-anchor="middle" dominant-baseline="middle" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="17" font-weight="750" fill="#163B68">User prompt</text>
+<text x="189" y="276" text-anchor="middle" dominant-baseline="middle" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="15" font-weight="500" fill="#5B708A"><tspan x="189" dy="-0.6em">intent + constraints</tspan><tspan x="189" dy="1.2em">agent-safe</tspan></text>
+<rect x="336" y="206" width="186" height="106" rx="0" fill="#FFFFFF" stroke="#0B63CE" stroke-width="2" />
+<rect x="336" y="206" width="186" height="30" rx="0" fill="#DBEAFE" stroke="#0B63CE" stroke-width="2" />
+<text x="429" y="222" text-anchor="middle" dominant-baseline="middle" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="17" font-weight="750" fill="#163B68">Choose style</text>
+<text x="429" y="276" text-anchor="middle" dominant-baseline="middle" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="15" font-weight="500" fill="#5B708A"><tspan x="429" dy="-0.6em">design.md + contract</tspan><tspan x="429" dy="1.2em">agent-safe</tspan></text>
+<rect x="576" y="206" width="186" height="106" rx="0" fill="#FFFFFF" stroke="#0B63CE" stroke-width="2" />
+<rect x="576" y="206" width="186" height="30" rx="0" fill="#DBEAFE" stroke="#0B63CE" stroke-width="2" />
+<text x="669" y="222" text-anchor="middle" dominant-baseline="middle" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="17" font-weight="750" fill="#163B68">Draft SVG</text>
+<text x="669" y="276" text-anchor="middle" dominant-baseline="middle" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="15" font-weight="500" fill="#5B708A"><tspan x="669" dy="-0.6em">layout is source</tspan><tspan x="669" dy="1.2em">agent-safe</tspan></text>
+<rect x="816" y="206" width="186" height="106" rx="0" fill="#FFFFFF" stroke="#0B63CE" stroke-width="2" />
+<rect x="816" y="206" width="186" height="30" rx="0" fill="#DBEAFE" stroke="#0B63CE" stroke-width="2" />
+<text x="909" y="222" text-anchor="middle" dominant-baseline="middle" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="17" font-weight="750" fill="#163B68">Import board</text>
+<text x="909" y="276" text-anchor="middle" dominant-baseline="middle" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="15" font-weight="500" fill="#5B708A"><tspan x="909" dy="-0.6em">editable objects</tspan><tspan x="909" dy="1.2em">agent-safe</tspan></text>
+<rect x="576" y="430" width="186" height="106" rx="0" fill="#FFFFFF" stroke="#0B63CE" stroke-width="2" />
+<rect x="576" y="430" width="186" height="30" rx="0" fill="#DBEAFE" stroke="#0B63CE" stroke-width="2" />
+<text x="669" y="446" text-anchor="middle" dominant-baseline="middle" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="17" font-weight="750" fill="#163B68">Validate</text>
+<text x="669" y="500" text-anchor="middle" dominant-baseline="middle" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="15" font-weight="500" fill="#5B708A"><tspan x="669" dy="-0.6em">repair warnings</tspan><tspan x="669" dy="1.2em">agent-safe</tspan></text>
+<rect x="816" y="430" width="186" height="106" rx="0" fill="#FFFFFF" stroke="#0B63CE" stroke-width="2" />
+<rect x="816" y="430" width="186" height="30" rx="0" fill="#DBEAFE" stroke="#0B63CE" stroke-width="2" />
+<text x="909" y="446" text-anchor="middle" dominant-baseline="middle" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="17" font-weight="750" fill="#163B68">Open editor</text>
+<text x="909" y="500" text-anchor="middle" dominant-baseline="middle" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="15" font-weight="500" fill="#5B708A"><tspan x="909" dy="-0.6em">human refinement</tspan><tspan x="909" dy="1.2em">agent-safe</tspan></text>
+<line x1="282" y1="259" x2="336" y2="259" stroke="#0B63CE" stroke-width="2" marker-end="url(#arrow)" />
+<line x1="522" y1="259" x2="576" y2="259" stroke="#0B63CE" stroke-width="2" marker-end="url(#arrow)" />
+<line x1="762" y1="259" x2="816" y2="259" stroke="#0B63CE" stroke-width="2" marker-end="url(#arrow)" />
+<polyline points="909,312 909,370 669,370 669,430" fill="none" stroke="#0B63CE" stroke-width="2" marker-end="url(#arrow)" />
+<line x1="762" y1="483" x2="816" y2="483" stroke="#0B63CE" stroke-width="2" marker-end="url(#arrow)" />
+<rect x="96" y="430" width="456" height="106" rx="0" fill="#DBEAFE" stroke="#163B68" stroke-width="2" />
+<text x="124" y="468" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="22" font-weight="760" fill="#163B68">Decision gate</text>
+<text x="124" y="504" font-family="Inter, Arial, Noto Sans SC, sans-serif" font-size="16" font-weight="500" fill="#5B708A">If preview looks weak, revise SVG and re-import.</text>
+<polyline points="576,483 552,483" fill="none" stroke="#0B63CE" stroke-width="2" marker-end="url(#arrow)" />
+</svg>
