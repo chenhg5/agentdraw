@@ -64,5 +64,6 @@ agentdraw guide
 Run without installing:
 
 ```bash
+npx @aidraw/agentdraw@latest import-svg board.svg --out board.agentdraw.json --style boardroom --json
 npx @aidraw/agentdraw@latest open board.agentdraw.json --no-open
 ```

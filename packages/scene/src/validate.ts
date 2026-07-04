@@ -68,12 +68,49 @@ export const validateScene = (scene: AgentDrawScene): SceneValidationResult => {
   issues.push(...findContainedTextBoxIssues(shapeBounds, textBounds, textElements));
   issues.push(...findVerticalCenteringIssues(shapeBounds, textBounds, textElements));
   issues.push(...findConnectorIssues(connectorElements, shapeBounds, textBounds));
+  issues.push(...findRedundantOuterFrameIssues(elements));
 
   return {
     issues,
     errorCount: issues.filter((issue) => issue.severity === "error").length,
     warningCount: issues.filter((issue) => issue.severity === "warning").length,
   };
+};
+
+const findRedundantOuterFrameIssues = (
+  elements: ElementRecord[],
+): SceneValidationIssue[] => {
+  const frameBounds = elements
+    .filter((element) => element.type === "rectangle" && isExplicitFrameElement(element))
+    .map(toBounds)
+    .filter((bounds): bounds is Bounds => Boolean(bounds));
+  if (frameBounds.length < 2) {
+    return [];
+  }
+
+  const contentBounds = elements
+    .filter((element) => !CONNECTOR_TYPES.has(element.type ?? ""))
+    .filter((element) => !(element.type === "rectangle" && isExplicitFrameElement(element)))
+    .map(toBounds)
+    .filter((bounds): bounds is Bounds => Boolean(bounds));
+  if (contentBounds.length < 4) {
+    return [];
+  }
+
+  const coveringFrames = frameBounds.filter((frame) => coversBounds(frame, contentBounds, 8));
+  if (coveringFrames.length < 2) {
+    return [];
+  }
+
+  return [
+    {
+      severity: "error",
+      code: "redundant-outer-frame",
+      message:
+        "Multiple outer frames cover the same board content. Keep one enclosing frame and remove the redundant system/user frame.",
+      elementIds: coveringFrames.map((frame) => frame.id),
+    },
+  ];
 };
 
 const findContainedTextBoxIssues = (
@@ -237,6 +274,14 @@ const findShapeOverlaps = (shapes: Bounds[]): SceneValidationIssue[] => {
 
 const isDecorativeShape = (element: ElementRecord | undefined) =>
   element?.customData?.role === "shadow" || element?.customData?.role === "decoration";
+
+const isExplicitFrameElement = (element: ElementRecord) => {
+  if (element.customData?.role === "frame") {
+    return true;
+  }
+  const id = String(element.id ?? "").toLowerCase();
+  return id.includes("frame") || id.includes("boundary");
+};
 
 const isIntentionalOverlap = (id: string) =>
   id.includes("shadow") || id.includes("decor") || id.includes("overlap");
@@ -537,6 +582,19 @@ const contains = (outer: Bounds, inner: Bounds) =>
   inner.y >= outer.y &&
   inner.x + inner.width <= outer.x + outer.width &&
   inner.y + inner.height <= outer.y + outer.height;
+
+const coversBounds = (outer: Bounds, boundsList: Bounds[], padding: number) => {
+  const x = Math.min(...boundsList.map((item) => item.x));
+  const y = Math.min(...boundsList.map((item) => item.y));
+  const right = Math.max(...boundsList.map((item) => item.x + item.width));
+  const bottom = Math.max(...boundsList.map((item) => item.y + item.height));
+  return (
+    outer.x <= x - padding &&
+    outer.y <= y - padding &&
+    outer.x + outer.width >= right + padding &&
+    outer.y + outer.height >= bottom + padding
+  );
+};
 
 const intersectionArea = (first: Bounds, second: Bounds) => {
   const width = Math.max(

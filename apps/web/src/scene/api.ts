@@ -13,11 +13,12 @@ export const loadScene = async (filePath: string): Promise<SceneEnvelope> => {
 export const saveScene = async (
   filePath: string,
   scene: SceneSnapshot,
+  baseUpdatedAt?: string,
 ): Promise<SceneEnvelope> => {
   const response = await fetch(`${apiBase}/api/scene`, {
     method: "POST",
     headers: { "content-type": "application/json" },
-    body: JSON.stringify({ filePath, scene }),
+    body: JSON.stringify({ filePath, scene, baseUpdatedAt }),
   });
   if (!response.ok) {
     throw new Error(await readError(response));

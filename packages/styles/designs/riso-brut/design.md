@@ -24,7 +24,7 @@ Use two or three accents per board. Do not use every bright color in every compo
 
 ## Typography
 
-- Font family: use Excalidraw sans (`fontFamily: 2`) for readable multilingual text; avoid Virgil/handwritten text unless the user explicitly asks for it.
+- Font family: in source SVG use `Inter, Arial, Noto Sans SC, sans-serif` or the closest available system sans. Keep text as real `<text>`/`<tspan>` and avoid handwritten fonts unless the user explicitly asks for them.
 
 - Title: 36-48px, bold, compact.
 - Stage label: 16-20px, bold, uppercase only when the label is short.
@@ -39,6 +39,14 @@ Use two or three accents per board. Do not use every bright color in every compo
 - Cards can intentionally collide visually through color, but text and connectors must remain clear.
 - Hard shadows are duplicate rectangles offset by 10-12px behind the real shape.
 - Avoid blur, gradients, opacity, or soft shadows.
+
+## SVG Source Rules
+
+- Generate this style as restricted SVG first, then convert with `agentdraw import-svg`.
+- Use only `svg`, `g`, `rect`, `circle`, `ellipse`, `line`, `polyline`, `text`, `tspan`, `defs`, and `marker` for editable boards.
+- Use `text-anchor="middle"` and `dominant-baseline="middle"` for centered labels. Use `tspan` with explicit `x` and `dy` values for multiline labels.
+- Put connector endpoints on the edge of shapes or just outside them. Do not start or end arrows deep inside cards.
+- Avoid `foreignObject`, `image`, `clipPath`, `mask`, `filter`, gradients, arbitrary `path` geometry, and text converted to outlines.
 
 ## Components
 

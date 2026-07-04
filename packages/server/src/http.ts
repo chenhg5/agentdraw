@@ -85,9 +85,18 @@ const handleApi = async (
     const body = await readJsonBody<{
       filePath?: string;
       scene?: SceneSnapshot;
+      baseUpdatedAt?: string;
     }>(request);
     const filePath = normalizeScenePath(body.filePath ?? "", cwd);
     const current = await readOrCreateSceneFile(filePath);
+    if (!isCurrentSave(body.baseUpdatedAt, current.updatedAt)) {
+      sendJson(response, 409, {
+        error:
+          "Scene file changed after this browser tab loaded it. Refresh before saving to avoid overwriting newer content.",
+        currentUpdatedAt: current.updatedAt,
+      });
+      return;
+    }
     const next = mergeSceneSnapshot(current, body.scene ?? {
       elements: [],
       appState: {},
@@ -100,6 +109,9 @@ const handleApi = async (
 
   sendJson(response, 404, { error: "Unknown API route." });
 };
+
+const isCurrentSave = (baseUpdatedAt: unknown, currentUpdatedAt: string) =>
+  typeof baseUpdatedAt === "string" && baseUpdatedAt === currentUpdatedAt;
 
 const readJsonBody = async <T>(request: IncomingMessage): Promise<T> => {
   const chunks: Buffer[] = [];

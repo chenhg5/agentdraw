@@ -1,18 +1,20 @@
 # AgentDraw Style System
 
-AgentDraw should treat a style as a small design system, not as a color preset.
+AgentDraw treats a style as a small design system, not as a color preset.
 
-The scene file remains the editable storage format:
+The primary agent pipeline is SVG-first:
 
 ```text
-agent prompt -> design system -> scene builder -> provider adapter -> .agentdraw.json
+agent prompt -> design system -> restricted SVG -> SVG importer -> editable .agentdraw.json
 ```
 
-This keeps the browser editor simple while giving agents enough guidance to produce boards that look designed.
+This is the current preferred architecture because agents produce cleaner alignment, spacing, and
+composition in SVG than in raw whiteboard JSON. The browser editor still receives editable scene
+objects, so users can manually refine the result.
 
 ## What A Style Owns
 
-Each style should have a `design.md` that an agent can read before generating a board.
+Each style has a `design.md` that an agent can read before generating a board.
 
 Required sections:
 
@@ -22,25 +24,47 @@ Required sections:
 - `geometry`: corner radius, stroke width, density, spacing grid, and allowed shapes.
 - `components`: reusable recipes such as cards, lanes, callouts, tables, badges, dividers, shadows, and connectors.
 - `layout`: recommended narrative structures such as pipeline, hub-and-spoke, swimlane, matrix, timeline, and system map.
+- `svg rules`: how to express the style in the supported SVG subset.
 - `do / avoid`: concrete constraints that prevent generic palette swaps.
 - `validation`: style-specific checks, such as minimum card padding, maximum text length per line, connector clearance, and intentional-overlap rules.
 
+## SVG Import Boundary
+
+The design system should tell agents how to draw the source SVG. The importer translates that source
+into editable scene elements.
+
+Supported source tags:
+
+- `svg`, `g`, `rect`, `circle`, `ellipse`
+- `line`, `polyline`
+- `text`, `tspan`
+- `defs`, `marker` for arrowheads
+
+Supported transform:
+
+- `translate(x y)` or `translate(x,y)` on groups
+
+Avoid in editable boards:
+
+- `foreignObject`, `image`, `clipPath`, `mask`, `filter`
+- gradients
+- arbitrary `path` geometry, except marker arrowhead definitions
+- text converted to outlines
+
 ## Provider Boundary
 
-The design system must be provider-neutral. It should describe intent and recipes; adapters translate those recipes into canvas elements.
+The editable output is still provider-specific. Today the provider is Excalidraw, so the importer
+maps SVG geometry into Excalidraw-compatible rectangles, ellipses, arrows, lines, and text.
 
-For Excalidraw:
+For Excalidraw output:
 
-- formal styles use `roughness: 0`, sharp corners, sans text, and elbow connectors;
+- formal styles use low roughness, sharp or small-radius corners, sans text, and clean connectors;
 - expressive styles may use roughness, larger color blocks, hard offset shadows, and sticker-like cards;
-- shadows are duplicated shapes behind the main shape, not CSS or image effects;
-- text must still be real editable text, not outlines or screenshots.
+- shadows are duplicated editable shapes behind the main shape, not CSS or image effects;
+- text must remain editable text, not outlines or screenshots.
 
-For future providers:
-
-- SVG import can be a compiler target, but not the canonical format;
-- tldraw or another canvas can be another adapter if its editable object model is useful;
-- draw.io-like output should come from the same semantic scene builder, not a separate hand-built JSON dialect.
+Future providers can share the same SVG source and design systems if their editable object model is
+useful enough.
 
 ## Recommended Package Shape
 
@@ -51,21 +75,21 @@ packages/styles/
   src/design.ts
 
 packages/scene/
-  src/builders/
-    layout.ts
-    components.ts
-    excalidraw.ts
+  src/svg-import.ts
   src/validate.ts
+  src/repair.ts
 ```
 
-`catalog.ts` exposes searchable metadata. `design.md` carries the agent-facing rules. `design.ts` exposes structured values that code can use without parsing Markdown.
+`catalog.ts` exposes searchable metadata. `design.md` carries the agent-facing rules. `design.ts`
+exposes structured values that code can use without parsing Markdown.
 
-## Builder API Direction
+## Builder Direction
 
-Agents should not have to hand-place every primitive. They should be able to call higher-level recipes:
+The next useful abstraction is not a separate JSON dialect. It is a small SVG helper layer that
+emits the supported SVG subset:
 
 ```ts
-const board = createBoard({ styleId: "riso-brut", title: "Launch Room Loop" });
+const board = createSvgBoard({ styleId: "boardroom", title: "Launch Room Loop" });
 
 board.pipeline({
   lanes: ["Sense", "Frame", "Publish", "Learn"],
@@ -77,16 +101,17 @@ board.pipeline({
   ],
 });
 
-board.validate();
-board.toExcalidrawScene();
+board.toSvg();
 ```
 
-The builder should emit normal `.agentdraw.json`, so users can still open and edit the result manually.
+The SVG is then converted through `agentdraw import-svg` into normal `.agentdraw.json`, so users can
+still open and edit the board manually.
 
 ## Feasibility
 
 This is feasible without replacing Excalidraw.
 
-The first useful step is to add `design.md` files for the bundled styles and teach examples/scripts to read structured style rules. The second step is a small component/layout builder so agents generate semantic cards, tables, lanes, and connectors instead of raw coordinates. The third step is style-aware validation, so each design system can define what counts as good spacing, text length, shadow usage, and connector routing.
-
-The risky path is trying to make provider switching solve design quality. Excalidraw can produce more formal boards if the generated scene uses sharper geometry, lower roughness, tighter typography, and stronger layout recipes. Provider choice matters less than the upstream design contract.
+The key bet is that SVG is the stable generation layer and Excalidraw is the editable interaction
+layer. The risky path is forcing agents to hand-place raw Excalidraw JSON. A style-aware SVG source
+keeps model output cleaner, keeps token use understandable, and still gives users editable objects
+after import.

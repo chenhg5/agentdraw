@@ -7,6 +7,7 @@ export type SceneRepairOptions = {
   containerPadding?: number;
   addOuterFrame?: boolean;
   frameColor?: string;
+  maxCornerRadiusPx?: number;
 };
 
 export type SceneRepairChange = {
@@ -73,6 +74,8 @@ export const repairScene = (
     }
     if (isFrameLikeElement(element)) {
       repairFrameElement(element, frameColor, changes);
+    } else if (shouldRepairSharpRectangle(element, options.maxCornerRadiusPx)) {
+      repairSharpRectangle(element, options.maxCornerRadiusPx ?? 0, changes);
     }
   }
 
@@ -149,6 +152,29 @@ const repairFrameElement = (
       message: `Set outer frame strokeColor to ${frameColor}.`,
     });
   }
+};
+
+const shouldRepairSharpRectangle = (
+  element: ElementRecord,
+  maxCornerRadiusPx: number | undefined,
+) =>
+  element.type === "rectangle" &&
+  typeof maxCornerRadiusPx === "number" &&
+  maxCornerRadiusPx <= 6 &&
+  element.roundness !== null;
+
+const repairSharpRectangle = (
+  element: ElementRecord,
+  maxCornerRadiusPx: number,
+  changes: SceneRepairChange[],
+) => {
+  const id = element.id ?? "(unknown)";
+  element.roundness = null;
+  changes.push({
+    elementId: id,
+    code: "rectangle-square-corners",
+    message: `Set rectangle roundness to null to match the formal corner radius contract 0-${maxCornerRadiusPx}px.`,
+  });
 };
 
 const repairTextElement = (
@@ -439,7 +465,7 @@ const removeRedundantSystemFrames = (
   const userFrameExists = records
     .filter((element) => element.id !== "agentdraw-system-frame")
     .filter(isExplicitFrameElement)
-    .some((element) => coversBounds(element, contentBounds, 12));
+    .some((element) => coversBounds(element, contentBounds, 8));
   if (!userFrameExists) {
     return;
   }

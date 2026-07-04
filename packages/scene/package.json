@@ -24,5 +24,8 @@
   },
   "publishConfig": {
     "access": "restricted"
+  },
+  "dependencies": {
+    "fast-xml-parser": "^5.9.3"
   }
 }

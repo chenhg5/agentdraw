@@ -6,6 +6,7 @@ import net from "node:net";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import {
+  importSvgToAgentDrawScene,
   normalizeScenePath,
   repairScene,
   readOrCreateSceneFile,
@@ -79,6 +80,13 @@ type ExportOptions = GlobalOptions & {
   outputPath?: string;
   renderFormat: RenderFormat;
   scale: number;
+};
+
+type ImportSvgOptions = GlobalOptions & {
+  svgPath: string;
+  outputPath?: string;
+  title?: string;
+  styleId?: string;
 };
 
 type GalleryOptions = GlobalOptions & {
@@ -223,6 +231,9 @@ const main = async () => {
     case "export":
       await exportCommand(parseExportOptions(args, context.globals));
       return;
+    case "import-svg":
+      await importSvgCommand(parseImportSvgOptions(args, context.globals));
+      return;
     case "gallery":
       await galleryCommand(parseGalleryOptions(args, context.globals));
       return;
@@ -358,6 +369,7 @@ const repairCommand = async (options: RepairOptions) => {
     connectorStrokeWidth: contract.connectors.minStrokeWidth,
     addOuterFrame: contract.formality === "high",
     frameColor: contract.palette.muted,
+    maxCornerRadiusPx: contract.geometry.cornerRadiusPx[1],
   });
   const afterValidation = validateSceneWithContract(repaired.scene, options.styleId);
   const skippedWrite = options.write && isValidationWorse(afterValidation, beforeValidation);
@@ -463,6 +475,46 @@ const exportCommand = async (options: ExportOptions) => {
       message: `Exported ${options.renderFormat.toUpperCase()} preview.`,
     },
     `Exported ${options.renderFormat.toUpperCase()}: ${outputPath}`,
+    options,
+  );
+};
+
+const importSvgCommand = async (options: ImportSvgOptions) => {
+  const svgPath = path.isAbsolute(options.svgPath)
+    ? options.svgPath
+    : path.resolve(options.cwd, options.svgPath);
+  const outputPath = options.outputPath
+    ? path.isAbsolute(options.outputPath)
+      ? options.outputPath
+      : path.resolve(options.cwd, options.outputPath)
+    : defaultImportedScenePath(svgPath);
+  const svg = readFileSync(svgPath, "utf8");
+  const result = importSvgToAgentDrawScene(svg, {
+    title: options.title,
+    styleId: options.styleId,
+  });
+  await writeSceneFile(outputPath, result.scene);
+  const validation = validateSceneWithContract(result.scene, options.styleId);
+
+  writeOutput(
+    {
+      ok: true,
+      command: "import-svg",
+      svgPath,
+      outputPath,
+      styleId: result.scene.styleId,
+      elementCount: result.scene.elements.length,
+      warningCount: result.warnings.length,
+      warnings: result.warnings,
+      validationOk: validation.errorCount === 0,
+      validation,
+    },
+    [
+      `Imported SVG into AgentDraw scene: ${outputPath}`,
+      `Elements: ${result.scene.elements.length}`,
+      result.warnings.length ? `Warnings: ${result.warnings.length}` : "Warnings: 0",
+      `Validation: ${validation.errorCount} error(s), ${validation.warningCount} warning(s)`,
+    ].join("\n"),
     options,
   );
 };
@@ -754,6 +806,28 @@ const parseExportOptions = (args: string[], globals: GlobalOptions): ExportOptio
   };
 };
 
+const parseImportSvgOptions = (args: string[], globals: GlobalOptions): ImportSvgOptions => {
+  const values = parseCommandFlags(args, {
+    booleanFlags: [],
+    valueFlags: ["--out", "--output", "--title", "--style"],
+  });
+  assertNoUnknownFlags(values.unknownFlags, "import-svg");
+  if (values.positionals.length !== 1) {
+    throw new CliError("missing_argument", "The import-svg command requires one SVG file.", {
+      exitCode: EXIT_USAGE_ERROR,
+      suggestion: "Run: agentdraw import-svg <file.svg> --out <board.agentdraw.json>",
+      input: { args },
+    });
+  }
+  return {
+    ...globals,
+    svgPath: values.positionals[0],
+    outputPath: values.valueFlags["--out"] ?? values.valueFlags["--output"],
+    title: values.valueFlags["--title"],
+    styleId: values.valueFlags["--style"],
+  };
+};
+
 const parseGalleryOptions = (args: string[], globals: GlobalOptions): GalleryOptions => {
   const values = parseCommandFlags(args, {
     booleanFlags: ["--open", "--no-open"],
@@ -963,6 +1037,11 @@ const resolveExportPath = (
   }
   const parsed = path.parse(filePath);
   return path.join(parsed.dir, `${parsed.name}.${format}`);
+};
+
+const defaultImportedScenePath = (svgPath: string) => {
+  const parsed = path.parse(svgPath);
+  return path.join(parsed.dir, `${parsed.name}.agentdraw.json`);
 };
 
 const assertSafePath = (filePath: string) => {
@@ -1194,6 +1273,7 @@ const scoreSceneQuality = (
     "color-outside-contract",
     "roughness-outside-contract",
     "stroke-width-outside-contract",
+    "corner-radius-outside-contract",
     "font-size-outside-contract",
     "font-family-outside-contract",
     "too-many-type-sizes",
@@ -1522,9 +1602,11 @@ const guidePayload = (topic: string, detail?: string) => {
           "Understand the board purpose, audience, density, and tone.",
           "Run agentdraw guide styles --json and choose one style id.",
           "Run agentdraw guide style <style-id> and agentdraw guide contract <style-id> to load the selected design system and machine-readable contract.",
-          "Create or patch a .agentdraw.json scene with editable primitives.",
-          "Run agentdraw validate <file> --format json and repair reported element ids.",
-          "If common display defaults are wrong, run agentdraw repair <file> --style <style-id> --write, then validate again.",
+          "Create a restricted SVG first. Use visible SVG geometry, grid-aligned layout, real <text>/<tspan> labels, and the selected style rules.",
+          "Preview or inspect the SVG. Fix layout, alignment, text wrapping, arrows, and visual hierarchy while it is still simple SVG.",
+          "Run agentdraw import-svg .agentdraw/board.svg --out .agentdraw/board.agentdraw.json --style <style-id> --title <title> --format json.",
+          "If import warnings mention unsupported SVG tags, edit the SVG and import again.",
+          "Run agentdraw repair <file> --style <style-id> --write, then validate.",
           "Run agentdraw quality <file> --style <style-id> --format json, then self-check task fit against the original prompt.",
           "For higher-quality review, run agentdraw export <file> --format png --out <preview.png> and inspect the rendered preview before opening.",
           "Run agentdraw open <file> --background --open --format json when a local browser is available. On a remote or headless host, use --background --no-open and return the printed local URL.",
@@ -1536,6 +1618,7 @@ const guidePayload = (topic: string, detail?: string) => {
           styles: "agentdraw guide styles --json",
           style: "agentdraw guide style <style-id>",
           contract: "agentdraw guide contract <style-id> --json",
+          importSvg: "agentdraw import-svg .agentdraw/board.svg --out .agentdraw/board.agentdraw.json --style <style-id> --title <title> --format json",
           validate: "agentdraw validate .agentdraw/board.agentdraw.json --style <style-id> --format json",
           repair: "agentdraw repair .agentdraw/board.agentdraw.json --style <style-id> --write --format json",
           qualityCheck: "agentdraw quality .agentdraw/board.agentdraw.json --style <style-id> --format json",
@@ -1596,6 +1679,7 @@ const guidePayload = (topic: string, detail?: string) => {
         ],
         selfCheck: [
           "If validation fails, repair the reported element ids before opening the board.",
+          "Prefer fixing layout in the source SVG, then re-importing, before hand-editing generated scene JSON.",
           "Run agentdraw quality <file> --style <style-id> --format json. Treat pass as a preflight result, not a substitute for checking the user's prompt.",
           "If the result looks like a generic diagram, load a stronger style with agentdraw guide styles --json and agentdraw guide style <style-id> --format text.",
           "If the user did not express a style preference and the choice is not obvious, open the gallery and ask before committing.",
@@ -1604,6 +1688,8 @@ const guidePayload = (topic: string, detail?: string) => {
           "If text contains emoji, replace it with plain labels or simple editable shapes unless the user explicitly requested emoji.",
           "If connector endpoints sit inside a shape instead of on its edge, move the endpoint to the nearest edge or reroute the connector.",
           "If connectors cross text, reroute or change the layout.",
+          "If a formal style reports corner-radius-outside-contract, remove Excalidraw proportional roundness instead of making cards pill-shaped.",
+          "If redundant-outer-frame is reported, keep one global frame and delete the extra system/user frame.",
         ],
         scorecard: {
           pass: "All dimensions pass and validation has zero errors.",
@@ -1616,23 +1702,27 @@ const guidePayload = (topic: string, detail?: string) => {
     case "scene":
       return {
         topic,
-        envelope: {
-          type: "agentdraw/scene",
-          version: 1,
-          title: "System map",
-          styleId: "system-formal",
-          providerId: "excalidraw",
-          elements: [],
-          appState: {},
-          files: {},
+        svgFirst: {
+          description:
+            "AgentDraw's primary agent workflow is SVG-first: draw a restricted SVG, then import it into editable .agentdraw.json.",
+          supportedTags: ["svg", "g", "rect", "circle", "ellipse", "line", "polyline", "text", "tspan", "defs", "marker"],
+          supportedTransforms: ["translate(x y)", "translate(x,y)"],
+          avoidTags: ["path except marker arrowheads", "foreignObject", "image", "clipPath", "mask", "filter", "linearGradient", "radialGradient"],
+          command:
+            "agentdraw import-svg .agentdraw/board.svg --out .agentdraw/board.agentdraw.json --style <style-id> --title <title> --format json",
+        },
+        editableOutput: {
+          format: ".agentdraw.json",
+          purpose:
+            "Editable browser storage produced by import-svg. Treat it as output, not the primary source format.",
+          advancedFields: ["styleId", "providerId", "elements", "appState", "files"],
         },
         notes: [
-          "The scene is editable output, not a screenshot.",
-          "Use editable text, rectangles, ellipses, diamonds, arrows, and lines.",
-          "For Excalidraw text, include text, originalText, fontSize, fontFamily, lineHeight, baseline, textAlign, verticalAlign, and autoResize. AgentDraw repairs missing display defaults, but complete text fields are more portable.",
-          "Use fontFamily 2 for default sans text unless agentdraw guide contract <style-id> says otherwise. Avoid fontFamily 1 for Chinese or multilingual boards unless the user explicitly asks for a hand-drawn look.",
-          "Use title-size text for one clear title, heading-size text for sections, and body-size text for details. AgentDraw editor text is not rich text, so hierarchy should come from size, contrast, and spacing.",
+          "The SVG is the source draft; the .agentdraw.json scene is the editable browser output.",
+          "Use real SVG text, rectangles, ellipses, lines, and polylines. Keep labels as text/tspan, not outlined paths or screenshots.",
+          "Use title-size text for one clear title, heading-size text for sections, and body-size text for details. Hierarchy should come from size, weight, contrast, spacing, and grouping.",
           "Avoid emoji in board text unless the user explicitly asks for them.",
+          "Direct .agentdraw.json generation is advanced escape-hatch usage. Prefer import-svg for new agent-generated boards.",
           "Do not persist viewport runtime fields such as scrollX, scrollY, zoom, width, height, offsetTop, selectedElementIds, or editingTextElement.",
           "Keep style guidance in the design system, not as extra metadata in the scene.",
         ],
@@ -1641,72 +1731,26 @@ const guidePayload = (topic: string, detail?: string) => {
       return {
         topic,
         rules: [
-          "Prefer these primitive patterns over hand-calculating Excalidraw text layout.",
-          "For a centered label inside a shape, create a rectangle and a separate text element inset by 12-20px, with textAlign center, verticalAlign middle, autoResize false, fontFamily 2, and lineHeight 1.25.",
-          "Do not set text x/y equal to the container top-left unless the text box is intentionally full-height and autoResize is false.",
-          "For multilingual boards, use fontFamily 2 unless the selected contract explicitly requires mono or hand lettering.",
-          "Use title/heading/body sizes from the selected contract; do not simulate hierarchy with emoji.",
+          "Prefer SVG layout patterns first; only use raw scene primitives for advanced patching after import.",
+          "For a centered label in SVG, draw the shape, then place text at the visual center with text-anchor=\"middle\" and dominant-baseline=\"middle\". Use tspans for multiple lines.",
+          "For multiline SVG labels, set the first tspan dy to a negative offset and subsequent lines to roughly 1.2em so the block is vertically centered.",
+          "Keep text as real SVG text/tspan. Do not convert text to paths.",
           "For arrows, route from edge center to edge center, keep at least 16px from text boxes, use the contract muted or ink color, and avoid crossing headers.",
+          "Use rect rx/ry sparingly. Formal cards should use small radii, not pill-shaped corners.",
         ],
-        centeredLabel: {
-          rectangle: {
-            id: "card",
-            type: "rectangle",
-            x: 100,
-            y: 100,
-            width: 260,
-            height: 88,
-            strokeColor: "#172033",
-            backgroundColor: "#F7F9FC",
-            fillStyle: "solid",
-            strokeWidth: 2,
-            roughness: 0,
-            roundness: { type: 2 },
-            boundElements: [{ id: "card-label", type: "text" }],
-          },
-          text: {
-            id: "card-label",
-            type: "text",
-            x: 116,
-            y: 116,
-            width: 228,
-            height: 56,
-            text: "Centered label",
-            originalText: "Centered label",
-            fontSize: 16,
-            fontFamily: 2,
-            lineHeight: 1.25,
-            baseline: 34,
-            textAlign: "center",
-            verticalAlign: "middle",
-            autoResize: false,
-            containerId: "card",
-            strokeColor: "#172033",
-            backgroundColor: "transparent",
-            fillStyle: "solid",
-            roughness: 0,
-          },
+        svgCard: {
+          rect: '<rect x="120" y="120" width="260" height="88" rx="6" fill="#F7F9FC" stroke="#172033" stroke-width="2" />',
+          text: '<text x="250" y="164" text-anchor="middle" dominant-baseline="middle" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="650" fill="#172033">Centered label</text>',
         },
-        edgeArrow: {
-          id: "arrow-a-b",
-          type: "arrow",
-          x: 360,
-          y: 144,
-          width: 120,
-          height: 0,
-          points: [
-            [0, 0],
-            [120, 0],
-          ],
-          strokeColor: "#64748B",
-          backgroundColor: "transparent",
-          fillStyle: "solid",
-          strokeWidth: 2,
-          roughness: 0,
-          startArrowhead: null,
-          endArrowhead: "arrow",
-          startBinding: null,
-          endBinding: null,
+        svgMultilineCard: {
+          rect: '<rect x="120" y="120" width="300" height="116" rx="6" fill="#F7F9FC" stroke="#172033" stroke-width="2" />',
+          text: '<text x="270" y="178" text-anchor="middle" dominant-baseline="middle" font-family="Inter, Arial, sans-serif" font-size="15" fill="#172033"><tspan x="270" dy="-0.6em">Primary label</tspan><tspan x="270" dy="1.2em">Secondary detail</tspan></text>',
+        },
+        svgArrow: {
+          defs:
+            '<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth"><path d="M 0 0 L 10 5 L 0 10 z" fill="#64748B" /></marker></defs>',
+          line:
+            '<line x1="380" y1="164" x2="520" y2="164" stroke="#64748B" stroke-width="2" marker-end="url(#arrow)" />',
         },
       };
     case "rules":
@@ -1714,11 +1758,14 @@ const guidePayload = (topic: string, detail?: string) => {
         topic,
         rules: [
           "Do not make screenshots when an editable board is expected.",
+          "For new boards, generate restricted SVG first and import it; do not start by hand-writing .agentdraw.json unless you are patching an existing scene.",
           "Do not use a style as a palette swap; follow its typography, layout, components, and avoid rules.",
           "Do not use system-formal just because examples mention it. Pick the style by audience and tone, or show the gallery and ask.",
           "Use agentdraw guide contract <style-id> as the machine-readable design constraint.",
           "Keep text editable and generously sized.",
           "Avoid emoji and decorative pictograms unless the user explicitly asks for them.",
+          "Use only supported SVG tags for import: svg, g, rect, circle, ellipse, line, polyline, text, tspan, defs, marker.",
+          "Do not use SVG foreignObject, image, clipPath, mask, filter, gradients, or arbitrary path geometry for editable boards.",
           "Do not rely on saved zoom or scroll state for presentation; AgentDraw fits the board on open.",
           "Run validation before opening or delivering the scene.",
           "Run repair before a second validation pass when text fields, fonts, or connector colors are inconsistent.",
@@ -1894,19 +1941,26 @@ const formatGuideText = (topic: string, detail?: string) => {
 
   if (topic === "scene") {
     const sceneGuide = guidePayload("scene") as {
-      envelope: Record<string, unknown>;
+      svgFirst: Record<string, unknown>;
+      editableOutput: Record<string, unknown>;
       notes: string[];
     };
     return [
       "# AgentDraw Scene Contract",
       "",
-      "Use this editable scene envelope:",
+      "Primary workflow: draw a restricted SVG first, then import it into editable AgentDraw JSON.",
       "",
       "```json",
-      JSON.stringify(sceneGuide.envelope, null, 2),
+      JSON.stringify(sceneGuide.svgFirst, null, 2),
       "```",
       "",
-      "The scene is the editable output. The design system is guidance for creating it, not extra metadata that must be embedded in the file.",
+      "Editable output:",
+      "",
+      "```json",
+      JSON.stringify(sceneGuide.editableOutput, null, 2),
+      "```",
+      "",
+      "The SVG is the source draft. Scene JSON is generated editable output. Use `agentdraw schema` only when debugging or patching existing files.",
       "",
       "## Notes",
       "",
@@ -1917,28 +1971,35 @@ const formatGuideText = (topic: string, detail?: string) => {
   if (topic === "patterns") {
     const patternsGuide = guidePayload("patterns") as {
       rules: string[];
-      centeredLabel: Record<string, unknown>;
-      edgeArrow: Record<string, unknown>;
+      svgCard: Record<string, unknown>;
+      svgMultilineCard: Record<string, unknown>;
+      svgArrow: Record<string, unknown>;
     };
     return [
       "# AgentDraw Primitive Patterns",
       "",
-      "Use these patterns when generating Excalidraw-backed AgentDraw scenes. They reduce common model errors around vertical centering, text clipping, fonts, and connectors.",
+      "Use SVG patterns first, then import to editable AgentDraw JSON. These patterns reduce common model errors around vertical centering, text clipping, fonts, and connectors.",
       "",
       "## Rules",
       "",
       ...patternsGuide.rules.map((rule) => `- ${rule}`),
       "",
-      "## Centered Label",
+      "## SVG Centered Card",
       "",
       "```json",
-      JSON.stringify(patternsGuide.centeredLabel, null, 2),
+      JSON.stringify(patternsGuide.svgCard, null, 2),
       "```",
       "",
-      "## Edge Arrow",
+      "## SVG Multiline Card",
       "",
       "```json",
-      JSON.stringify(patternsGuide.edgeArrow, null, 2),
+      JSON.stringify(patternsGuide.svgMultilineCard, null, 2),
+      "```",
+      "",
+      "## SVG Arrow",
+      "",
+      "```json",
+      JSON.stringify(patternsGuide.svgArrow, null, 2),
       "```",
     ].join("\n");
   }
@@ -1963,6 +2024,7 @@ const formatGuideText = (topic: string, detail?: string) => {
     "npx @aidraw/agentdraw@latest guide styles --json",
     "npx @aidraw/agentdraw@latest gallery --open --format json",
     "npx @aidraw/agentdraw@latest guide style <style-id>",
+    "npx @aidraw/agentdraw@latest import-svg .agentdraw/board.svg --out .agentdraw/board.agentdraw.json --style <style-id> --format json",
     "```",
     "",
     "Workflow:",
@@ -2158,6 +2220,7 @@ const helpText = (command: string | undefined) => {
         "AgentDraw - local editable whiteboard workspace for coding agents.",
         "",
         "Examples:",
+        "  agentdraw import-svg diagram.svg --out board.agentdraw.json --style boardroom --json",
         "  agentdraw open board.agentdraw.json --background --open",
         "  agentdraw open board.agentdraw.json --background --no-open --format json",
         "  agentdraw validate board.agentdraw.json --format json",
@@ -2175,6 +2238,7 @@ const helpText = (command: string | undefined) => {
         "  repair     Normalize deterministic scene display defaults, then validate.",
         "  quality    Score scene quality against the AgentDraw rubric.",
         "  export     Export a rendered SVG or PNG preview for visual review.",
+        "  import-svg Convert a restricted SVG into an editable AgentDraw scene.",
         "  gallery    Generate a local HTML gallery for choosing AgentDraw themes.",
         "  validate-style",
         "             Validate installed design guides against the design-contract baseline.",
@@ -2321,6 +2385,32 @@ const helpText = (command: string | undefined) => {
         "",
         "Notes:",
         "  Use this before opening when an agent needs a visual preview for quality review.",
+      ].join("\n");
+    case "import-svg":
+      return [
+        "Convert a restricted SVG into an editable AgentDraw scene. This is the recommended agent generation path.",
+        "",
+        "Examples:",
+        "  agentdraw import-svg diagram.svg --out board.agentdraw.json --style boardroom --json",
+        "  agentdraw import-svg diagram.svg --title \"Agent workflow\"",
+        "",
+        "Usage:",
+        "  agentdraw import-svg <file.svg> [--out <board.agentdraw.json>] [--style <style-id>] [--title <title>]",
+        "",
+        "Arguments:",
+        "  file.svg            Required SVG path.",
+        "",
+        "Flags:",
+        "  --out <path>        Output AgentDraw JSON path. Default: same basename with .agentdraw.json.",
+        "  --output <path>     Alias for --out.",
+        "  --style <style-id>  Scene style id. Default: boardroom.",
+        "  --title <title>     Scene title.",
+        "",
+        "Notes:",
+        "  Supported tags: svg, g, rect, circle, ellipse, text/tspan, line, polyline, defs, marker.",
+        "  Supported transforms: translate(x y) and translate(x,y).",
+        "  Avoid foreignObject, image, clipPath, mask, filter, gradients, and arbitrary path geometry.",
+        "  The command succeeds when conversion succeeds. Validation errors are returned as advisory data for repair/validate follow-up.",
       ].join("\n");
     case "gallery":
       return [
@@ -2512,6 +2602,25 @@ const commandSchema = (commandPath: string[]) => {
         "Use exported previews when an agent or reviewer needs to inspect rendered output before opening the editor.",
       ],
     },
+    "import-svg": {
+      description: "Convert a restricted SVG into an editable AgentDraw scene. This is the recommended agent generation path.",
+      usage: "agentdraw import-svg <file.svg> [--out <board.agentdraw.json>] [--style <style-id>] [--title <title>]",
+      arguments: [{ name: "file.svg", required: true }],
+      flags: [
+        { name: "--out", type: "string", required: false },
+        { name: "--output", type: "string", required: false },
+        { name: "--style", type: "string", required: false, default: "boardroom" },
+        { name: "--title", type: "string", required: false },
+        { name: "--format", type: "enum", values: ["json", "text"], required: false },
+        { name: "--json", type: "boolean", required: false },
+      ],
+      examples: [
+        "agentdraw import-svg diagram.svg --out board.agentdraw.json --style boardroom --json",
+      ],
+      notes: [
+        "Supported SVG subset: svg, g, rect, circle, ellipse, text/tspan, line, polyline, defs, marker, and g translate(). Unsupported tags are skipped with warnings.",
+      ],
+    },
     gallery: {
       description: "Generate a local HTML gallery for choosing AgentDraw themes.",
       usage: "agentdraw gallery [output.html] [--open|--no-open] [--out <path>]",
@@ -2685,7 +2794,7 @@ const errorPayload = (error: unknown): AgentDrawErrorPayload => {
       message: error.message,
       suggestion:
         error.name === "SyntaxError"
-          ? "Fix the scene JSON, then run: agentdraw validate <file>"
+          ? "Fix the input file, then run the command again."
           : "Run: agentdraw doctor",
       retryable: false,
     };

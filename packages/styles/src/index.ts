@@ -232,7 +232,7 @@ export function getDesignContract(styleOrId: AgentDrawStyle | string): DesignCon
     ],
     avoid: [
       "palette-only restyling",
-      "Excalidraw Virgil/handwritten font unless explicitly requested by the user",
+      "handwritten or sketch fonts unless explicitly requested by the user",
       "emoji used as icons, bullets, or status markers",
       "uncontained or clipped text",
       "connectors crossing labels, titles, or table headers",
@@ -372,6 +372,19 @@ export function validateSceneAgainstDesignContract(
           elementIds: [element.id],
         });
       }
+    }
+    if (
+      element.type === "rectangle" &&
+      contract.geometry.cornerRadiusPx[1] <= 6 &&
+      element.roundness !== null &&
+      element.roundness !== undefined
+    ) {
+      issues.push({
+        severity: "warning",
+        code: "corner-radius-outside-contract",
+        message: `Rectangle uses Excalidraw roundness, but ${style.id} expects square or lightly rounded corners (${contract.geometry.cornerRadiusPx[0]}-${contract.geometry.cornerRadiusPx[1]}px).`,
+        elementIds: [element.id],
+      });
     }
     if (element.type === "text" && typeof element.fontSize === "number") {
       if (

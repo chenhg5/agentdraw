@@ -22,12 +22,20 @@ Use this style for technical maps where the relationships matter more than decor
 
 ## Typography
 
-- Font family: use Excalidraw sans (`fontFamily: 2`) for readable multilingual text; avoid Virgil/handwritten text unless the user explicitly asks for it.
+- Font family: in source SVG use `Inter, Arial, Noto Sans SC, sans-serif` or the closest available system sans. Keep text as real `<text>`/`<tspan>` and avoid handwritten fonts unless the user explicitly asks for them.
 
 - Title: 32-38px.
 - Module title: 19-22px.
 - Module body: 14-16px.
 - Backbone label: 16-18px, all-caps only for short technical phrases.
+
+## SVG Source Rules
+
+- Generate this style as restricted SVG first, then convert with `agentdraw import-svg`.
+- Use only `svg`, `g`, `rect`, `circle`, `ellipse`, `line`, `polyline`, `text`, `tspan`, `defs`, and `marker` for editable boards.
+- Use `text-anchor="middle"` and `dominant-baseline="middle"` for centered labels. Use `tspan` with explicit `x` and `dy` values for multiline labels.
+- Put connector endpoints on the edge of shapes or just outside them. Do not start or end arrows deep inside cards.
+- Avoid `foreignObject`, `image`, `clipPath`, `mask`, `filter`, gradients, arbitrary `path` geometry, and text converted to outlines.
 
 ## Components
 

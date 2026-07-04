@@ -3,7 +3,7 @@ import {
   styleGroups,
   type AgentDrawStyle,
 } from "@agentdraw/styles";
-import { Download, FileJson, Github, Image, Palette, Save } from "lucide-react";
+import { Check, Copy, Download, FileJson, Github, Image, Palette, Save, Upload } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ExcalidrawBoard } from "../board/excalidraw/ExcalidrawBoard";
 import {
@@ -25,6 +25,7 @@ type EditorProps = {
     files: Record<string, unknown>,
     styleId?: string,
     providerId?: string,
+    options?: { replace?: boolean },
   ) => void;
 };
 
@@ -36,7 +37,10 @@ export const Editor = ({
   onSceneChange,
 }: EditorProps) => {
   const boardRef = useRef<BoardHandle | null>(null);
+  const importInputRef = useRef<HTMLInputElement | null>(null);
   const [selectedStyleId, setSelectedStyleId] = useState(() => getStyleById(scene.styleId).id);
+  const [copiedPath, setCopiedPath] = useState(false);
+  const [importError, setImportError] = useState<string | null>(null);
   const [replayProgress, setReplayProgress] = useState<BoardReplayProgress>({
     active: false,
     current: scene.elements.length,
@@ -126,16 +130,57 @@ export const Editor = ({
     }
   };
 
+  const copyFilePath = async () => {
+    await copyText(filePath);
+    setCopiedPath(true);
+    window.setTimeout(() => setCopiedPath(false), 1200);
+  };
+
+  const importJsonFile = async (file: File | null) => {
+    if (!file) {
+      return;
+    }
+    try {
+      const imported = parseImportedScene(await file.text());
+      const nextStyleId = imported.styleId ? getStyleById(imported.styleId).id : selectedStyleId;
+      setSelectedStyleId(nextStyleId);
+      setImportError(null);
+      onSceneChange(
+        imported.elements,
+        imported.appState,
+        imported.files,
+        nextStyleId,
+        imported.providerId ?? scene.providerId,
+        { replace: true },
+      );
+    } catch (importFailure) {
+      setImportError(
+        importFailure instanceof Error ? importFailure.message : "Failed to import JSON.",
+      );
+    }
+  };
+
   return (
     <main className="shell">
       <header className="topbar">
         <div className="title-block">
           <h1>{scene.title}</h1>
-          <span title={filePath}>{filePath}</span>
+          <div className="path-row">
+            <span title={filePath}>{compactPath(filePath)}</span>
+            <button
+              className="path-copy"
+              type="button"
+              onClick={copyFilePath}
+              title={copiedPath ? "Copied path" : "Copy file path"}
+            >
+              {copiedPath ? <Check size={13} /> : <Copy size={13} />}
+            </button>
+          </div>
         </div>
         <div className="actions">
           <ReplayStatus progress={replayProgress} enabled={replayEnabled} />
           <Status saveState={saveState} error={error} />
+          {importError ? <span className="status status--error">{importError}</span> : null}
           <div className="style-picker">
             <Swatches style={selectedStyle} />
             <select
@@ -160,6 +205,23 @@ export const Editor = ({
           <button type="button" onClick={exportJson} title="Export JSON">
             <FileJson size={17} />
           </button>
+          <button
+            type="button"
+            onClick={() => importInputRef.current?.click()}
+            title="Import JSON"
+          >
+            <Upload size={17} />
+          </button>
+          <input
+            ref={importInputRef}
+            className="file-input"
+            type="file"
+            accept=".json,.agentdraw.json,application/json"
+            onChange={(event) => {
+              void importJsonFile(event.currentTarget.files?.[0] ?? null);
+              event.currentTarget.value = "";
+            }}
+          />
           <button
             type="button"
             onClick={() => boardRef.current?.exportSvg(scene.title)}
@@ -261,3 +323,53 @@ const readReplayEnabledFromUrl = (filePath: string) => {
 };
 
 const replaySessionStorageKey = (filePath: string) => `agentdraw:replayed:${filePath}`;
+
+const compactPath = (filePath: string) => {
+  const normalized = filePath.replaceAll("\\", "/");
+  const parts = normalized.split("/").filter(Boolean);
+  if (parts.length <= 4) {
+    return filePath;
+  }
+  const prefix = normalized.startsWith("/") ? "/" : "";
+  return `${prefix}${parts[0]}/.../${parts.slice(-3).join("/")}`;
+};
+
+const copyText = async (text: string) => {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "true");
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+  document.body.appendChild(textarea);
+  textarea.select();
+  document.execCommand("copy");
+  textarea.remove();
+};
+
+const parseImportedScene = (rawJson: string): BoardSnapshot & { styleId?: string } => {
+  const parsed = JSON.parse(rawJson) as Record<string, unknown>;
+  const source =
+    parsed.scene && typeof parsed.scene === "object"
+      ? (parsed.scene as Record<string, unknown>)
+      : parsed;
+  if (!Array.isArray(source.elements)) {
+    throw new Error("Imported JSON must contain an elements array.");
+  }
+  return {
+    styleId: typeof source.styleId === "string" ? source.styleId : undefined,
+    providerId: typeof source.providerId === "string" ? source.providerId : undefined,
+    elements: source.elements,
+    appState:
+      source.appState && typeof source.appState === "object"
+        ? (source.appState as Record<string, unknown>)
+        : {},
+    files:
+      source.files && typeof source.files === "object"
+        ? (source.files as Record<string, unknown>)
+        : {},
+  };
+};

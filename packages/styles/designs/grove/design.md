@@ -23,7 +23,7 @@ Green is the main voice. Coral is rare: use it for a short rule, number, or smal
 
 ## Typography
 
-- Font family: use Excalidraw sans (`fontFamily: 2`) for readable multilingual text; avoid Virgil/handwritten text unless the user explicitly asks for it.
+- Font family: in source SVG use `Inter, Arial, Noto Sans SC, sans-serif` or the closest available system sans. Keep text as real `<text>`/`<tspan>` and avoid handwritten fonts unless the user explicitly asks for them.
 
 - Title: 34-44px, medium or bold, editorial sentence case.
 - Kicker: 15-17px, optional, muted or coral.
@@ -37,6 +37,14 @@ Green is the main voice. Coral is rare: use it for a short rule, number, or smal
 - Corners are square to lightly rounded: 0-8px.
 - Strokes are 0-2px; use filled bands instead of heavy outlines.
 - Avoid heavy shadows, rough hand-drawn effects, and noisy decoration.
+
+## SVG Source Rules
+
+- Generate this style as restricted SVG first, then convert with `agentdraw import-svg`.
+- Use only `svg`, `g`, `rect`, `circle`, `ellipse`, `line`, `polyline`, `text`, `tspan`, `defs`, and `marker` for editable boards.
+- Use `text-anchor="middle"` and `dominant-baseline="middle"` for centered labels. Use `tspan` with explicit `x` and `dy` values for multiline labels.
+- Put connector endpoints on the edge of shapes or just outside them. Do not start or end arrows deep inside cards.
+- Avoid `foreignObject`, `image`, `clipPath`, `mask`, `filter`, gradients, arbitrary `path` geometry, and text converted to outlines.
 
 ## Components
 

@@ -18,9 +18,17 @@ Canvas `#FFFDF5`, ink black, surface white, pink `#FE90E8`, cyan `#C0F7FE`, yell
 
 ## Typography
 
-- Font family: use Excalidraw sans (`fontFamily: 2`) for readable multilingual text; avoid Virgil/handwritten text unless the user explicitly asks for it.
+- Font family: in source SVG use `Inter, Arial, Noto Sans SC, sans-serif` or the closest available system sans. Keep text as real `<text>`/`<tspan>` and avoid handwritten fonts unless the user explicitly asks for them.
 
 Title 38-50px, card titles 22-28px, body 16-18px. Short punchy text only.
+
+## SVG Source Rules
+
+- Generate this style as restricted SVG first, then convert with `agentdraw import-svg`.
+- Use only `svg`, `g`, `rect`, `circle`, `ellipse`, `line`, `polyline`, `text`, `tspan`, `defs`, and `marker` for editable boards.
+- Use `text-anchor="middle"` and `dominant-baseline="middle"` for centered labels. Use `tspan` with explicit `x` and `dy` values for multiline labels.
+- Put connector endpoints on the edge of shapes or just outside them. Do not start or end arrows deep inside cards.
+- Avoid `foreignObject`, `image`, `clipPath`, `mask`, `filter`, gradients, arbitrary `path` geometry, and text converted to outlines.
 
 ## Geometry And Components
 

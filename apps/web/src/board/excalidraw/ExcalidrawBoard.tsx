@@ -22,6 +22,7 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
     const [apiReady, setApiReady] = useState(false);
     const replayEnabled = replay?.enabled === true && scene.elements.length > 0;
     const suppressChangeRef = useRef(true);
+    const suppressChangeUntilRef = useRef(0);
     const fitSceneKeyRef = useRef<string | null>(null);
     const normalizedElements = useMemo(
       () => normalizeElementsForExcalidraw(scene.elements, style),
@@ -64,7 +65,7 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
       const orderedElements = orderElementsForReplay(normalizedElements);
       const batchSize = replay.batchSize ?? 1;
       const intervalMs = replay.intervalMs ?? 70;
-      suppressChangeRef.current = true;
+      suppressChangesFor(1200);
       fitSceneKeyRef.current = sceneKey;
 
       api.updateScene({
@@ -113,7 +114,6 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
 
       return () => {
         cancelled = true;
-        suppressChangeRef.current = false;
       };
     }, [
       apiReady,
@@ -137,7 +137,7 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
       if (fitSceneKeyRef.current === sceneKey) {
         return;
       }
-      suppressChangeRef.current = true;
+      suppressChangesFor(1600);
       api.updateScene({
         elements: normalizedElements as readonly ExcalidrawElement[],
         appState: styledAppState as AppState,
@@ -176,7 +176,6 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
         cancelled = true;
         resizeObserver?.disconnect();
         timers.forEach((timer) => window.clearTimeout(timer));
-        suppressChangeRef.current = false;
       };
     }, [apiReady, replayEnabled, sceneKey, normalizedElements, styledAppState]);
 
@@ -243,7 +242,7 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
           }}
           initialData={initialData}
           onChange={(elements, appState, files) => {
-            if (suppressChangeRef.current) {
+            if (suppressChangeRef.current || Date.now() < suppressChangeUntilRef.current) {
               return;
             }
             onChange({
@@ -255,6 +254,11 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
         />
       </div>
     );
+
+    function suppressChangesFor(durationMs: number) {
+      suppressChangeRef.current = true;
+      suppressChangeUntilRef.current = Math.max(suppressChangeUntilRef.current, Date.now() + durationMs);
+    }
   },
 );
 

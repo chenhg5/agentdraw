@@ -2,15 +2,14 @@
 
 [中文 README](./README.zh.md)
 
-AgentDraw is a local-first, editable whiteboard workspace for coding agents.
+AgentDraw is a local-first, SVG-first editable whiteboard workspace for coding agents.
 
-It lets Claude Code, Codex, Cursor, or any other agent generate a structured `.agentdraw.json`
-scene, open it in a browser-based whiteboard editor, let a human refine it manually, and export the
-result as JSON, SVG, or PNG.
+It lets Claude Code, Codex, Cursor, or any other agent draft a clean SVG diagram, convert it into an
+editable `.agentdraw.json` whiteboard, open it in a browser editor, let a human refine it manually,
+and export the result as JSON, SVG, or PNG.
 
-The first canvas provider is Excalidraw. AgentDraw keeps the storage format, style system, local
-server, and validation logic separate from the canvas implementation, so other providers can be
-added later without replacing the whole app.
+The first canvas provider is Excalidraw. AgentDraw uses SVG as the agent-friendly source draft and
+`.agentdraw.json` as the editable browser format.
 
 Powered by [Excalidraw](https://github.com/excalidraw/excalidraw).
 
@@ -41,6 +40,7 @@ agentdraw guide
 No global install:
 
 ```bash
+npx @aidraw/agentdraw@latest import-svg board.svg --out board.agentdraw.json --style boardroom --json
 npx @aidraw/agentdraw@latest open board.agentdraw.json --background --open
 ```
 
@@ -113,12 +113,13 @@ README; click a preview to open the source `.agentdraw.json`.
 ## Why
 
 Agent-generated diagrams often fail in predictable ways: text overlaps, labels are not centered,
-arrows miss their targets, or a complex scene opens under the toolbar. AgentDraw treats those as
-engineering problems:
+arrows miss their targets, or raw whiteboard JSON drifts into messy coordinates. AgentDraw treats
+those as engineering problems:
 
-- diagrams are stored as editable structured JSON, not screenshots;
-- styles are reusable presets rather than one-off colors;
-- scenes can be validated before opening;
+- agents draft diagrams as simple, inspectable SVG first;
+- SVG is converted into editable structured JSON, not screenshots;
+- styles are reusable design systems rather than one-off colors;
+- imported scenes can be repaired and validated before opening;
 - humans can still edit the final board directly in the browser.
 
 ## Why AgentDraw
@@ -130,6 +131,8 @@ open for a human to edit.
 - **Made for coding agents, not only chat users**: the CLI, schemas, `guide` commands, JSON output,
   and skill file are designed so Claude Code, Codex, Cursor, or another agent can discover the
   workflow and run it without guessing.
+- **SVG-first generation**: agents are much better at producing aligned SVG than hand-placed
+  whiteboard JSON. AgentDraw turns that stable SVG draft into editable browser objects.
 - **Local-first by default**: generated boards live in project-local `.agentdraw.json` files and open
   through a local server. Teams can keep diagrams next to code, prompts, docs, and eval artifacts
   instead of sending every draft through a hosted workspace.
@@ -145,13 +148,14 @@ open for a human to edit.
   [`next-ai-draw-io`](https://github.com/DayuanJiang/next-ai-draw-io) focus on chat-driven creation
   and editing of draw.io diagrams. AgentDraw focuses on local agent workflows: generate a structured
   scene, check it, open it, edit it, and keep the artifact in the project.
-- **Provider boundary**: Excalidraw is the first renderer, but AgentDraw keeps scene IO, style
-  contracts, validation, local serving, and provider code separated so other canvases can be explored
-  later.
+- **Provider boundary**: Excalidraw is the first editor, but AgentDraw keeps SVG import, scene IO,
+  style contracts, validation, local serving, and provider code separated.
 
 ## Features
 
-- Local `.agentdraw.json` scene files.
+- SVG-first agent workflow with editable `.agentdraw.json` output.
+- Restricted SVG importer for `rect`, `circle`, `ellipse`, `line`, `polyline`, `text/tspan`, groups,
+  and arrow markers.
 - Excalidraw-based editable canvas.
 - 38 bundled styles, including formal diagram styles and palettes adapted from
   `beautiful-feishu-whiteboard`.
@@ -165,9 +169,12 @@ open for a human to edit.
 
 ## Quick Start
 
-Run directly from npm:
+Draft a board as SVG, convert it, then open the editable result:
 
 ```bash
+npx @aidraw/agentdraw@latest import-svg board.svg --out board.agentdraw.json --style boardroom --json
+npx @aidraw/agentdraw@latest repair board.agentdraw.json --style boardroom --write --json
+npx @aidraw/agentdraw@latest validate board.agentdraw.json --style boardroom --json
 npx @aidraw/agentdraw@latest open board.agentdraw.json --background --open
 ```
 
@@ -225,6 +232,12 @@ Create a scene file without starting the editor:
 pnpm agentdraw init .agentdraw/board.agentdraw.json
 ```
 
+Convert a restricted SVG into an editable board:
+
+```bash
+pnpm agentdraw import-svg .agentdraw/board.svg --out .agentdraw/board.agentdraw.json --style boardroom --title "Agent workflow" --json
+```
+
 Export a rendered preview for visual review:
 
 ```bash
@@ -256,35 +269,41 @@ the command. Style-contract drift is reported as warnings so agents can repair w
 blocking intentionally custom boards. A typical agent loop should be:
 
 ```text
-choose style -> load design guide + contract + patterns -> generate scene -> validate scene -> repair deterministic display defaults -> score quality -> export preview when quality matters -> repair reported element ids -> open board
+choose style -> load design guide + contract -> generate restricted SVG -> inspect SVG -> import-svg -> repair -> validate -> score quality -> export preview when quality matters -> revise SVG if needed -> open board
 ```
 
-Use `agentdraw guide patterns --json` before generating Excalidraw-backed scenes. It gives agents
-copyable centered-label and edge-arrow primitives, which prevents common failures such as text
-sticking to the top of a box, Chinese text using a handwritten font, or connector colors drifting
-from the selected style. `agentdraw repair` can normalize these deterministic defaults after
-generation; it skips writing if the repaired scene would validate worse than the original. Use
-`agentdraw gallery --open` when the user has not expressed a visual preference and should choose
-between theme directions.
+Use `agentdraw guide scene` and `agentdraw guide patterns --json` before generating SVG. The SVG
+contract keeps the source draft simple enough to import into editable objects while preserving the
+layout quality agents usually achieve with SVG. `agentdraw repair` normalizes deterministic display
+defaults after import. Use `agentdraw gallery --open` when the user has not expressed a visual
+preference and should choose between theme directions.
+
+## SVG-First Format
+
+AgentDraw's recommended source format is a restricted SVG:
+
+```svg
+<svg width="1200" height="760" viewBox="0 0 1200 760" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748B" />
+    </marker>
+  </defs>
+  <rect x="80" y="80" width="1040" height="600" rx="10" fill="#FFFFFF" stroke="#172033" />
+  <text x="120" y="140" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="750" fill="#172033">System map</text>
+</svg>
+```
+
+Supported import tags are `svg`, `g`, `rect`, `circle`, `ellipse`, `line`, `polyline`, `text`,
+`tspan`, `defs`, and `marker`. Keep text as real text. Avoid `foreignObject`, `image`, `clipPath`,
+`mask`, `filter`, gradients, and arbitrary paths for editable boards.
 
 ## Scene Format
 
-An AgentDraw scene is a JSON envelope around provider-specific scene data:
+An AgentDraw scene is the editable browser storage format produced by `agentdraw import-svg`.
+Agents should treat it as generated output, not the source drawing language.
 
-```json
-{
-  "type": "agentdraw/scene",
-  "version": 1,
-  "title": "System map",
-  "styleId": "system-formal",
-  "providerId": "excalidraw",
-  "elements": [],
-  "appState": {},
-  "files": {}
-}
-```
-
-Agents usually generate or patch:
+Advanced agents may patch these fields only when updating an existing board:
 
 - `styleId`
 - `providerId`
@@ -381,8 +400,9 @@ agentdraw gallery --no-open --format json
 agentdraw guide style system-formal --format text
 agentdraw guide contract system-formal --json
 agentdraw guide patterns --json
-agentdraw validate .agentdraw/board.agentdraw.json --style system-formal --json
+agentdraw import-svg .agentdraw/board.svg --out .agentdraw/board.agentdraw.json --style system-formal --json
 agentdraw repair .agentdraw/board.agentdraw.json --style system-formal --write --json
+agentdraw validate .agentdraw/board.agentdraw.json --style system-formal --json
 agentdraw quality .agentdraw/board.agentdraw.json --style system-formal --json
 agentdraw guide quality --format text
 ```
