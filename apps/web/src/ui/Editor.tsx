@@ -4,7 +4,7 @@ import {
   type AgentDrawStyle,
 } from "@agentdraw/styles";
 import { Download, FileJson, Image, Palette, Save } from "lucide-react";
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ExcalidrawBoard } from "../board/excalidraw/ExcalidrawBoard";
 import {
   downloadBlob,
@@ -43,7 +43,8 @@ export const Editor = ({
     total: scene.elements.length,
   });
   const selectedStyle = getStyleById(selectedStyleId);
-  const replayEnabled = useMemo(() => readReplayEnabledFromUrl(), []);
+  const replayEnabled = useMemo(() => readReplayEnabledFromUrl(filePath), [filePath]);
+  const replayStorageKey = useMemo(() => replaySessionStorageKey(filePath), [filePath]);
   const replayOptions = useMemo(
     () => ({
       enabled: replayEnabled,
@@ -51,6 +52,17 @@ export const Editor = ({
     }),
     [replayEnabled],
   );
+
+  useEffect(() => {
+    if (
+      replayEnabled &&
+      replayProgress.total > 0 &&
+      !replayProgress.active &&
+      replayProgress.current >= replayProgress.total
+    ) {
+      window.sessionStorage.setItem(replayStorageKey, "1");
+    }
+  }, [replayEnabled, replayProgress, replayStorageKey]);
 
   const sceneSnapshot: BoardSnapshot = {
     providerId: scene.providerId,
@@ -212,10 +224,22 @@ const Swatches = ({ style }: { style: AgentDrawStyle }) => (
   </div>
 );
 
-const readReplayEnabledFromUrl = () => {
+const readReplayEnabledFromUrl = (filePath: string) => {
   const params = new URLSearchParams(window.location.search);
   const animate = params.get("animate");
   const replay = params.get("replay");
   const instant = params.get("instant");
-  return animate !== "0" && replay !== "0" && instant !== "1";
+  if (animate === "0" || replay === "0" || instant === "1") {
+    return false;
+  }
+  if (animate === "1" || replay === "1") {
+    return true;
+  }
+
+  if (window.sessionStorage.getItem(replaySessionStorageKey(filePath)) === "1") {
+    return false;
+  }
+  return true;
 };
+
+const replaySessionStorageKey = (filePath: string) => `agentdraw:replayed:${filePath}`;

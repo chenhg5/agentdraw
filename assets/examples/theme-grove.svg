@@ -44,7 +44,7 @@
 <rect x="956" y="294" width="92" height="38" rx="0" fill="none" stroke="#192B1B" stroke-width="2"/>
 <rect x="1054" y="294" width="92" height="38" rx="0" fill="none" stroke="#766C58" stroke-width="2"/>
 <rect x="92" y="454" width="1080" height="64" rx="0" fill="#F4EFE2" stroke="#192B1B" stroke-width="2"/>
-<text x="632" y="493" fill="#192B1B" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="500" text-anchor="middle"><tspan x="632" dy="0">Agent output stays editable: structured scene data, styled shapes, validated layout, and manual refinement in the browser.</tspan></text>
+<text x="632" y="493" fill="#192B1B" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="500" text-anchor="middle"><tspan x="632" dy="0">Editable scene data, styled shapes, layout validation, and browser refinement.</tspan></text>
 <rect x="208" y="578" width="200" height="46" rx="0" fill="#F4EFE2" stroke="#192B1B" stroke-width="2"/>
 <text x="308" y="607" fill="#192B1B" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle"><tspan x="308" dy="0">Editable</tspan></text>
 <rect x="488" y="578" width="200" height="46" rx="0" fill="#C8524A" stroke="#192B1B" stroke-width="2"/>

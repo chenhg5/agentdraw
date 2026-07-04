@@ -5,7 +5,7 @@
   "title": "System Formal Architecture",
   "styleId": "system-formal",
   "providerId": "excalidraw",
-  "updatedAt": "2026-07-04T01:20:07.512Z",
+  "updatedAt": "2026-07-04T01:50:22.441Z",
   "elements": [
     {
       "id": "title",
@@ -283,13 +283,13 @@
       "strokeWidth": 2,
       "strokeStyle": "solid",
       "roughness": 0,
-      "text": "scene JSON",
+      "text": "scene",
       "fontSize": 16,
       "fontFamily": 2,
       "textAlign": "center",
       "verticalAlign": "top",
       "containerId": null,
-      "originalText": "scene JSON",
+      "originalText": "scene",
       "lineHeight": 1.25
     },
     {
@@ -821,13 +821,13 @@
       "strokeWidth": 2,
       "strokeStyle": "solid",
       "roughness": 0,
-      "text": "Excalidraw",
+      "text": "canvas",
       "fontSize": 16,
       "fontFamily": 2,
       "textAlign": "center",
       "verticalAlign": "top",
       "containerId": null,
-      "originalText": "Excalidraw",
+      "originalText": "canvas",
       "lineHeight": 1.25
     },
     {
@@ -1256,13 +1256,13 @@
       "strokeWidth": 2,
       "strokeStyle": "solid",
       "roughness": 0,
-      "text": "Agent output stays editable: structured scene data, styled shapes, validated layout, and manual refinement in the browser.",
+      "text": "Editable scene data, styled shapes, layout validation, and browser refinement.",
       "fontSize": 18,
       "fontFamily": 2,
       "textAlign": "center",
       "verticalAlign": "top",
       "containerId": null,
-      "originalText": "Agent output stays editable: structured scene data, styled shapes, validated layout, and manual refinement in the browser.",
+      "originalText": "Editable scene data, styled shapes, layout validation, and browser refinement.",
       "lineHeight": 1.25
     },
     {

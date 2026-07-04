@@ -39,18 +39,18 @@
 <text x="1240" y="433.25" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="500" text-anchor="middle"><tspan x="1240" dy="0">contract first</tspan><tspan x="1240" dy="23.75">editable output</tspan></text>
 <rect x="88" y="535" width="424" height="132" rx="0" fill="#EDE9FE" stroke="#172033" stroke-width="2"/>
 <text x="116" y="588" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="start"><tspan x="116" dy="0">Style / Geometry Profile</tspan></text>
-<text x="116" y="619" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="start"><tspan x="116" dy="0">palette · formality · roughness · font · roundness · arrow type</tspan></text>
+<text x="116" y="619" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="start"><tspan x="116" dy="0">palette · formality · typography</tspan><tspan x="116" dy="20">roughness · roundness · arrows</tspan></text>
 <path d="M 300 535 L 300 478" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
 <rect x="552" y="535" width="424" height="132" rx="0" fill="#DCFCE7" stroke="#172033" stroke-width="2"/>
 <text x="580" y="588" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="start"><tspan x="580" dy="0">Layout Engine</tspan></text>
-<text x="580" y="619" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="start"><tspan x="580" dy="0">columns · swimlanes · bus · matrix · dependency graph · spacing rules</tspan></text>
+<text x="580" y="619" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="start"><tspan x="580" dy="0">columns · swimlanes · matrix</tspan><tspan x="580" dy="20">bus · dependencies · spacing</tspan></text>
 <path d="M 764 535 L 764 478" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
 <rect x="1016" y="535" width="424" height="132" rx="0" fill="#FFE4E6" stroke="#172033" stroke-width="2"/>
 <text x="1044" y="588" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="start"><tspan x="1044" dy="0">Control &amp; Persistence</tspan></text>
-<text x="1044" y="619" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="start"><tspan x="1044" dy="0">local server · debounced save · tolerant JSON parser · exports</tspan></text>
+<text x="1044" y="619" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="start"><tspan x="1044" dy="0">local server · autosave</tspan><tspan x="1044" dy="20">JSON parser · SVG/PNG export</tspan></text>
 <path d="M 1228 535 L 1228 478" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
 <rect x="88" y="690" width="640" height="44" rx="0" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
-<text x="112" y="719" fill="#475569" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="112" dy="0">生成器原则：复杂关系优先分区表达，跨区依赖用总线或表格说明，避免长斜线穿越画布。</tspan></text>
+<text x="112" y="719" fill="#475569" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="112" dy="0">生成器原则：复杂关系先分区，跨区依赖用总线或表格说明，避免长斜线穿越画布。</tspan></text>
 <rect x="800" y="690" width="640" height="44" rx="0" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
 <text x="824" y="719" fill="#475569" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="824" dy="0">编辑原则：每个模块都是独立元素；连线只连接相邻层级，用户拖动后仍容易修正。</tspan></text>
 <text x="88" y="798" fill="#2563EB" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700" text-anchor="start"><tspan x="88" dy="0">复杂图能力覆盖</tspan></text>

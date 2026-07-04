@@ -25,6 +25,8 @@ type ElementRecord = Record<string, unknown> & {
   points?: unknown;
   isDeleted?: boolean;
   text?: string;
+  fontSize?: number;
+  lineHeight?: number;
 };
 
 type Bounds = {
@@ -49,9 +51,11 @@ export const validateScene = (scene: AgentDrawScene): SceneValidationResult => {
   const bounds = elements.map(toBounds).filter((bound): bound is Bounds => Boolean(bound));
   const textBounds = bounds.filter((bound) => bound.type === "text");
   const shapeBounds = bounds.filter((bound) => SHAPE_TYPES.has(bound.type));
+  const textElements = elements.filter((element) => element.type === "text");
   const connectorElements = elements.filter((element) => CONNECTOR_TYPES.has(element.type ?? ""));
   const issues: SceneValidationIssue[] = [];
 
+  issues.push(...findTextOverflowIssues(textElements, shapeBounds));
   issues.push(...findTextOverlaps(textBounds));
   issues.push(...findShapeOverlaps(shapeBounds));
   issues.push(...findVerticalCenteringIssues(shapeBounds, textBounds));
@@ -62,6 +66,66 @@ export const validateScene = (scene: AgentDrawScene): SceneValidationResult => {
     errorCount: issues.filter((issue) => issue.severity === "error").length,
     warningCount: issues.filter((issue) => issue.severity === "warning").length,
   };
+};
+
+const findTextOverflowIssues = (
+  texts: ElementRecord[],
+  shapes: Bounds[],
+): SceneValidationIssue[] => {
+  const issues: SceneValidationIssue[] = [];
+
+  for (const text of texts) {
+    const bounds = toBounds(text);
+    if (!bounds || !text.text) {
+      continue;
+    }
+    const measured = estimateTextSize(text);
+    const horizontalOverflow = measured.width - bounds.width;
+    const verticalOverflow = measured.height - bounds.height;
+
+    if (horizontalOverflow > 8 || verticalOverflow > 8) {
+      issues.push({
+        severity: "error",
+        code: "text-box-overflow",
+        message: `Text content exceeds its text box by ${Math.max(0, Math.round(horizontalOverflow))}px horizontally and ${Math.max(0, Math.round(verticalOverflow))}px vertically.`,
+        elementIds: [bounds.id],
+      });
+    }
+
+    const container = nearestContainingShape(bounds, shapes);
+    if (!container) {
+      continue;
+    }
+
+    if (container.height > 240) {
+      continue;
+    }
+
+    const padding = Math.max(4, Math.min(12, container.height * 0.12));
+    const available = {
+      ...container,
+      x: container.x + padding,
+      y: container.y + padding,
+      width: Math.max(0, container.width - padding * 2),
+      height: Math.max(0, container.height - padding * 2),
+    };
+    const rendered = {
+      ...bounds,
+      width: Math.max(bounds.width, measured.width),
+      height: Math.max(bounds.height, measured.height),
+    };
+
+    if (!contains(padded(available, 6), rendered)) {
+      issues.push({
+        severity: "error",
+        code: "text-container-overflow",
+        message: "Text content does not fit inside its containing shape.",
+        elementIds: [container.id, bounds.id],
+      });
+    }
+  }
+
+  return issues;
 };
 
 const findTextOverlaps = (texts: Bounds[]): SceneValidationIssue[] => {
@@ -274,6 +338,53 @@ const unionBounds = (bounds: Bounds[]): Bounds => {
     width: right - x,
     height: bottom - y,
   };
+};
+
+const estimateTextSize = (element: ElementRecord) => {
+  const fontSize = typeof element.fontSize === "number" ? element.fontSize : 16;
+  const lineHeight = typeof element.lineHeight === "number" ? element.lineHeight : 1.25;
+  const lines = String(element.text ?? "").split("\n");
+  const width = Math.max(...lines.map((line) => estimateLineWidth(line, fontSize)), 0);
+  return {
+    width,
+    height: lines.length * fontSize * lineHeight,
+  };
+};
+
+const estimateLineWidth = (line: string, fontSize: number) => {
+  let units = 0;
+  for (const char of line) {
+    units += char.charCodeAt(0) > 255 ? 1 : asciiCharWidth(char);
+  }
+  return units * fontSize;
+};
+
+const asciiCharWidth = (char: string) => {
+  if (char === " ") {
+    return 0.33;
+  }
+  if (/[ilI.,:;|!]/.test(char)) {
+    return 0.32;
+  }
+  if (/[mwMW@#%&]/.test(char)) {
+    return 0.88;
+  }
+  if (/[A-Z0-9]/.test(char)) {
+    return 0.62;
+  }
+  return 0.54;
+};
+
+const nearestContainingShape = (text: Bounds, shapes: Bounds[]) => {
+  const center = {
+    x: text.x + text.width / 2,
+    y: text.y + text.height / 2,
+  };
+  const containing = shapes.filter((shape) => pointInsideRect(center, shape));
+  if (containing.length === 0) {
+    return null;
+  }
+  return containing.sort((left, right) => left.width * left.height - right.width * right.height)[0];
 };
 
 const padded = (bounds: Bounds, padding: number): Bounds => ({

@@ -5,7 +5,7 @@
   "title": "Mint Brut Product Roadmap",
   "styleId": "mint-brut",
   "providerId": "excalidraw",
-  "updatedAt": "2026-07-04T01:20:07.514Z",
+  "updatedAt": "2026-07-04T01:50:22.443Z",
   "elements": [
     {
       "id": "title",
@@ -1256,13 +1256,13 @@
       "strokeWidth": 2,
       "strokeStyle": "solid",
       "roughness": 0,
-      "text": "Agent output stays editable: structured scene data, styled shapes, validated layout, and manual refinement in the browser.",
+      "text": "Editable scene data, styled shapes, layout validation, and browser refinement.",
       "fontSize": 18,
       "fontFamily": 2,
       "textAlign": "center",
       "verticalAlign": "top",
       "containerId": null,
-      "originalText": "Agent output stays editable: structured scene data, styled shapes, validated layout, and manual refinement in the browser.",
+      "originalText": "Editable scene data, styled shapes, layout validation, and browser refinement.",
       "lineHeight": 1.25
     },
     {

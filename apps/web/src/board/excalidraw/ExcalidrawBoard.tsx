@@ -48,8 +48,8 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
       let cancelled = false;
       let visibleCount = 0;
       const orderedElements = orderElementsForReplay(scene.elements);
-      const batchSize = replay.batchSize ?? preferredBatchSize(orderedElements.length);
-      const intervalMs = replay.intervalMs ?? 120;
+      const batchSize = replay.batchSize ?? 1;
+      const intervalMs = replay.intervalMs ?? 70;
       suppressChangeRef.current = true;
 
       api.updateScene({
@@ -188,7 +188,17 @@ const orderElementsForReplay = (elements: readonly unknown[]) => {
   return typed
     .sort((left, right) => {
       const stageDiff = replayStage(left.element) - replayStage(right.element);
-      return stageDiff === 0 ? left.index - right.index : stageDiff;
+      if (stageDiff !== 0) {
+        return stageDiff;
+      }
+      const leftPosition = replayPosition(left.element);
+      const rightPosition = replayPosition(right.element);
+      const yDiff = leftPosition.y - rightPosition.y;
+      if (Math.abs(yDiff) > 8) {
+        return yDiff;
+      }
+      const xDiff = leftPosition.x - rightPosition.x;
+      return xDiff === 0 ? left.index - right.index : xDiff;
     })
     .map(({ element }) => element);
 };
@@ -198,18 +208,12 @@ const replayStage = (element: unknown) => {
     return 4;
   }
   if (element.type === "arrow" || element.type === "line") {
-    return 4;
-  }
-  if (element.type === "text") {
     return 3;
   }
   if (isLargeFrameElement(element)) {
     return 0;
   }
-  if (element.type === "rectangle" || element.type === "diamond" || element.type === "ellipse") {
-    return 1;
-  }
-  return 2;
+  return 1;
 };
 
 const isLargeFrameElement = (element: Record<string, unknown>) => {
@@ -218,14 +222,13 @@ const isLargeFrameElement = (element: Record<string, unknown>) => {
   return width >= 700 && height >= 350;
 };
 
-const preferredBatchSize = (elementCount: number) => {
-  if (elementCount > 120) {
-    return 8;
+const replayPosition = (element: unknown) => {
+  if (!isElementRecord(element)) {
+    return { x: 0, y: 0 };
   }
-  if (elementCount > 60) {
-    return 5;
-  }
-  return 3;
+  const x = typeof element.x === "number" ? element.x : 0;
+  const y = typeof element.y === "number" ? element.y : 0;
+  return { x, y };
 };
 
 const snapshotFromApi = (

@@ -44,9 +44,9 @@ const examples = [
     styleId: "system-formal",
     subtitle: "Local agent draw stack with validation and editable exports.",
     cards: [
-      ["Agent", "prompt", "scene JSON"],
+      ["Agent", "prompt", "scene"],
       ["Validator", "overlap", "center", "routing"],
-      ["Renderer", "Excalidraw", "styles"],
+      ["Renderer", "canvas", "styles"],
       ["Export", "JSON", "SVG", "PNG"],
     ],
     lanes: ["Input", "Quality Gate", "Editable Board", "Output"],
@@ -134,7 +134,7 @@ function buildScene(example) {
 
   elements.push(
     rect("signal-strip", 92, 454, 1080, 64, palette.panel, palette.ink, 2),
-    text("signal-text", 124, 475, 1016, 24, "Agent output stays editable: structured scene data, styled shapes, validated layout, and manual refinement in the browser.", 18, palette.ink, "center"),
+    text("signal-text", 124, 475, 1016, 24, "Editable scene data, styled shapes, layout validation, and browser refinement.", 18, palette.ink, "center"),
   );
 
   const metricY = 578;
