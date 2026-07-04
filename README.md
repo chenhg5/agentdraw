@@ -121,6 +121,44 @@ engineering problems:
 - scenes can be validated before opening;
 - humans can still edit the final board directly in the browser.
 
+## Why AgentDraw Is Different
+
+AgentDraw is built for the handoff between coding agents and humans. It is not only a canvas, and it
+is not only a text-to-diagram renderer.
+
+- **Agent-native workflow**: the CLI, schemas, `guide` commands, JSON output, and skill file are
+  designed so Claude Code, Codex, Cursor, or another agent can discover the workflow and run it
+  without guessing.
+- **Local-first by default**: generated boards live in project-local `.agentdraw.json` files and open
+  through a local server. Teams can keep diagrams next to code, prompts, docs, and eval artifacts.
+- **Editable structured output**: the result is a real whiteboard scene, not a screenshot. Humans can
+  adjust layout, labels, colors, and connectors in the browser after the agent drafts the board.
+- **Design systems for agents**: each theme includes agent-readable `design.md` guidance plus a
+  machine-readable contract for palette, typography, geometry, spacing, connectors, and avoid rules.
+- **Quality gates before preview**: validation catches common generated-board failures such as text
+  overflow, overlap, visual centering drift, connector mistakes, wrong font family, and style-contract
+  drift.
+- **Provider boundary**: Excalidraw is the first renderer, but AgentDraw keeps scene IO, style
+  contracts, validation, local serving, and provider code separated so other canvases can be explored
+  later.
+
+## Compared With
+
+AgentDraw is complementary to existing tools:
+
+- **Excalidraw / tldraw** are excellent editable canvas engines. AgentDraw adds an agent-facing CLI,
+  scene validation, design contracts, and repeatable local file workflows around a canvas provider.
+- **draw.io / diagrams.net** is strong for mature formal diagramming. AgentDraw focuses on
+  agent-generated local scenes, quality checks, and design guidance rather than a full manual diagram
+  suite.
+- **Mermaid / PlantUML / D2** are great for text-based diagrams in documentation. AgentDraw targets
+  freeform visual boards that still need human editing, spatial layout, styled sections, and exportable
+  whiteboard artifacts.
+- **Miro / FigJam / Boardmix / Jeda / Zoom Whiteboard / Eraser** offer AI-assisted cloud workspaces.
+  AgentDraw is smaller and local-first, intended to be installed by agents inside a coding workflow.
+
+See [Competitive Landscape](./docs/COMPETITIVE_LANDSCAPE.md) for the initial research notes.
+
 ## Features
 
 - Local `.agentdraw.json` scene files.
