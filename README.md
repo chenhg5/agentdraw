@@ -106,7 +106,7 @@ engineering problems:
 Run directly from npm:
 
 ```bash
-npx @chg80333/agentdraw open board.agentdraw.json
+npx @aidraw/agentdraw open board.agentdraw.json
 ```
 
 Or use the repo:

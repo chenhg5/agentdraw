@@ -4,7 +4,34 @@ Use this skill when the user wants a local editable whiteboard, diagram, system 
 
 AgentDraw stores the board as structured `.agentdraw.json`, opens it in a local Excalidraw-based editor, validates common layout mistakes, and exports JSON/SVG/PNG.
 
-## Install
+## Runtime
+
+Prefer the npm runtime. Agents do not need to import AgentDraw; use it as a local executable tool.
+
+Run without installing:
+
+```bash
+npx @aidraw/agentdraw open .agentdraw/board.agentdraw.json --no-open
+```
+
+Validate a generated scene:
+
+```bash
+npx @aidraw/agentdraw validate .agentdraw/board.agentdraw.json
+```
+
+The `open` command prints a local URL. Give that URL to the user so they can inspect and manually edit the board in the browser.
+
+For repeated use, install globally:
+
+```bash
+npm install -g @aidraw/agentdraw
+agentdraw open .agentdraw/board.agentdraw.json --no-open
+```
+
+## Source Install
+
+Use the repository only when developing AgentDraw itself.
 
 ```bash
 git clone git@github.com:chenhg5/agentdraw.git
@@ -13,7 +40,7 @@ pnpm install
 pnpm build
 ```
 
-Open an example board:
+Open an example board from source:
 
 ```bash
 pnpm agentdraw open examples/complex-agentdraw-workbench.agentdraw.json
@@ -25,7 +52,7 @@ Open without launching the system browser:
 pnpm agentdraw open examples/complex-agentdraw-workbench.agentdraw.json --no-open
 ```
 
-Validate a generated scene:
+Validate a generated scene from source:
 
 ```bash
 pnpm validate:scene path/to/board.agentdraw.json
@@ -37,9 +64,10 @@ pnpm validate:scene path/to/board.agentdraw.json
 2. Read [`CATALOG.md`](./CATALOG.md) and choose one style id.
 3. Read only that style's `packages/styles/designs/<style-id>/design.md`.
 4. Generate or patch a `.agentdraw.json` scene using editable primitives: text, rectangles, ellipses, diamonds, arrows, and lines.
-5. Run `pnpm validate:scene <file>`.
+5. Run `npx @aidraw/agentdraw validate <file>` or `agentdraw validate <file>`.
 6. Repair reported element ids until validation passes.
-7. Open the board with `pnpm agentdraw open <file>` or `--no-open`.
+7. Open the board with `npx @aidraw/agentdraw open <file> --no-open` or `agentdraw open <file> --no-open`.
+8. Return the printed local URL to the user.
 
 ## Scene Contract
 

@@ -3,14 +3,14 @@
 Local-first editable whiteboard workspace for coding agents.
 
 ```bash
-npm install -g agentdraw
+npm install -g @aidraw/agentdraw
 agentdraw open board.agentdraw.json
 ```
 
 Or run without installing:
 
 ```bash
-npx agentdraw open board.agentdraw.json
+npx @aidraw/agentdraw open board.agentdraw.json
 ```
 
 Commands:

@@ -1,5 +1,5 @@
 {
-  "name": "@chg80333/agentdraw",
+  "name": "@aidraw/agentdraw",
   "version": "0.1.0",
   "type": "module",
   "description": "Local-first editable whiteboard workspace for coding agents.",
