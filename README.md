@@ -121,41 +121,33 @@ engineering problems:
 - scenes can be validated before opening;
 - humans can still edit the final board directly in the browser.
 
-## Why AgentDraw Is Different
+## Why AgentDraw
 
-AgentDraw is built for the handoff between coding agents and humans. It is not only a canvas, and it
-is not only a text-to-diagram renderer.
+AgentDraw is built for the handoff between coding agents and humans. It is not trying to be a full
+hosted AI diagram app; it is a small local tool that agents can install, reason about, validate, and
+open for a human to edit.
 
-- **Agent-native workflow**: the CLI, schemas, `guide` commands, JSON output, and skill file are
-  designed so Claude Code, Codex, Cursor, or another agent can discover the workflow and run it
-  without guessing.
+- **Made for coding agents, not only chat users**: the CLI, schemas, `guide` commands, JSON output,
+  and skill file are designed so Claude Code, Codex, Cursor, or another agent can discover the
+  workflow and run it without guessing.
 - **Local-first by default**: generated boards live in project-local `.agentdraw.json` files and open
-  through a local server. Teams can keep diagrams next to code, prompts, docs, and eval artifacts.
+  through a local server. Teams can keep diagrams next to code, prompts, docs, and eval artifacts
+  instead of sending every draft through a hosted workspace.
 - **Editable structured output**: the result is a real whiteboard scene, not a screenshot. Humans can
   adjust layout, labels, colors, and connectors in the browser after the agent drafts the board.
-- **Design systems for agents**: each theme includes agent-readable `design.md` guidance plus a
-  machine-readable contract for palette, typography, geometry, spacing, connectors, and avoid rules.
+- **Design systems before drawing**: each theme includes agent-readable `design.md` guidance plus a
+  machine-readable contract for palette, typography, geometry, spacing, connectors, and avoid rules,
+  so the agent has a design standard instead of just picking colors.
 - **Quality gates before preview**: validation catches common generated-board failures such as text
   overflow, overlap, visual centering drift, connector mistakes, wrong font family, and style-contract
   drift.
+- **A tighter scope than AI draw.io apps**: projects like
+  [`next-ai-draw-io`](https://github.com/DayuanJiang/next-ai-draw-io) focus on chat-driven creation
+  and editing of draw.io diagrams. AgentDraw focuses on local agent workflows: generate a structured
+  scene, check it, open it, edit it, and keep the artifact in the project.
 - **Provider boundary**: Excalidraw is the first renderer, but AgentDraw keeps scene IO, style
   contracts, validation, local serving, and provider code separated so other canvases can be explored
   later.
-
-## Similar Projects
-
-AgentDraw is closest to AI diagram applications that combine an editable diagram surface with
-agent- or chat-driven generation, such as
-[`next-ai-draw-io`](https://github.com/DayuanJiang/next-ai-draw-io). That project focuses on
-natural-language creation and editing of draw.io diagrams, including MCP access for agents.
-
-AgentDraw takes a narrower local-agent workflow:
-
-- install a CLI and skill directly inside a coding environment;
-- generate project-local `.agentdraw.json` files instead of depending on a hosted workspace;
-- load agent-readable design guides and machine-readable style contracts before drawing;
-- validate layout, text, connectors, font choices, and style drift before opening the board;
-- keep the canvas provider boundary explicit so Excalidraw is only the first renderer.
 
 ## Features
 
@@ -257,37 +249,6 @@ blocking intentionally custom boards. A typical agent loop should be:
 
 ```text
 choose style -> load design guide + contract -> generate scene -> validate scene -> score quality -> repair reported element ids -> open board
-```
-
-## Example Sources
-
-The gallery images are generated from these editable source files:
-
-- [`examples/getting-started.agentdraw.json`](./examples/getting-started.agentdraw.json)
-- [`examples/complex-agentdraw-workbench.agentdraw.json`](./examples/complex-agentdraw-workbench.agentdraw.json)
-- [`examples/theme-agentdraw-os.agentdraw.json`](./examples/theme-agentdraw-os.agentdraw.json)
-- [`examples/theme-incident-command.agentdraw.json`](./examples/theme-incident-command.agentdraw.json)
-- [`examples/theme-message-bus.agentdraw.json`](./examples/theme-message-bus.agentdraw.json)
-- [`examples/theme-launch-room.agentdraw.json`](./examples/theme-launch-room.agentdraw.json)
-- [`examples/theme-strategy-grove.agentdraw.json`](./examples/theme-strategy-grove.agentdraw.json)
-- [`examples/theme-roadmap-mint.agentdraw.json`](./examples/theme-roadmap-mint.agentdraw.json)
-- [`examples/theme-customer-journey.agentdraw.json`](./examples/theme-customer-journey.agentdraw.json)
-- [`examples/theme-research-synthesis.agentdraw.json`](./examples/theme-research-synthesis.agentdraw.json)
-- [`examples/theme-raw-grid.agentdraw.json`](./examples/theme-raw-grid.agentdraw.json)
-- [`examples/theme-bold-poster.agentdraw.json`](./examples/theme-bold-poster.agentdraw.json)
-- [`examples/theme-soft-editorial.agentdraw.json`](./examples/theme-soft-editorial.agentdraw.json)
-- [`examples/theme-block-frame.agentdraw.json`](./examples/theme-block-frame.agentdraw.json)
-
-Regenerate the theme examples:
-
-```bash
-node scripts/generate-theme-examples.mjs
-```
-
-Regenerate the README preview images:
-
-```bash
-pnpm examples:previews
 ```
 
 ## Scene Format
