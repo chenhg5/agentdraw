@@ -121,6 +121,7 @@ const sanitizeAppState = (appState: Record<string, unknown>) => {
     openSidebar,
     openDialog,
     toast,
+    currentItemRoundness,
     ...persisted
   } = appState;
   void collaborators;
@@ -148,5 +149,6 @@ const sanitizeAppState = (appState: Record<string, unknown>) => {
   void openSidebar;
   void openDialog;
   void toast;
+  void currentItemRoundness;
   return persisted;
 };

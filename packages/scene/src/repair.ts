@@ -78,6 +78,7 @@ export const repairScene = (
 
   if (options.addOuterFrame) {
     addOuterFrame(elements, frameColor, changes);
+    removeRedundantSystemFrames(elements, changes);
   }
 
   touchChangedElements(elements, changes);
@@ -356,7 +357,7 @@ const addOuterFrame = (
   const drawableBounds = elements
     .filter(isElementRecord)
     .filter((element) => !CONNECTOR_TYPES.has(element.type ?? ""))
-    .filter((element) => element.customData?.role !== "frame")
+    .filter((element) => !isExplicitFrameElement(element))
     .map(toBounds)
     .filter((bounds): bounds is Bounds => Boolean(bounds));
   if (drawableBounds.length < 4 || hasOuterFrame(elements, drawableBounds)) {
@@ -422,15 +423,69 @@ const hasOuterFrame = (elements: unknown[], drawableBounds: Bounds[]) => {
     });
 };
 
-const isFrameLikeElement = (element: ElementRecord) => {
-  if (element.type !== "rectangle") {
+const removeRedundantSystemFrames = (
+  elements: unknown[],
+  changes: SceneRepairChange[],
+) => {
+  const records = elements.filter(isElementRecord);
+  const contentBounds = records
+    .filter((element) => !CONNECTOR_TYPES.has(element.type ?? ""))
+    .filter((element) => !isExplicitFrameElement(element))
+    .map(toBounds)
+    .filter((bounds): bounds is Bounds => Boolean(bounds));
+  if (contentBounds.length < 4) {
+    return;
+  }
+  const userFrameExists = records
+    .filter((element) => element.id !== "agentdraw-system-frame")
+    .filter(isExplicitFrameElement)
+    .some((element) => coversBounds(element, contentBounds, 12));
+  if (!userFrameExists) {
+    return;
+  }
+  for (const element of records) {
+    if (element.id !== "agentdraw-system-frame" || element.isDeleted === true) {
+      continue;
+    }
+    element.isDeleted = true;
+    changes.push({
+      elementId: element.id,
+      code: "redundant-system-frame",
+      message: "Removed redundant system outer frame because the scene already has an explicit outer frame.",
+    });
+  }
+};
+
+const coversBounds = (element: ElementRecord, boundsList: Bounds[], padding: number) => {
+  const bounds = toBounds(element);
+  if (!bounds) {
     return false;
   }
+  const x = Math.min(...boundsList.map((item) => item.x));
+  const y = Math.min(...boundsList.map((item) => item.y));
+  const right = Math.max(...boundsList.map((item) => item.x + item.width));
+  const bottom = Math.max(...boundsList.map((item) => item.y + item.height));
+  return (
+    bounds.x <= x - padding &&
+    bounds.y <= y - padding &&
+    bounds.x + bounds.width >= right + padding &&
+    bounds.y + bounds.height >= bottom + padding
+  );
+};
+
+const isExplicitFrameElement = (element: ElementRecord) => {
   if (element.customData?.role === "frame") {
     return true;
   }
   const id = String(element.id ?? "").toLowerCase();
-  if (id.includes("frame") || id.includes("boundary")) {
+  return id.includes("frame") || id.includes("boundary");
+};
+
+const isFrameLikeElement = (element: ElementRecord) => {
+  if (element.type !== "rectangle") {
+    return false;
+  }
+  if (isExplicitFrameElement(element)) {
     return true;
   }
   const width = typeof element.width === "number" ? Math.abs(element.width) : 0;

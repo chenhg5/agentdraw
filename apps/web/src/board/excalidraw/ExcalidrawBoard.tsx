@@ -137,7 +137,6 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
       if (fitSceneKeyRef.current === sceneKey) {
         return;
       }
-      fitSceneKeyRef.current = sceneKey;
       suppressChangeRef.current = true;
       api.updateScene({
         elements: normalizedElements as readonly ExcalidrawElement[],
@@ -150,11 +149,20 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
         if (cancelled) {
           return;
         }
-        fitBoardToContent(api, normalizedElements, boardRootRef.current);
+        if (fitBoardToContent(api, normalizedElements, boardRootRef.current)) {
+          fitSceneKeyRef.current = sceneKey;
+        }
       };
       window.requestAnimationFrame(() => window.requestAnimationFrame(fitWhenReady));
       for (const delay of [160, 480, 900, 1500, 2400]) {
         timers.push(window.setTimeout(fitWhenReady, delay));
+      }
+      const resizeObserver =
+        boardRootRef.current && "ResizeObserver" in window
+          ? new ResizeObserver(fitWhenReady)
+          : null;
+      if (resizeObserver && boardRootRef.current) {
+        resizeObserver.observe(boardRootRef.current);
       }
       timers.push(
         window.setTimeout(() => {
@@ -166,6 +174,7 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
 
       return () => {
         cancelled = true;
+        resizeObserver?.disconnect();
         timers.forEach((timer) => window.clearTimeout(timer));
         suppressChangeRef.current = false;
       };
@@ -226,7 +235,7 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
     }));
 
     return (
-      <div ref={boardRootRef} style={{ width: "100%", height: "100%" }}>
+      <div ref={boardRootRef} className="board-host">
         <Excalidraw
           excalidrawAPI={(api) => {
             apiRef.current = api;
@@ -500,6 +509,7 @@ const sanitizeInitialAppState = (appState: Record<string, unknown>) => {
     openSidebar,
     openDialog,
     toast,
+    currentItemRoundness,
     ...safeAppState
   } = appState;
   void scrollX;
@@ -521,6 +531,7 @@ const sanitizeInitialAppState = (appState: Record<string, unknown>) => {
   void openSidebar;
   void openDialog;
   void toast;
+  void currentItemRoundness;
   return safeAppState as Partial<AppState>;
 };
 
@@ -543,9 +554,9 @@ const fitBoardToContent = (
   api.scrollToContent(drawableElements, {
     animate: false,
     fitToViewport: true,
-    viewportZoomFactor: 0.76,
+    viewportZoomFactor: 0.7,
     minZoom: 0.35,
-    maxZoom: 1,
+    maxZoom: 0.72,
   });
   return true;
 };

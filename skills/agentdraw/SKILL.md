@@ -55,7 +55,7 @@ Before delivering:
 - The selected style changes layout, typography, spacing, components, connector treatment, and geometry, not only colors.
 - The board follows `agentdraw guide contract <style-id> --json` for palette, type scale, roughness, stroke width, spacing, and avoid rules.
 - Text hierarchy comes from title/heading/body sizes, contrast, and spacing; do not use emoji as icons, bullets, status markers, or decoration unless the user explicitly asked for them.
-- Connectors attach to meaningful shapes and avoid crossing labels.
+- Connectors attach to meaningful shapes at the shape edge or just outside it; endpoints must not sit deep inside nodes or cross labels.
 - Text fits inside containers.
 - `agentdraw validate <file> --style <style-id> --format json` reports zero errors.
 - `agentdraw quality <file> --style <style-id> --format json` returns `verdict: "pass"` or the remaining weaknesses are intentionally accepted.
@@ -93,6 +93,7 @@ agentdraw open .agentdraw/board.agentdraw.json --background --no-open --format j
 - Keep text editable and generously sized.
 - For centered text inside a shape, use `agentdraw guide patterns --json`: inset the text box by 12-20px, set `textAlign: "center"`, `verticalAlign: "middle"`, `autoResize: false`, `fontFamily: 2`, and `lineHeight: 1.25`.
 - Do not place contained text at the container top-left with `autoResize: true`; this often renders as top-aligned or cramped text.
+- Do not place connector start or end points deep inside a shape. Put endpoints on the nearest shape edge or just outside it; `agentdraw validate` reports `connector-endpoint-inside-shape` as an error.
 - Use the font family required by `agentdraw guide contract <style-id> --json`. Default AgentDraw themes use Excalidraw `fontFamily: 2` sans text; avoid `fontFamily: 1` for Chinese or multilingual boards unless the user explicitly asks for a hand-drawn look.
 - Do not persist viewport runtime fields such as `scrollX`, `scrollY`, `zoom`, `width`, `height`, `offsetTop`, `selectedElementIds`, or `editingTextElement`.
 - Run validation before opening or delivering the scene.

@@ -314,6 +314,9 @@ const findConnectorIssues = (
       });
     }
 
+    const embeddedEndpointIssues = connectorEndpointInsideShapeIssues(connector, points, shapes);
+    issues.push(...embeddedEndpointIssues);
+
     const crossedText = texts.find((text) =>
       segments(points).some(([start, end]) => segmentIntersectsRect(start, end, padded(text, 4))),
     );
@@ -328,6 +331,50 @@ const findConnectorIssues = (
   }
 
   return issues;
+};
+
+const connectorEndpointInsideShapeIssues = (
+  connector: ElementRecord,
+  points: Point[],
+  shapes: Bounds[],
+): SceneValidationIssue[] => {
+  const issues: SceneValidationIssue[] = [];
+  const endpoints = [
+    { name: "start", point: points[0] },
+    { name: "end", point: points[points.length - 1] },
+  ];
+  const connectableShapes = shapes.filter(isConnectableShape);
+
+  for (const endpoint of endpoints) {
+    const containingShape = smallestContainingShape(endpoint.point, connectableShapes);
+    if (!containingShape) {
+      continue;
+    }
+    const inset = distanceToRectEdge(endpoint.point, containingShape);
+    const tolerance = Math.max(6, Math.min(12, Math.min(containingShape.width, containingShape.height) * 0.12));
+    if (inset <= tolerance) {
+      continue;
+    }
+    issues.push({
+      severity: "error",
+      code: "connector-endpoint-inside-shape",
+      message: `Connector ${endpoint.name} endpoint is ${Math.round(inset)}px inside ${containingShape.id}. Place connector endpoints on the shape edge or just outside it.`,
+      elementIds: [connector.id ?? "(unknown)", containingShape.id],
+    });
+  }
+
+  return issues;
+};
+
+const isConnectableShape = (shape: Bounds) =>
+  SHAPE_TYPES.has(shape.type) && shape.width <= 640 && shape.height <= 260;
+
+const smallestContainingShape = (point: Point, shapes: Bounds[]) => {
+  const containing = shapes.filter((shape) => pointInsideRect(point, shape));
+  if (containing.length === 0) {
+    return null;
+  }
+  return containing.sort((left, right) => left.width * left.height - right.width * right.height)[0];
 };
 
 const isDrawableElement = (element: unknown): element is ElementRecord => {
@@ -511,6 +558,14 @@ const pointToRectDistance = (point: Point, rect: Bounds) => {
   const dy = Math.max(rect.y - point.y, 0, point.y - (rect.y + rect.height));
   return Math.hypot(dx, dy);
 };
+
+const distanceToRectEdge = (point: Point, rect: Bounds) =>
+  Math.min(
+    Math.abs(point.x - rect.x),
+    Math.abs(point.x - (rect.x + rect.width)),
+    Math.abs(point.y - rect.y),
+    Math.abs(point.y - (rect.y + rect.height)),
+  );
 
 const segmentIntersectsRect = (start: Point, end: Point, rect: Bounds) => {
   if (

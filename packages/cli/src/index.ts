@@ -990,6 +990,35 @@ const outputFormat = (options: GlobalOptions): OutputFormat =>
   options.format ?? (process.stdout.isTTY ? "text" : "json");
 
 const openBackgroundCommand = async (options: OpenOptions, filePath: string) => {
+  const url = `${displayBaseUrl(options.host, options.port)}/?file=${encodeURIComponent(filePath)}`;
+  if (await isRunningAgentDrawServer(options.host, options.port)) {
+    if (options.openBrowser) {
+      openSystemBrowser(url);
+    }
+    writeOutput(
+      {
+        ok: true,
+        command: "open",
+        background: true,
+        reused: true,
+        filePath,
+        url,
+        host: options.host,
+        port: options.port,
+        browserOpened: options.openBrowser,
+        message: "Reused the existing AgentDraw background server.",
+      },
+      [
+        `AgentDraw ${VERSION}`,
+        `File: ${filePath}`,
+        `URL: ${url}`,
+        `Reused existing AgentDraw server on ${options.host}:${options.port}.`,
+      ].join("\n"),
+      options,
+    );
+    return;
+  }
+
   await assertPortAvailable(options.host, options.port);
 
   const cliPath = fileURLToPath(import.meta.url);
@@ -1011,7 +1040,6 @@ const openBackgroundCommand = async (options: OpenOptions, filePath: string) => 
   });
   child.unref();
 
-  const url = `${displayBaseUrl(options.host, options.port)}/?file=${encodeURIComponent(filePath)}`;
   writeOutput(
     {
       ok: true,
@@ -1033,6 +1061,25 @@ const openBackgroundCommand = async (options: OpenOptions, filePath: string) => 
     ].join("\n"),
     options,
   );
+};
+
+const isRunningAgentDrawServer = async (host: string, port: number) => {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 700);
+  try {
+    const response = await fetch(displayBaseUrl(host, port), {
+      signal: controller.signal,
+    });
+    if (!response.ok) {
+      return false;
+    }
+    const body = await response.text();
+    return body.includes("<title>AgentDraw</title>") || body.includes("AgentDraw");
+  } catch {
+    return false;
+  } finally {
+    clearTimeout(timeout);
+  }
 };
 
 const displayBaseUrl = (host: string, port: number) => {
@@ -1133,8 +1180,16 @@ const scoreSceneQuality = (
   ]);
   const connectorIssueCount = countIssueCodes(issueCodes, [
     "connector-endpoint",
+    "connector-endpoint-inside-shape",
     "connector-crosses-text",
   ]);
+  const connectorErrorCount = validation.issues.filter(
+    (issue) =>
+      issue.severity === "error" &&
+      ["connector-endpoint", "connector-endpoint-inside-shape", "connector-crosses-text"].includes(
+        issue.code,
+      ),
+  ).length;
   const contractIssueCount = countIssueCodes(issueCodes, [
     "color-outside-contract",
     "roughness-outside-contract",
@@ -1159,7 +1214,12 @@ const scoreSceneQuality = (
     scoreStructure(scene, shapeElements.length, connectorElements.length, sectionLikeShapes.length),
     scoreVisualDesign(scene, contractIssueCount),
     scoreReadability(textIssueCount, hardTextIssueCount),
-    scoreConnectorQuality(connectorElements.length, shapeElements.length, connectorIssueCount),
+    scoreConnectorQuality(
+      connectorElements.length,
+      shapeElements.length,
+      connectorIssueCount,
+      connectorErrorCount,
+    ),
     scoreValidationEditability(scene, validation.errorCount, validation.warningCount),
   ];
 
@@ -1271,12 +1331,16 @@ const scoreConnectorQuality = (
   connectorCount: number,
   shapeCount: number,
   connectorIssueCount: number,
+  connectorErrorCount: number,
 ): QualityDimensionScore => {
   const issues: string[] = [];
   let score = 4;
   if (connectorCount === 0 && shapeCount > 3) {
     score = 2;
     issues.push("Board has multiple shapes but no connectors.");
+  } else if (connectorErrorCount > 0) {
+    score = 2;
+    issues.push(`${connectorErrorCount} connector error(s) must be fixed.`);
   } else if (connectorIssueCount > 4) {
     score = 2;
     issues.push(`${connectorIssueCount} connector routing issue(s).`);
@@ -1519,8 +1583,8 @@ const guidePayload = (topic: string, detail?: string) => {
             id: "connector_quality",
             name: "Connector quality",
             pass:
-              "Connectors attach to meaningful shapes, avoid labels and table headers, and do not create visual tangles.",
-            check: "Following the arrows should make the system easier to understand, not harder.",
+              "Connectors attach to meaningful shapes at the shape edge or just outside it, avoid labels and table headers, and do not create visual tangles.",
+            check: "Following the arrows should make the system easier to understand, and no endpoint should sit deep inside a node.",
           },
           {
             id: "validation",
@@ -1538,6 +1602,7 @@ const guidePayload = (topic: string, detail?: string) => {
           "If the scene is dense, add visible groups, section headers, or lanes before adding more detail.",
           "If text is long, resize the container or split the content; do not rely on tiny text.",
           "If text contains emoji, replace it with plain labels or simple editable shapes unless the user explicitly requested emoji.",
+          "If connector endpoints sit inside a shape instead of on its edge, move the endpoint to the nearest edge or reroute the connector.",
           "If connectors cross text, reroute or change the layout.",
         ],
         scorecard: {
