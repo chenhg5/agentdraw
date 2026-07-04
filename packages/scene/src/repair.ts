@@ -71,11 +71,16 @@ export const repairScene = (
     if (CONNECTOR_TYPES.has(element.type ?? "")) {
       repairConnectorElement(element, connectorColor, connectorStrokeWidth, changes);
     }
+    if (isFrameLikeElement(element)) {
+      repairFrameElement(element, frameColor, changes);
+    }
   }
 
   if (options.addOuterFrame) {
     addOuterFrame(elements, frameColor, changes);
   }
+
+  touchChangedElements(elements, changes);
 
   return {
     scene: {
@@ -88,6 +93,61 @@ export const repairScene = (
     },
     changes,
   };
+};
+
+const touchChangedElements = (
+  elements: unknown[],
+  changes: SceneRepairChange[],
+) => {
+  const changedIds = new Set(
+    changes
+      .map((change) => change.elementId)
+      .filter((id) => id && id !== "(unknown)"),
+  );
+  if (changedIds.size === 0) {
+    return;
+  }
+  const updated = Date.now();
+  for (const element of elements.filter(isElementRecord)) {
+    if (!element.id || !changedIds.has(element.id)) {
+      continue;
+    }
+    element.version = typeof element.version === "number" ? element.version + 1 : 1;
+    element.versionNonce = Math.floor(Math.random() * 2 ** 31);
+    element.updated = updated;
+  }
+};
+
+const repairFrameElement = (
+  element: ElementRecord,
+  frameColor: string,
+  changes: SceneRepairChange[],
+) => {
+  const id = element.id ?? "(unknown)";
+  if (element.roundness !== null) {
+    element.roundness = null;
+    changes.push({
+      elementId: id,
+      code: "frame-square-corners",
+      message: "Set outer frame roundness to null for square formal framing.",
+    });
+  }
+  if (element.backgroundColor !== "transparent") {
+    element.backgroundColor = "transparent";
+    changes.push({
+      elementId: id,
+      code: "frame-transparent-fill",
+      message: "Set outer frame backgroundColor to transparent.",
+    });
+  }
+  if (element.strokeColor !== frameColor && typeof element.strokeColor !== "string") {
+    element.strokeColor = frameColor;
+    changes.push({
+      elementId: id,
+      code: "frame-stroke-color",
+      message: `Set outer frame strokeColor to ${frameColor}.`,
+    });
+  }
 };
 
 const repairTextElement = (
@@ -324,7 +384,7 @@ const addOuterFrame = (
     opacity: 100,
     groupIds: [],
     boundElements: null,
-    roundness: { type: 2 },
+    roundness: null,
     seed: 1,
     version: 1,
     versionNonce: 1,
@@ -360,6 +420,22 @@ const hasOuterFrame = (elements: unknown[], drawableBounds: Bounds[]) => {
           bounds.y + bounds.height >= bottom + 12,
       );
     });
+};
+
+const isFrameLikeElement = (element: ElementRecord) => {
+  if (element.type !== "rectangle") {
+    return false;
+  }
+  if (element.customData?.role === "frame") {
+    return true;
+  }
+  const id = String(element.id ?? "").toLowerCase();
+  if (id.includes("frame") || id.includes("boundary")) {
+    return true;
+  }
+  const width = typeof element.width === "number" ? Math.abs(element.width) : 0;
+  const height = typeof element.height === "number" ? Math.abs(element.height) : 0;
+  return width >= 700 && height >= 350 && element.backgroundColor === "transparent";
 };
 
 const isElementRecord = (element: unknown): element is ElementRecord =>

@@ -28,6 +28,7 @@ type ElementRecord = Record<string, unknown> & {
   fontSize?: number;
   lineHeight?: number;
   autoResize?: boolean;
+  containerId?: string | null;
   customData?: Record<string, unknown>;
 };
 
@@ -61,8 +62,10 @@ export const validateScene = (scene: AgentDrawScene): SceneValidationResult => {
   const issues: SceneValidationIssue[] = [];
 
   issues.push(...findTextOverflowIssues(textElements, shapeBounds));
+  issues.push(...findEmojiTextIssues(textElements));
   issues.push(...findTextOverlaps(textBounds));
   issues.push(...findShapeOverlaps(shapeBounds));
+  issues.push(...findContainedTextBoxIssues(shapeBounds, textBounds, textElements));
   issues.push(...findVerticalCenteringIssues(shapeBounds, textBounds, textElements));
   issues.push(...findConnectorIssues(connectorElements, shapeBounds, textBounds));
 
@@ -72,6 +75,59 @@ export const validateScene = (scene: AgentDrawScene): SceneValidationResult => {
     warningCount: issues.filter((issue) => issue.severity === "warning").length,
   };
 };
+
+const findContainedTextBoxIssues = (
+  shapes: Bounds[],
+  texts: Bounds[],
+  textElements: ElementRecord[],
+): SceneValidationIssue[] => {
+  const issues: SceneValidationIssue[] = [];
+  const textBoundsById = new Map(texts.map((text) => [text.id, text]));
+  const shapeById = new Map(shapes.map((shape) => [shape.id, shape]));
+
+  for (const text of textElements) {
+    if (typeof text.containerId !== "string") {
+      continue;
+    }
+    const bounds = text.id ? textBoundsById.get(text.id) : null;
+    const container = shapeById.get(text.containerId);
+    if (!bounds || !container || container.height > 240) {
+      continue;
+    }
+    const expectedHeight = Math.max(32, container.height - defaultContainerPadding(container) * 2);
+    if (bounds.height < expectedHeight * 0.72) {
+      issues.push({
+        severity: "warning",
+        code: "contained-text-box-too-small",
+        message:
+          "Contained text box is much shorter than its container. This can render top-aligned on first load; run repair or use the centered-label pattern.",
+        elementIds: [container.id, bounds.id],
+      });
+    }
+  }
+
+  return issues;
+};
+
+const findEmojiTextIssues = (texts: ElementRecord[]): SceneValidationIssue[] => {
+  const emojiTexts = texts.filter(
+    (text) => typeof text.text === "string" && containsEmoji(text.text),
+  );
+  if (emojiTexts.length === 0) {
+    return [];
+  }
+  return [
+    {
+      severity: "warning",
+      code: "emoji-text",
+      message:
+        "Text contains emoji. Prefer plain text labels or editable shapes unless the user explicitly requested emoji.",
+      elementIds: emojiTexts.map((text) => text.id ?? "(unknown)"),
+    },
+  ];
+};
+
+const containsEmoji = (text: string) => /\p{Extended_Pictographic}/u.test(text);
 
 const findTextOverflowIssues = (
   texts: ElementRecord[],
@@ -425,6 +481,9 @@ const padded = (bounds: Bounds, padding: number): Bounds => ({
   width: bounds.width + padding * 2,
   height: bounds.height + padding * 2,
 });
+
+const defaultContainerPadding = (container: Bounds) =>
+  Math.max(8, Math.min(20, Math.round(Math.min(container.width, container.height) * 0.16)));
 
 const contains = (outer: Bounds, inner: Bounds) =>
   inner.x >= outer.x &&

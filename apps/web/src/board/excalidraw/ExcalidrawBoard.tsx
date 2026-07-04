@@ -132,8 +132,38 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
         return;
       }
       fitSceneKeyRef.current = sceneKey;
-      window.setTimeout(() => fitBoardToContent(api, normalizedElements), 120);
-    }, [apiReady, replayEnabled, sceneKey, normalizedElements]);
+      suppressChangeRef.current = true;
+      api.updateScene({
+        elements: normalizedElements as readonly ExcalidrawElement[],
+        appState: styledAppState as AppState,
+      });
+
+      let cancelled = false;
+      const timers: number[] = [];
+      const fitWhenReady = () => {
+        if (cancelled) {
+          return;
+        }
+        fitBoardToContent(api, normalizedElements);
+      };
+      window.requestAnimationFrame(() => window.requestAnimationFrame(fitWhenReady));
+      for (const delay of [160, 480, 900]) {
+        timers.push(window.setTimeout(fitWhenReady, delay));
+      }
+      timers.push(
+        window.setTimeout(() => {
+          if (!cancelled) {
+            suppressChangeRef.current = false;
+          }
+        }, 250),
+      );
+
+      return () => {
+        cancelled = true;
+        timers.forEach((timer) => window.clearTimeout(timer));
+        suppressChangeRef.current = false;
+      };
+    }, [apiReady, replayEnabled, sceneKey, normalizedElements, styledAppState]);
 
     useImperativeHandle(ref, () => ({
       getSnapshot: () => snapshotFromApi(apiRef.current),
@@ -237,6 +267,7 @@ const normalizeElementsForExcalidraw = (
 ) => {
   const profile = getStyleRenderProfile(style);
   const expectedFontFamily = fontFamilyForProfile(profile.fontFamily);
+  const now = Date.now();
   const elementById = new Map(
     elements
       .filter(isElementRecord)
@@ -260,6 +291,16 @@ const normalizeElementsForExcalidraw = (
       : null;
     const width = normalizedBox?.width ?? element.width;
     const height = normalizedBox?.height ?? element.height;
+    const hasLayoutChange = Boolean(
+      normalizedBox &&
+        (numberChanged(element.x, normalizedBox.x) ||
+          numberChanged(element.y, normalizedBox.y) ||
+          numberChanged(element.width, normalizedBox.width) ||
+          numberChanged(element.height, normalizedBox.height) ||
+          element.verticalAlign !== "middle" ||
+          element.textAlign !== "center" ||
+          element.autoResize !== false),
+    );
     return {
       ...element,
       ...(normalizedBox
@@ -292,6 +333,13 @@ const normalizeElementsForExcalidraw = (
       height,
       backgroundColor:
         typeof element.backgroundColor === "string" ? element.backgroundColor : "transparent",
+      ...(hasLayoutChange
+        ? {
+            version: bumpNumber(element.version),
+            versionNonce: randomNonce(),
+            updated: now,
+          }
+        : null),
     };
   });
 };
@@ -363,6 +411,9 @@ const insetBounds = (box: Box, padding: number): Box => ({
 
 const defaultTextPadding = (box: Box) =>
   Math.max(8, Math.min(20, Math.round(Math.min(box.width, box.height) * 0.16)));
+
+const numberChanged = (left: unknown, right: number) =>
+  typeof left !== "number" || Math.abs(left - right) > 0.5;
 
 const centeredBaseline = (
   text: string,

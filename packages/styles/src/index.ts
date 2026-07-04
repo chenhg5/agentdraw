@@ -222,6 +222,8 @@ export function getDesignContract(styleOrId: AgentDrawStyle | string): DesignCon
       "The selected style must change layout, typography, geometry, components, and connector treatment.",
       "Use only contract palette colors unless the user explicitly asks for a custom brand color.",
       "Use the contract font family; default AgentDraw themes use sans text for multilingual readability.",
+      "Use title-size text for one clear title, heading-size text for section labels, and body-size text for content. Create hierarchy with size, contrast, and spacing rather than emoji.",
+      "Avoid emoji and decorative pictograms unless the user explicitly asks for them.",
       ...(formal
         ? ["For architecture, layered system, and workflow boards, add an outer frame, canvas boundary, or titled system region so the diagram reads as a complete artifact."]
         : []),
@@ -231,6 +233,7 @@ export function getDesignContract(styleOrId: AgentDrawStyle | string): DesignCon
     avoid: [
       "palette-only restyling",
       "Excalidraw Virgil/handwritten font unless explicitly requested by the user",
+      "emoji used as icons, bullets, or status markers",
       "uncontained or clipped text",
       "connectors crossing labels, titles, or table headers",
       "unmarked decorative overlaps",

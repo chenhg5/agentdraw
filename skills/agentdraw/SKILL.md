@@ -18,7 +18,7 @@ npx @aidraw/agentdraw@latest guide quality --format text
 npx @aidraw/agentdraw@latest guide patterns --json
 npx @aidraw/agentdraw@latest guide styles --json
 npx @aidraw/agentdraw@latest gallery --open --format json
-npx @aidraw/agentdraw@latest guide contract system-formal --json
+npx @aidraw/agentdraw@latest guide contract <style-id> --json
 ```
 
 For repeated use:
@@ -54,6 +54,7 @@ Before delivering:
 - The agent states why it selected the theme. If the user has no clear preference, the agent offers `agentdraw gallery` before committing to a style.
 - The selected style changes layout, typography, spacing, components, connector treatment, and geometry, not only colors.
 - The board follows `agentdraw guide contract <style-id> --json` for palette, type scale, roughness, stroke width, spacing, and avoid rules.
+- Text hierarchy comes from title/heading/body sizes, contrast, and spacing; do not use emoji as icons, bullets, status markers, or decoration unless the user explicitly asked for them.
 - Connectors attach to meaningful shapes and avoid crossing labels.
 - Text fits inside containers.
 - `agentdraw validate <file> --style <style-id> --format json` reports zero errors.
@@ -71,14 +72,14 @@ agentdraw guide scene
 agentdraw guide patterns --json
 agentdraw gallery --open --format json
 agentdraw guide rules
-agentdraw guide style system-formal --format text
-agentdraw guide contract system-formal --json
+agentdraw guide style <style-id> --format text
+agentdraw guide contract <style-id> --json
 agentdraw init .agentdraw/board.agentdraw.json
-agentdraw validate .agentdraw/board.agentdraw.json --style system-formal --format json
-agentdraw repair .agentdraw/board.agentdraw.json --style system-formal --write --format json
-agentdraw quality .agentdraw/board.agentdraw.json --style system-formal --format json
+agentdraw validate .agentdraw/board.agentdraw.json --style <style-id> --format json
+agentdraw repair .agentdraw/board.agentdraw.json --style <style-id> --write --format json
+agentdraw quality .agentdraw/board.agentdraw.json --style <style-id> --format json
 agentdraw export .agentdraw/board.agentdraw.json --format png --out .agentdraw/board.preview.png --json
-agentdraw validate-style system-formal --json
+agentdraw validate-style <style-id> --json
 agentdraw open .agentdraw/board.agentdraw.json --background --open --format json
 agentdraw open .agentdraw/board.agentdraw.json --background --no-open --format json
 ```
@@ -87,7 +88,8 @@ agentdraw open .agentdraw/board.agentdraw.json --background --no-open --format j
 
 - Do not make screenshots when an editable board is expected.
 - Do not use a design style as a palette swap; load its guide and contract before generating.
-- Do not silently default to the same style every time. State the selected style and reason; if unsure, show the theme gallery and ask.
+- Do not silently default to the same style every time. Do not choose `system-formal` just because examples or previous runs used it. State the selected style and reason; if unsure, show the theme gallery and ask.
+- Avoid emoji and decorative pictograms unless the user explicitly requests them. They often reduce perceived quality in professional diagrams and may render inconsistently.
 - Keep text editable and generously sized.
 - For centered text inside a shape, use `agentdraw guide patterns --json`: inset the text box by 12-20px, set `textAlign: "center"`, `verticalAlign: "middle"`, `autoResize: false`, `fontFamily: 2`, and `lineHeight: 1.25`.
 - Do not place contained text at the container top-left with `autoResize: true`; this often renders as top-aligned or cramped text.
