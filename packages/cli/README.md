@@ -21,6 +21,7 @@ agentdraw open [file] [--host 127.0.0.1] [--port 3927] [--open|--no-open] [--bac
 agentdraw init [file]
 agentdraw validate <file...> [--style <style-id>] [--format json|text]
 agentdraw quality <file...> [--style <style-id>] [--format json|text]
+agentdraw export <file> [--format svg|png] [--out <path>] [--scale <number>]
 agentdraw validate-style [style-id...] [--format json|text]
 agentdraw guide [workflow|styles|style|contract|scene|rules] [style-id]
 agentdraw schema [command] [--json]

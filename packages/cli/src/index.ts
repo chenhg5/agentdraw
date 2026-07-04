@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { spawn } from "node:child_process";
 import { readFileSync } from "node:fs";
+import { mkdir, writeFile } from "node:fs/promises";
 import net from "node:net";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -21,6 +22,7 @@ import {
   validateSceneAgainstDesignContract,
   type DesignContractIssue,
 } from "@agentdraw/styles";
+import { renderScenePng, renderSceneSvg, type RenderFormat } from "./render.js";
 
 const VERSION = readPackageVersion();
 const DEFAULT_PORT = 3927;
@@ -62,6 +64,13 @@ type ValidateOptions = GlobalOptions & {
 type QualityOptions = GlobalOptions & {
   filePaths: string[];
   styleId?: string;
+};
+
+type ExportOptions = GlobalOptions & {
+  filePath: string;
+  outputPath?: string;
+  renderFormat: RenderFormat;
+  scale: number;
 };
 
 type DoctorOptions = GlobalOptions;
@@ -194,6 +203,9 @@ const main = async () => {
       return;
     case "quality":
       await qualityCommand(parseQualityOptions(args, context.globals));
+      return;
+    case "export":
+      await exportCommand(parseExportOptions(args, context.globals));
       return;
     case "validate-style":
       await validateStyleCommand(parseValidateStyleOptions(args, context.globals));
@@ -349,6 +361,37 @@ const qualityCommand = async (options: QualityOptions) => {
   }
 };
 
+const exportCommand = async (options: ExportOptions) => {
+  const filePath = resolveScenePath(options.filePath, options.cwd);
+  const scene = await readSceneFile(filePath);
+  const outputPath = resolveExportPath(
+    options.outputPath,
+    filePath,
+    options.renderFormat,
+    options.cwd,
+  );
+  const data =
+    options.renderFormat === "png"
+      ? renderScenePng(scene, { scale: options.scale })
+      : renderSceneSvg(scene, { scale: options.scale });
+  await mkdir(path.dirname(outputPath), { recursive: true });
+  await writeFile(outputPath, data);
+
+  writeOutput(
+    {
+      ok: true,
+      command: "export",
+      filePath,
+      outputPath,
+      format: options.renderFormat,
+      scale: options.scale,
+      message: `Exported ${options.renderFormat.toUpperCase()} preview.`,
+    },
+    `Exported ${options.renderFormat.toUpperCase()}: ${outputPath}`,
+    options,
+  );
+};
+
 const validateStyleCommand = async (options: ValidateStyleOptions) => {
   const styleIds = options.styleIds.length > 0 ? options.styleIds : styles.map((style) => style.id);
   const results: StyleValidationSummary[] = [];
@@ -457,11 +500,26 @@ const parseGlobalOptions = (argv: string[]): CommandContext => {
       continue;
     }
     if (arg === "--format") {
-      globals.format = readFormat(argv[++index], "--format");
+      const value = argv[index + 1];
+      if (value === "json" || value === "text") {
+        globals.format = readFormat(value, "--format");
+        index += 1;
+        continue;
+      }
+      rest.push(arg);
+      if (value !== undefined) {
+        rest.push(value);
+        index += 1;
+      }
       continue;
     }
     if (arg.startsWith("--format=")) {
-      globals.format = readFormat(arg.slice("--format=".length), "--format");
+      const value = arg.slice("--format=".length);
+      if (value === "json" || value === "text") {
+        globals.format = readFormat(value, "--format");
+      } else {
+        rest.push(arg);
+      }
       continue;
     }
     if (arg === "--cwd") {
@@ -548,6 +606,29 @@ const parseQualityOptions = (
     ...globals,
     filePaths: values.positionals,
     styleId: values.valueFlags["--style"],
+  };
+};
+
+const parseExportOptions = (args: string[], globals: GlobalOptions): ExportOptions => {
+  const values = parseCommandFlags(args, {
+    booleanFlags: [],
+    valueFlags: ["--format", "--out", "--output", "--scale"],
+  });
+  assertNoUnknownFlags(values.unknownFlags, "export");
+  if (values.positionals.length !== 1) {
+    throw new CliError("missing_argument", "The export command requires one scene file.", {
+      exitCode: EXIT_USAGE_ERROR,
+      suggestion: "Run: agentdraw export <file> --format svg|png --out <preview>",
+      input: { args },
+    });
+  }
+  const outputPath = values.valueFlags["--out"] ?? values.valueFlags["--output"];
+  return {
+    ...globals,
+    filePath: values.positionals[0],
+    outputPath,
+    renderFormat: readRenderFormat(values.valueFlags["--format"], outputPath),
+    scale: readScale(values.valueFlags["--scale"] ?? "1"),
   };
 };
 
@@ -690,10 +771,52 @@ const readPort = (value: string) => {
   return port;
 };
 
+const readRenderFormat = (value: string | undefined, outputPath: string | undefined): RenderFormat => {
+  const inferred = outputPath?.toLowerCase().endsWith(".png")
+    ? "png"
+    : outputPath?.toLowerCase().endsWith(".svg")
+      ? "svg"
+      : undefined;
+  const format = value ?? inferred ?? "svg";
+  if (format === "svg" || format === "png") {
+    return format;
+  }
+  throw new CliError("invalid_format", "--format must be svg or png.", {
+    exitCode: EXIT_USAGE_ERROR,
+    suggestion: "Use --format svg or --format png.",
+    input: { value },
+  });
+};
+
+const readScale = (value: string) => {
+  const scale = Number(value);
+  if (!Number.isFinite(scale) || scale <= 0 || scale > 4) {
+    throw new CliError("invalid_scale", "--scale must be greater than 0 and at most 4.", {
+      exitCode: EXIT_USAGE_ERROR,
+      suggestion: "Use --scale 1, --scale 2, or another value up to 4.",
+      input: { value },
+    });
+  }
+  return scale;
+};
+
 const resolveScenePath = (inputPath: string, cwd: string) => {
   const filePath = normalizeScenePath(inputPath, cwd);
   assertSafePath(filePath);
   return filePath;
+};
+
+const resolveExportPath = (
+  outputPath: string | undefined,
+  filePath: string,
+  format: RenderFormat,
+  cwd: string,
+) => {
+  if (outputPath) {
+    return path.isAbsolute(outputPath) ? outputPath : path.resolve(cwd, outputPath);
+  }
+  const parsed = path.parse(filePath);
+  return path.join(parsed.dir, `${parsed.name}.${format}`);
 };
 
 const assertSafePath = (filePath: string) => {
@@ -1155,6 +1278,7 @@ const guidePayload = (topic: string, detail?: string) => {
           "Create or patch a .agentdraw.json scene with editable primitives.",
           "Run agentdraw validate <file> --format json and repair reported element ids.",
           "Run agentdraw quality <file> --style <style-id> --format json, then self-check task fit against the original prompt.",
+          "For higher-quality review, run agentdraw export <file> --format png --out <preview.png> and inspect the rendered preview before opening.",
           "Run agentdraw open <file> --background --open --format json when a local browser is available. On a remote or headless host, use --background --no-open and return the printed local URL.",
         ],
         commands: {
@@ -1166,6 +1290,7 @@ const guidePayload = (topic: string, detail?: string) => {
           contract: "agentdraw guide contract system-formal --json",
           validate: "agentdraw validate .agentdraw/board.agentdraw.json --format json",
           qualityCheck: "agentdraw quality .agentdraw/board.agentdraw.json --style system-formal --format json",
+          exportPreview: "agentdraw export .agentdraw/board.agentdraw.json --format png --out .agentdraw/board.preview.png --json",
           validateStyle: "agentdraw validate-style system-formal --format json",
           open: "agentdraw open .agentdraw/board.agentdraw.json --background --open --format json",
         },
@@ -1566,6 +1691,7 @@ const helpText = (command: string | undefined) => {
         "  agentdraw open board.agentdraw.json --background --no-open --format json",
         "  agentdraw validate board.agentdraw.json --format json",
         "  agentdraw quality board.agentdraw.json --style system-formal --format json",
+        "  agentdraw export board.agentdraw.json --format png --out board.preview.png --json",
         "  agentdraw validate-style system-formal --format json",
         "  agentdraw schema open --format json",
         "",
@@ -1574,6 +1700,7 @@ const helpText = (command: string | undefined) => {
         "  init       Create a scene file without starting the editor.",
         "  validate   Validate one or more scene files.",
         "  quality    Score scene quality against the AgentDraw rubric.",
+        "  export     Export a rendered SVG or PNG preview for visual review.",
         "  validate-style",
         "             Validate installed design guides against the design-contract baseline.",
         "  doctor     Check local runtime details.",
@@ -1674,6 +1801,29 @@ const helpText = (command: string | undefined) => {
         "",
         "Notes:",
         "  Automatic task-fit scoring is limited. Compare the board with the original prompt before delivery.",
+      ].join("\n");
+    case "export":
+      return [
+        "Export a rendered AgentDraw scene preview as SVG or PNG.",
+        "",
+        "Examples:",
+        "  agentdraw export board.agentdraw.json --format svg --out board.svg",
+        "  agentdraw export board.agentdraw.json --format png --out board.preview.png --scale 2 --json",
+        "",
+        "Usage:",
+        "  agentdraw export <file> [--format svg|png] [--out <path>] [--scale <number>]",
+        "",
+        "Arguments:",
+        "  file                Required scene path.",
+        "",
+        "Flags:",
+        "  --format svg|png    Rendered preview format. Inferred from --out when possible. Default: svg.",
+        "  --out <path>        Output path. Default: same directory and basename as the scene.",
+        "  --output <path>     Alias for --out.",
+        "  --scale <number>    Output scale from 0.25 to 4. Default: 1.",
+        "",
+        "Notes:",
+        "  Use this before opening when an agent needs a visual preview for quality review.",
       ].join("\n");
     case "validate-style":
       return [
@@ -1802,6 +1952,25 @@ const commandSchema = (commandPath: string[]) => {
       ],
       notes: [
         "Automatic task-fit scoring is limited. Compare the board with the original prompt before delivery.",
+      ],
+    },
+    export: {
+      description: "Export a rendered scene preview as SVG or PNG.",
+      usage: "agentdraw export <file> [--format svg|png] [--out <path>] [--scale <number>]",
+      arguments: [{ name: "file", required: true }],
+      flags: [
+        { name: "--format", type: "enum", values: ["svg", "png"], required: false },
+        { name: "--out", type: "string", required: false },
+        { name: "--output", type: "string", required: false },
+        { name: "--scale", type: "number", required: false, default: 1 },
+        { name: "--json", type: "boolean", required: false },
+      ],
+      examples: [
+        "agentdraw export board.agentdraw.json --format svg --out board.svg",
+        "agentdraw export board.agentdraw.json --format png --out board.preview.png --scale 2 --json",
+      ],
+      notes: [
+        "Use exported previews when an agent or reviewer needs to inspect rendered output before opening the editor.",
       ],
     },
     "validate-style": {

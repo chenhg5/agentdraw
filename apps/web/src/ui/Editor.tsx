@@ -3,7 +3,7 @@ import {
   styleGroups,
   type AgentDrawStyle,
 } from "@agentdraw/styles";
-import { Download, FileJson, Image, Palette, Save } from "lucide-react";
+import { Download, FileJson, Github, Image, Palette, Save } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ExcalidrawBoard } from "../board/excalidraw/ExcalidrawBoard";
 import {
@@ -174,6 +174,15 @@ export const Editor = ({
           >
             <Image size={17} />
           </button>
+          <a
+            className="icon-link"
+            href="https://github.com/chenhg5/agentdraw"
+            target="_blank"
+            rel="noreferrer"
+            title="Open AgentDraw on GitHub"
+          >
+            <Github size={17} />
+          </a>
         </div>
       </header>
       <section className="canvas">
@@ -248,7 +257,7 @@ const readReplayEnabledFromUrl = (filePath: string) => {
   if (animate === "1" || replay === "1") {
     return true;
   }
-  return true;
+  return false;
 };
 
 const replaySessionStorageKey = (filePath: string) => `agentdraw:replayed:${filePath}`;

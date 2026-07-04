@@ -225,13 +225,18 @@ Create a scene file without starting the editor:
 pnpm agentdraw init .agentdraw/board.agentdraw.json
 ```
 
-Boards replay their final scene by default when opened, so users can watch the diagram being drawn.
-Disable the replay with any of these URL flags:
+Export a rendered preview for visual review:
+
+```bash
+pnpm agentdraw export examples/getting-started.agentdraw.json --format png --out .agentdraw/getting-started.preview.png --scale 2 --json
+```
+
+Boards open instantly by default. Enable replay only when you explicitly want to watch the diagram
+being drawn:
 
 ```text
-?animate=0
-?replay=0
-?instant=1
+?animate=1
+?replay=1
 ```
 
 Validate a generated scene:
@@ -241,6 +246,7 @@ pnpm validate:scene examples/complex-agentdraw-workbench.agentdraw.json
 pnpm agentdraw validate examples/complex-agentdraw-workbench.agentdraw.json --format json
 pnpm agentdraw validate examples/complex-agentdraw-workbench.agentdraw.json --style system-formal --format json
 pnpm agentdraw quality examples/complex-agentdraw-workbench.agentdraw.json --style system-formal --format json
+pnpm agentdraw export examples/complex-agentdraw-workbench.agentdraw.json --format png --out .agentdraw/complex.preview.png --json
 ```
 
 The validator returns a non-zero exit code for layout errors. Warnings are printed but do not fail
@@ -248,7 +254,7 @@ the command. Style-contract drift is reported as warnings so agents can repair w
 blocking intentionally custom boards. A typical agent loop should be:
 
 ```text
-choose style -> load design guide + contract -> generate scene -> validate scene -> score quality -> repair reported element ids -> open board
+choose style -> load design guide + contract -> generate scene -> validate scene -> score quality -> export preview when quality matters -> repair reported element ids -> open board
 ```
 
 ## Scene Format

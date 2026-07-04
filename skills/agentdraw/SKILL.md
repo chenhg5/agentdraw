@@ -34,7 +34,8 @@ agentdraw doctor --json
 4. Create or patch a `.agentdraw.json` scene using editable primitives.
 5. Run `agentdraw validate <file> --style <style-id> --format json` and repair reported element ids until validation passes.
 6. Run `agentdraw quality <file> --style <style-id> --format json`. Use it as preflight, then self-check task fit against the original prompt.
-7. If a local browser is available, run `agentdraw open <file> --background --open --format json`. On a remote or headless host, run `agentdraw open <file> --background --no-open --format json` and return the printed URL to the user.
+7. When the user asks for higher quality or when the board is complex, run `agentdraw export <file> --format png --out <preview.png> --json` and inspect the rendered preview before opening.
+8. If a local browser is available, run `agentdraw open <file> --background --open --format json`. On a remote or headless host, run `agentdraw open <file> --background --no-open --format json` and return the printed URL to the user.
 
 ## Quality Bar
 
@@ -51,6 +52,7 @@ Before delivering:
 - Text fits inside containers.
 - `agentdraw validate <file> --style <style-id> --format json` reports zero errors.
 - `agentdraw quality <file> --style <style-id> --format json` returns `verdict: "pass"` or the remaining weaknesses are intentionally accepted.
+- For important boards, export a PNG/SVG preview and inspect the rendered result before delivery.
 
 If the result looks generic or weak, run `agentdraw guide quality --format text`, choose a better style, and revise before opening.
 
@@ -66,6 +68,7 @@ agentdraw guide contract system-formal --json
 agentdraw init .agentdraw/board.agentdraw.json
 agentdraw validate .agentdraw/board.agentdraw.json --style system-formal --format json
 agentdraw quality .agentdraw/board.agentdraw.json --style system-formal --format json
+agentdraw export .agentdraw/board.agentdraw.json --format png --out .agentdraw/board.preview.png --json
 agentdraw validate-style system-formal --json
 agentdraw open .agentdraw/board.agentdraw.json --background --open --format json
 agentdraw open .agentdraw/board.agentdraw.json --background --no-open --format json
