@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "license": "MIT",
   "packageManager": "pnpm@11.9.0",
   "scripts": {
     "build": "pnpm --filter @agentdraw/styles build && pnpm --filter @agentdraw/scene build && pnpm --filter @agentdraw/server build && pnpm --filter @agentdraw/cli build && pnpm --filter @agentdraw/web build",

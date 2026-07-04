@@ -1,12 +1,12 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
+const themeFiles = (await readdir("examples"))
+  .filter((file) => file.startsWith("theme-") && file.endsWith(".agentdraw.json"))
+  .sort();
 const examples = [
   ["complex-agentdraw-workbench", "examples/complex-agentdraw-workbench.agentdraw.json"],
-  ["theme-system-formal", "examples/theme-system-formal.agentdraw.json"],
-  ["theme-riso-brut", "examples/theme-riso-brut.agentdraw.json"],
-  ["theme-grove", "examples/theme-grove.agentdraw.json"],
-  ["theme-mint-brut", "examples/theme-mint-brut.agentdraw.json"],
+  ...themeFiles.map((file) => [file.replace(".agentdraw.json", ""), path.join("examples", file)]),
 ];
 
 await mkdir("assets/examples", { recursive: true });

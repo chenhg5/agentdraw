@@ -12,6 +12,8 @@ The first canvas provider is Excalidraw. AgentDraw keeps the storage format, sty
 server, and validation logic separate from the canvas implementation, so other providers can be
 added later without replacing the whole app.
 
+Powered by [Excalidraw](https://github.com/excalidraw/excalidraw).
+
 ## Gallery
 
 AgentDraw examples are real editable scene files. The images below are generated previews for the
@@ -27,23 +29,43 @@ README; click a preview to open the source `.agentdraw.json`.
 
 <table>
 <tr>
-<td width="50%">
-<a href="./examples/theme-system-formal.agentdraw.json"><img src="./assets/examples/theme-system-formal.svg" alt="System Formal Architecture preview" /></a><br />
-<sub><a href="./examples/theme-system-formal.agentdraw.json"><b>System Formal</b></a> · structured product diagram</sub>
+<td width="50%" valign="top">
+<a href="./examples/theme-agentdraw-os.agentdraw.json"><img width="100%" src="./assets/examples/theme-agentdraw-os.svg" alt="AgentDraw Operating System preview" /></a><br />
+<sub><a href="./examples/theme-agentdraw-os.agentdraw.json"><b>AgentDraw OS</b></a> · local agent diagram loop</sub>
 </td>
-<td width="50%">
-<a href="./examples/theme-riso-brut.agentdraw.json"><img src="./assets/examples/theme-riso-brut.svg" alt="Riso Brut Launch Loop preview" /></a><br />
-<sub><a href="./examples/theme-riso-brut.agentdraw.json"><b>Riso Brut</b></a> · editorial launch loop</sub>
+<td width="50%" valign="top">
+<a href="./examples/theme-incident-command.agentdraw.json"><img width="100%" src="./assets/examples/theme-incident-command.svg" alt="Incident Command Center preview" /></a><br />
+<sub><a href="./examples/theme-incident-command.agentdraw.json"><b>Incident Command</b></a> · severity and recovery map</sub>
 </td>
 </tr>
 <tr>
-<td width="50%">
-<a href="./examples/theme-grove.agentdraw.json"><img src="./assets/examples/theme-grove.svg" alt="Grove Strategy Map preview" /></a><br />
-<sub><a href="./examples/theme-grove.agentdraw.json"><b>Grove</b></a> · restrained strategy map</sub>
+<td width="50%" valign="top">
+<a href="./examples/theme-message-bus.agentdraw.json"><img width="100%" src="./assets/examples/theme-message-bus.svg" alt="Multi-Agent Message Bus preview" /></a><br />
+<sub><a href="./examples/theme-message-bus.agentdraw.json"><b>Message Bus</b></a> · multi-agent coordination</sub>
 </td>
-<td width="50%">
-<a href="./examples/theme-mint-brut.agentdraw.json"><img src="./assets/examples/theme-mint-brut.svg" alt="Mint Brut Product Roadmap preview" /></a><br />
-<sub><a href="./examples/theme-mint-brut.agentdraw.json"><b>Mint Brut</b></a> · playful product roadmap</sub>
+<td width="50%" valign="top">
+<a href="./examples/theme-launch-room.agentdraw.json"><img width="100%" src="./assets/examples/theme-launch-room.svg" alt="Launch Room Loop preview" /></a><br />
+<sub><a href="./examples/theme-launch-room.agentdraw.json"><b>Launch Room</b></a> · editorial growth loop</sub>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<a href="./examples/theme-strategy-grove.agentdraw.json"><img width="100%" src="./assets/examples/theme-strategy-grove.svg" alt="Quarterly Strategy Map preview" /></a><br />
+<sub><a href="./examples/theme-strategy-grove.agentdraw.json"><b>Strategy Grove</b></a> · quarterly operating map</sub>
+</td>
+<td width="50%" valign="top">
+<a href="./examples/theme-roadmap-mint.agentdraw.json"><img width="100%" src="./assets/examples/theme-roadmap-mint.svg" alt="Creator Tool Roadmap preview" /></a><br />
+<sub><a href="./examples/theme-roadmap-mint.agentdraw.json"><b>Roadmap Mint</b></a> · playful product roadmap</sub>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<a href="./examples/theme-customer-journey.agentdraw.json"><img width="100%" src="./assets/examples/theme-customer-journey.svg" alt="Customer Journey Signals preview" /></a><br />
+<sub><a href="./examples/theme-customer-journey.agentdraw.json"><b>Customer Journey</b></a> · activation signal map</sub>
+</td>
+<td width="50%" valign="top">
+<a href="./examples/theme-research-synthesis.agentdraw.json"><img width="100%" src="./assets/examples/theme-research-synthesis.svg" alt="Research Synthesis Wall preview" /></a><br />
+<sub><a href="./examples/theme-research-synthesis.agentdraw.json"><b>Research Synthesis</b></a> · interview clustering board</sub>
 </td>
 </tr>
 </table>
@@ -133,10 +155,14 @@ The gallery images are generated from these editable source files:
 
 - [`examples/getting-started.agentdraw.json`](./examples/getting-started.agentdraw.json)
 - [`examples/complex-agentdraw-workbench.agentdraw.json`](./examples/complex-agentdraw-workbench.agentdraw.json)
-- [`examples/theme-system-formal.agentdraw.json`](./examples/theme-system-formal.agentdraw.json)
-- [`examples/theme-riso-brut.agentdraw.json`](./examples/theme-riso-brut.agentdraw.json)
-- [`examples/theme-grove.agentdraw.json`](./examples/theme-grove.agentdraw.json)
-- [`examples/theme-mint-brut.agentdraw.json`](./examples/theme-mint-brut.agentdraw.json)
+- [`examples/theme-agentdraw-os.agentdraw.json`](./examples/theme-agentdraw-os.agentdraw.json)
+- [`examples/theme-incident-command.agentdraw.json`](./examples/theme-incident-command.agentdraw.json)
+- [`examples/theme-message-bus.agentdraw.json`](./examples/theme-message-bus.agentdraw.json)
+- [`examples/theme-launch-room.agentdraw.json`](./examples/theme-launch-room.agentdraw.json)
+- [`examples/theme-strategy-grove.agentdraw.json`](./examples/theme-strategy-grove.agentdraw.json)
+- [`examples/theme-roadmap-mint.agentdraw.json`](./examples/theme-roadmap-mint.agentdraw.json)
+- [`examples/theme-customer-journey.agentdraw.json`](./examples/theme-customer-journey.agentdraw.json)
+- [`examples/theme-research-synthesis.agentdraw.json`](./examples/theme-research-synthesis.agentdraw.json)
 
 Regenerate the theme examples:
 
@@ -252,4 +278,6 @@ git remote add origin git@github.com:chenhg5/agentdraw.git
 
 ## License
 
-No license has been selected yet.
+[MIT](./LICENSE)
+
+AgentDraw is powered by [Excalidraw](https://github.com/excalidraw/excalidraw).

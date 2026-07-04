@@ -8,6 +8,8 @@ AgentDraw 是一个本地优先、可编辑的白板工作区，面向 Claude Co
 
 当前第一个画板 provider 是 Excalidraw。AgentDraw 把存储格式、风格系统、本地服务和校验逻辑跟画布实现解耦，后续可以继续增加其它 provider，而不用推倒整个应用。
 
+Powered by [Excalidraw](https://github.com/excalidraw/excalidraw)。
+
 ## 画廊
 
 AgentDraw 示例都是可编辑的真实 scene 文件。下面的图片只是 README 预览图；点击图片可以打开对应的 `.agentdraw.json` 源文件。
@@ -22,23 +24,43 @@ AgentDraw 示例都是可编辑的真实 scene 文件。下面的图片只是 RE
 
 <table>
 <tr>
-<td width="50%">
-<a href="./examples/theme-system-formal.agentdraw.json"><img src="./assets/examples/theme-system-formal.svg" alt="System Formal Architecture preview" /></a><br />
-<sub><a href="./examples/theme-system-formal.agentdraw.json"><b>System Formal</b></a> · 结构化产品图</sub>
+<td width="50%" valign="top">
+<a href="./examples/theme-agentdraw-os.agentdraw.json"><img width="100%" src="./assets/examples/theme-agentdraw-os.svg" alt="AgentDraw Operating System preview" /></a><br />
+<sub><a href="./examples/theme-agentdraw-os.agentdraw.json"><b>AgentDraw OS</b></a> · 本地 agent 作图闭环</sub>
 </td>
-<td width="50%">
-<a href="./examples/theme-riso-brut.agentdraw.json"><img src="./assets/examples/theme-riso-brut.svg" alt="Riso Brut Launch Loop preview" /></a><br />
-<sub><a href="./examples/theme-riso-brut.agentdraw.json"><b>Riso Brut</b></a> · 编辑感增长闭环</sub>
+<td width="50%" valign="top">
+<a href="./examples/theme-incident-command.agentdraw.json"><img width="100%" src="./assets/examples/theme-incident-command.svg" alt="Incident Command Center preview" /></a><br />
+<sub><a href="./examples/theme-incident-command.agentdraw.json"><b>Incident Command</b></a> · 故障响应和复盘图</sub>
 </td>
 </tr>
 <tr>
-<td width="50%">
-<a href="./examples/theme-grove.agentdraw.json"><img src="./assets/examples/theme-grove.svg" alt="Grove Strategy Map preview" /></a><br />
-<sub><a href="./examples/theme-grove.agentdraw.json"><b>Grove</b></a> · 克制策略图</sub>
+<td width="50%" valign="top">
+<a href="./examples/theme-message-bus.agentdraw.json"><img width="100%" src="./assets/examples/theme-message-bus.svg" alt="Multi-Agent Message Bus preview" /></a><br />
+<sub><a href="./examples/theme-message-bus.agentdraw.json"><b>Message Bus</b></a> · 多 agent 协作图</sub>
 </td>
-<td width="50%">
-<a href="./examples/theme-mint-brut.agentdraw.json"><img src="./assets/examples/theme-mint-brut.svg" alt="Mint Brut Product Roadmap preview" /></a><br />
-<sub><a href="./examples/theme-mint-brut.agentdraw.json"><b>Mint Brut</b></a> · 活泼产品路线图</sub>
+<td width="50%" valign="top">
+<a href="./examples/theme-launch-room.agentdraw.json"><img width="100%" src="./assets/examples/theme-launch-room.svg" alt="Launch Room Loop preview" /></a><br />
+<sub><a href="./examples/theme-launch-room.agentdraw.json"><b>Launch Room</b></a> · 增长发布闭环</sub>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<a href="./examples/theme-strategy-grove.agentdraw.json"><img width="100%" src="./assets/examples/theme-strategy-grove.svg" alt="Quarterly Strategy Map preview" /></a><br />
+<sub><a href="./examples/theme-strategy-grove.agentdraw.json"><b>Strategy Grove</b></a> · 季度策略图</sub>
+</td>
+<td width="50%" valign="top">
+<a href="./examples/theme-roadmap-mint.agentdraw.json"><img width="100%" src="./assets/examples/theme-roadmap-mint.svg" alt="Creator Tool Roadmap preview" /></a><br />
+<sub><a href="./examples/theme-roadmap-mint.agentdraw.json"><b>Roadmap Mint</b></a> · 创作工具路线图</sub>
+</td>
+</tr>
+<tr>
+<td width="50%" valign="top">
+<a href="./examples/theme-customer-journey.agentdraw.json"><img width="100%" src="./assets/examples/theme-customer-journey.svg" alt="Customer Journey Signals preview" /></a><br />
+<sub><a href="./examples/theme-customer-journey.agentdraw.json"><b>Customer Journey</b></a> · 用户旅程信号图</sub>
+</td>
+<td width="50%" valign="top">
+<a href="./examples/theme-research-synthesis.agentdraw.json"><img width="100%" src="./assets/examples/theme-research-synthesis.svg" alt="Research Synthesis Wall preview" /></a><br />
+<sub><a href="./examples/theme-research-synthesis.agentdraw.json"><b>Research Synthesis</b></a> · 访谈聚类分析图</sub>
 </td>
 </tr>
 </table>
@@ -122,10 +144,14 @@ pnpm validate:scene examples/complex-agentdraw-workbench.agentdraw.json
 
 - [`examples/getting-started.agentdraw.json`](./examples/getting-started.agentdraw.json)
 - [`examples/complex-agentdraw-workbench.agentdraw.json`](./examples/complex-agentdraw-workbench.agentdraw.json)
-- [`examples/theme-system-formal.agentdraw.json`](./examples/theme-system-formal.agentdraw.json)
-- [`examples/theme-riso-brut.agentdraw.json`](./examples/theme-riso-brut.agentdraw.json)
-- [`examples/theme-grove.agentdraw.json`](./examples/theme-grove.agentdraw.json)
-- [`examples/theme-mint-brut.agentdraw.json`](./examples/theme-mint-brut.agentdraw.json)
+- [`examples/theme-agentdraw-os.agentdraw.json`](./examples/theme-agentdraw-os.agentdraw.json)
+- [`examples/theme-incident-command.agentdraw.json`](./examples/theme-incident-command.agentdraw.json)
+- [`examples/theme-message-bus.agentdraw.json`](./examples/theme-message-bus.agentdraw.json)
+- [`examples/theme-launch-room.agentdraw.json`](./examples/theme-launch-room.agentdraw.json)
+- [`examples/theme-strategy-grove.agentdraw.json`](./examples/theme-strategy-grove.agentdraw.json)
+- [`examples/theme-roadmap-mint.agentdraw.json`](./examples/theme-roadmap-mint.agentdraw.json)
+- [`examples/theme-customer-journey.agentdraw.json`](./examples/theme-customer-journey.agentdraw.json)
+- [`examples/theme-research-synthesis.agentdraw.json`](./examples/theme-research-synthesis.agentdraw.json)
 
 重新生成主题示例：
 
@@ -238,4 +264,6 @@ git remote add origin git@github.com:chenhg5/agentdraw.git
 
 ## License
 
-暂未选择 license。
+[MIT](./LICENSE)
+
+AgentDraw 基于 [Excalidraw](https://github.com/excalidraw/excalidraw) 构建。
