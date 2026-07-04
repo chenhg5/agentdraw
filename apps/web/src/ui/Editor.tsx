@@ -43,8 +43,8 @@ export const Editor = ({
     total: scene.elements.length,
   });
   const selectedStyle = getStyleById(selectedStyleId);
-  const replayEnabled = useMemo(() => readReplayEnabledFromUrl(filePath), [filePath]);
   const replayStorageKey = useMemo(() => replaySessionStorageKey(filePath), [filePath]);
+  const [replayEnabled, setReplayEnabled] = useState(() => readReplayEnabledFromUrl(filePath));
   const replayOptions = useMemo(
     () => ({
       enabled: replayEnabled,
@@ -54,6 +54,15 @@ export const Editor = ({
   );
 
   useEffect(() => {
+    setReplayEnabled(readReplayEnabledFromUrl(filePath));
+    setReplayProgress({
+      active: false,
+      current: scene.elements.length,
+      total: scene.elements.length,
+    });
+  }, [filePath]);
+
+  useEffect(() => {
     if (
       replayEnabled &&
       replayProgress.total > 0 &&
@@ -61,6 +70,7 @@ export const Editor = ({
       replayProgress.current >= replayProgress.total
     ) {
       window.sessionStorage.setItem(replayStorageKey, "1");
+      setReplayEnabled(false);
     }
   }, [replayEnabled, replayProgress, replayStorageKey]);
 
@@ -232,12 +242,11 @@ const readReplayEnabledFromUrl = (filePath: string) => {
   if (animate === "0" || replay === "0" || instant === "1") {
     return false;
   }
-  if (animate === "1" || replay === "1") {
-    return true;
-  }
-
   if (window.sessionStorage.getItem(replaySessionStorageKey(filePath)) === "1") {
     return false;
+  }
+  if (animate === "1" || replay === "1") {
+    return true;
   }
   return true;
 };
