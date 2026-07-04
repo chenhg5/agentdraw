@@ -1,0 +1,14 @@
+node_modules
+dist
+.agentdraw
+.DS_Store
+*.log
+.env
+.env.*
+!.env.example
+coverage
+.turbo
+.vite
+*.tsbuildinfo
+*.tmp
+*.temp

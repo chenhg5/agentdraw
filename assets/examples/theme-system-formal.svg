@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="8 0 1252 722" role="img" aria-label="System Formal Architecture preview">
+<defs>
+<marker id="arrowhead" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+<path d="M0,0 L10,4 L0,8 Z" fill="context-stroke"/>
+</marker>
+</defs>
+<rect x="8" y="0" width="1252" height="722" fill="#FFFFFF"/>
+<text x="72" y="90" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="700" text-anchor="start"><tspan x="72" dy="0">System Formal Architecture</tspan></text>
+<text x="74" y="124" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="500" text-anchor="start"><tspan x="74" dy="0">Local agent draw stack with validation and editable exports.</tspan></text>
+<rect x="44" y="36" width="1180" height="650" rx="0" fill="none" stroke="#64748B" stroke-width="2"/>
+<rect x="92" y="166" width="238" height="34" rx="0" fill="#2563EB" stroke="#2563EB" stroke-width="0"/>
+<text x="211" y="188" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="500" text-anchor="middle"><tspan x="211" dy="0">Input</tspan></text>
+<rect x="92" y="224" width="238" height="156" rx="0" fill="#F7F9FC" stroke="#172033" stroke-width="2"/>
+<text x="211" y="276" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700" text-anchor="middle"><tspan x="211" dy="0">Agent</tspan></text>
+<text x="162" y="318" fill="#2563EB" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle"><tspan x="162" dy="0">prompt</tspan></text>
+<text x="260" y="318" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle"><tspan x="260" dy="0">scene JSON</tspan></text>
+<rect x="116" y="294" width="92" height="38" rx="0" fill="none" stroke="#2563EB" stroke-width="2"/>
+<rect x="214" y="294" width="92" height="38" rx="0" fill="none" stroke="#64748B" stroke-width="2"/>
+<path d="M 338 302 L 364 302" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+<rect x="372" y="166" width="238" height="34" rx="0" fill="#2563EB" stroke="#2563EB" stroke-width="0"/>
+<text x="491" y="188" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="500" text-anchor="middle"><tspan x="491" dy="0">Quality Gate</tspan></text>
+<rect x="372" y="224" width="238" height="156" rx="0" fill="#D8E5FF" stroke="#172033" stroke-width="2"/>
+<text x="491" y="276" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700" text-anchor="middle"><tspan x="491" dy="0">Validator</tspan></text>
+<text x="442" y="318" fill="#2563EB" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle"><tspan x="442" dy="0">overlap</tspan></text>
+<text x="540" y="318" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle"><tspan x="540" dy="0">center</tspan></text>
+<rect x="396" y="294" width="92" height="38" rx="0" fill="none" stroke="#2563EB" stroke-width="2"/>
+<rect x="494" y="294" width="92" height="38" rx="0" fill="none" stroke="#64748B" stroke-width="2"/>
+<path d="M 618 302 L 644 302" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+<rect x="652" y="166" width="238" height="34" rx="0" fill="#2563EB" stroke="#2563EB" stroke-width="0"/>
+<text x="771" y="188" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="500" text-anchor="middle"><tspan x="771" dy="0">Editable Board</tspan></text>
+<rect x="652" y="224" width="238" height="156" rx="0" fill="#F7F9FC" stroke="#172033" stroke-width="2"/>
+<text x="771" y="276" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700" text-anchor="middle"><tspan x="771" dy="0">Renderer</tspan></text>
+<text x="722" y="318" fill="#2563EB" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle"><tspan x="722" dy="0">Excalidraw</tspan></text>
+<text x="820" y="318" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle"><tspan x="820" dy="0">styles</tspan></text>
+<rect x="676" y="294" width="92" height="38" rx="0" fill="none" stroke="#2563EB" stroke-width="2"/>
+<rect x="774" y="294" width="92" height="38" rx="0" fill="none" stroke="#64748B" stroke-width="2"/>
+<path d="M 898 302 L 924 302" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+<rect x="932" y="166" width="238" height="34" rx="0" fill="#2563EB" stroke="#2563EB" stroke-width="0"/>
+<text x="1051" y="188" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="14" font-weight="500" text-anchor="middle"><tspan x="1051" dy="0">Output</tspan></text>
+<rect x="932" y="224" width="238" height="156" rx="0" fill="#D8E5FF" stroke="#172033" stroke-width="2"/>
+<text x="1051" y="276" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700" text-anchor="middle"><tspan x="1051" dy="0">Export</tspan></text>
+<text x="1002" y="318" fill="#2563EB" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle"><tspan x="1002" dy="0">JSON</tspan></text>
+<text x="1100" y="318" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle"><tspan x="1100" dy="0">SVG</tspan></text>
+<rect x="956" y="294" width="92" height="38" rx="0" fill="none" stroke="#2563EB" stroke-width="2"/>
+<rect x="1054" y="294" width="92" height="38" rx="0" fill="none" stroke="#64748B" stroke-width="2"/>
+<rect x="92" y="454" width="1080" height="64" rx="0" fill="#F7F9FC" stroke="#172033" stroke-width="2"/>
+<text x="632" y="493" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="500" text-anchor="middle"><tspan x="632" dy="0">Agent output stays editable: structured scene data, styled shapes, validated layout, and manual refinement in the browser.</tspan></text>
+<rect x="208" y="578" width="200" height="46" rx="0" fill="#F7F9FC" stroke="#172033" stroke-width="2"/>
+<text x="308" y="607" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle"><tspan x="308" dy="0">Editable</tspan></text>
+<rect x="488" y="578" width="200" height="46" rx="0" fill="#D8E5FF" stroke="#172033" stroke-width="2"/>
+<text x="588" y="607" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle"><tspan x="588" dy="0">Validated</tspan></text>
+<rect x="768" y="578" width="200" height="46" rx="0" fill="#F7F9FC" stroke="#172033" stroke-width="2"/>
+<text x="868" y="607" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle"><tspan x="868" dy="0">Themeable</tspan></text>
+</svg>

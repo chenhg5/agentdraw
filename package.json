@@ -1,0 +1,20 @@
+{
+  "name": "agentdraw",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.9.0",
+  "scripts": {
+    "build": "pnpm --filter @agentdraw/styles build && pnpm --filter @agentdraw/scene build && pnpm --filter @agentdraw/server build && pnpm --filter @agentdraw/cli build && pnpm --filter @agentdraw/web build",
+    "dev": "pnpm --parallel --filter @agentdraw/server --filter @agentdraw/web dev",
+    "typecheck": "pnpm -r typecheck",
+    "agentdraw": "pnpm --filter @agentdraw/cli start",
+    "validate:scene": "pnpm agentdraw validate",
+    "examples:themes": "node scripts/generate-theme-examples.mjs",
+    "examples:previews": "node scripts/render-example-previews.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.10",
+    "typescript": "^5.9.3"
+  }
+}

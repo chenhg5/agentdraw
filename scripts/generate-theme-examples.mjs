@@ -1,0 +1,255 @@
+import { mkdir, writeFile } from "node:fs/promises";
+
+let seed = 1000;
+
+const palettes = {
+  "system-formal": {
+    canvas: "#FFFFFF",
+    ink: "#172033",
+    panel: "#F7F9FC",
+    accent: "#2563EB",
+    accent2: "#D8E5FF",
+    accent3: "#64748B",
+  },
+  "riso-brut": {
+    canvas: "#EFE9D9",
+    ink: "#1E1B16",
+    panel: "#FFF8E8",
+    accent: "#1F8A4C",
+    accent2: "#F06CA8",
+    accent3: "#E85A1F",
+  },
+  grove: {
+    canvas: "#E8E4D6",
+    ink: "#192B1B",
+    panel: "#F4EFE2",
+    accent: "#192B1B",
+    accent2: "#C8524A",
+    accent3: "#766C58",
+  },
+  "mint-brut": {
+    canvas: "#D0FDE4",
+    ink: "#000000",
+    panel: "#FFFFFF",
+    accent: "#F888C8",
+    accent2: "#A7E7FF",
+    accent3: "#6DD89E",
+  },
+};
+
+const examples = [
+  {
+    file: "examples/theme-system-formal.agentdraw.json",
+    title: "System Formal Architecture",
+    styleId: "system-formal",
+    subtitle: "Local agent draw stack with validation and editable exports.",
+    cards: [
+      ["Agent", "prompt", "scene JSON"],
+      ["Validator", "overlap", "center", "routing"],
+      ["Renderer", "Excalidraw", "styles"],
+      ["Export", "JSON", "SVG", "PNG"],
+    ],
+    lanes: ["Input", "Quality Gate", "Editable Board", "Output"],
+  },
+  {
+    file: "examples/theme-riso-brut.agentdraw.json",
+    title: "Riso Brut Launch Loop",
+    styleId: "riso-brut",
+    subtitle: "A brighter editorial board for growth loops and campaign planning.",
+    cards: [
+      ["Insight", "research", "signals"],
+      ["Concept", "story", "angle"],
+      ["Build", "asset", "page"],
+      ["Measure", "traffic", "feedback"],
+    ],
+    lanes: ["Sense", "Frame", "Ship", "Learn"],
+  },
+  {
+    file: "examples/theme-grove.agentdraw.json",
+    title: "Grove Strategy Map",
+    styleId: "grove",
+    subtitle: "A restrained strategy map for priorities, constraints, and operating rhythm.",
+    cards: [
+      ["North Star", "outcome", "metric"],
+      ["Pillars", "product", "market"],
+      ["Systems", "process", "data"],
+      ["Cadence", "review", "adjust"],
+    ],
+    lanes: ["Intent", "Focus", "Enablement", "Governance"],
+  },
+  {
+    file: "examples/theme-mint-brut.agentdraw.json",
+    title: "Mint Brut Product Roadmap",
+    styleId: "mint-brut",
+    subtitle: "A playful roadmap board for milestones, bets, and ownership.",
+    cards: [
+      ["Now", "prototype", "test"],
+      ["Next", "collab", "polish"],
+      ["Later", "templates", "sharing"],
+      ["Scale", "agents", "gallery"],
+    ],
+    lanes: ["Explore", "Make", "Package", "Grow"],
+  },
+];
+
+await mkdir("examples", { recursive: true });
+
+for (const example of examples) {
+  const scene = buildScene(example);
+  await writeFile(example.file, `${JSON.stringify(scene, null, 2)}\n`, "utf8");
+}
+
+function buildScene(example) {
+  const palette = palettes[example.styleId];
+  const elements = [];
+
+  elements.push(
+    text("title", 72, 56, 780, 44, example.title, 34, palette.ink),
+    text("subtitle", 74, 106, 860, 24, example.subtitle, 18, palette.accent3),
+    rect("boundary", 44, 36, 1180, 650, "transparent", palette.accent3, 2),
+  );
+
+  const startX = 92;
+  const gap = 42;
+  const cardW = 238;
+  const cardY = 224;
+
+  example.cards.forEach((card, index) => {
+    const x = startX + index * (cardW + gap);
+    const fill = index % 2 === 0 ? palette.panel : palette.accent2;
+    elements.push(
+      rect(`lane-${index}`, x, 166, cardW, 34, palette.accent, palette.accent, 0),
+      text(`lane-label-${index}`, x + 16, 174, cardW - 32, 18, example.lanes[index], 14, "#FFFFFF", "center"),
+      rect(`card-${index}`, x, cardY, cardW, 156, fill, palette.ink, 2),
+      text(`card-title-${index}`, x + 24, cardY + 28, cardW - 48, 30, card[0], 24, palette.ink, "center"),
+      text(`card-a-${index}`, x + 32, cardY + 78, 76, 22, card[1], 16, palette.accent, "center"),
+      text(`card-b-${index}`, x + cardW - 108, cardY + 78, 76, 22, card[2], 16, palette.accent3, "center"),
+      rect(`chip-a-${index}`, x + 24, cardY + 70, 92, 38, "transparent", palette.accent, 2),
+      rect(`chip-b-${index}`, x + cardW - 116, cardY + 70, 92, 38, "transparent", palette.accent3, 2),
+    );
+    if (index < example.cards.length - 1) {
+      elements.push(arrow(`flow-${index}`, x + cardW + 8, cardY + 78, gap - 16, 0, palette.accent));
+    }
+  });
+
+  elements.push(
+    rect("signal-strip", 92, 454, 1080, 64, palette.panel, palette.ink, 2),
+    text("signal-text", 124, 475, 1016, 24, "Agent output stays editable: structured scene data, styled shapes, validated layout, and manual refinement in the browser.", 18, palette.ink, "center"),
+  );
+
+  const metricY = 578;
+  const metrics = ["Editable", "Validated", "Themeable"];
+  metrics.forEach((metric, index) => {
+    const x = 208 + index * 280;
+    elements.push(
+      rect(`metric-${index}`, x, metricY, 200, 46, index === 1 ? palette.accent2 : palette.panel, palette.ink, 2),
+      text(`metric-text-${index}`, x + 20, metricY + 13, 160, 20, metric, 16, palette.ink, "center"),
+    );
+  });
+
+  return {
+    type: "agentdraw/scene",
+    version: 1,
+    id: `theme-${example.styleId}`,
+    title: example.title,
+    styleId: example.styleId,
+    providerId: "excalidraw",
+    updatedAt: new Date().toISOString(),
+    elements,
+    appState: {
+      viewBackgroundColor: palette.canvas,
+      currentItemStrokeColor: palette.ink,
+      currentItemBackgroundColor: palette.panel,
+      currentItemFillStyle: "solid",
+      currentItemStrokeWidth: 2,
+      currentItemStrokeStyle: "solid",
+      currentItemRoughness: example.styleId === "mint-brut" ? 1 : 0,
+      currentItemFontFamily: example.styleId === "mint-brut" ? 1 : 2,
+      currentItemRoundness: example.styleId === "system-formal" || example.styleId === "grove" ? "sharp" : "round",
+      currentItemArrowType: example.styleId === "system-formal" || example.styleId === "grove" ? "elbow" : "sharp",
+      currentItemStartArrowhead: null,
+      currentItemEndArrowhead: "arrow",
+      scrollX: 80,
+      scrollY: 28,
+      zoom: { value: 0.78 },
+    },
+    files: {},
+  };
+}
+
+function rect(id, x, y, width, height, backgroundColor, strokeColor, strokeWidth) {
+  return base(id, "rectangle", x, y, width, height, {
+    strokeColor,
+    backgroundColor,
+    fillStyle: "solid",
+    strokeWidth,
+    strokeStyle: "solid",
+    roughness: 0,
+    roundness: null,
+  });
+}
+
+function text(id, x, y, width, height, value, fontSize, strokeColor, textAlign = "left") {
+  return base(id, "text", x, y, width, height, {
+    strokeColor,
+    backgroundColor: "transparent",
+    fillStyle: "solid",
+    strokeWidth: 2,
+    strokeStyle: "solid",
+    roughness: 0,
+    text: value,
+    fontSize,
+    fontFamily: 2,
+    textAlign,
+    verticalAlign: "top",
+    containerId: null,
+    originalText: value,
+    lineHeight: 1.25,
+  });
+}
+
+function arrow(id, x, y, width, height, strokeColor) {
+  return base(id, "arrow", x, y, width, height, {
+    strokeColor,
+    backgroundColor: "transparent",
+    fillStyle: "solid",
+    strokeWidth: 2,
+    strokeStyle: "solid",
+    roughness: 0,
+    points: [
+      [0, 0],
+      [width, height],
+    ],
+    lastCommittedPoint: null,
+    startBinding: null,
+    endBinding: null,
+    startArrowhead: null,
+    endArrowhead: "arrow",
+    elbowed: false,
+  });
+}
+
+function base(id, type, x, y, width, height, extra) {
+  seed += 1;
+  return {
+    id,
+    type,
+    x,
+    y,
+    width,
+    height,
+    angle: 0,
+    opacity: 100,
+    groupIds: [],
+    frameId: null,
+    seed,
+    version: 1,
+    versionNonce: seed + 1,
+    isDeleted: false,
+    boundElements: null,
+    updated: 1,
+    link: null,
+    locked: false,
+    ...extra,
+  };
+}

@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="4 -2 1572 1185" role="img" aria-label="Complex AgentDraw Workbench preview">
+<defs>
+<marker id="arrowhead" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+<path d="M0,0 L10,4 L0,8 Z" fill="context-stroke"/>
+</marker>
+</defs>
+<rect x="4" y="-2" width="1572" height="1185" fill="#FFFFFF"/>
+<rect x="56" y="44" width="94" height="12" rx="0" fill="#2563EB" stroke="#2563EB" stroke-width="0"/>
+<text x="56" y="116" fill="#2563EB" font-family="Inter, Arial, sans-serif" font-size="38" font-weight="700" text-anchor="start"><tspan x="56" dy="0">AgentDraw · 本地智能画板工作台</tspan></text>
+<text x="56" y="150" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="500" text-anchor="start"><tspan x="56" dy="0">左侧 agent 生成结构化 scene，右侧 Excalidraw 以正式图形风格渲染；用户可继续编辑、导出 JSON / SVG / PNG。</tspan></text>
+<rect x="40" y="34" width="1500" height="1113" rx="0" fill="none" stroke="#CBD5E1" stroke-width="2"/>
+<rect x="80" y="210" width="220" height="132" rx="0" fill="#D8E5FF" stroke="#172033" stroke-width="2"/>
+<rect x="80" y="210" width="10" height="132" rx="0" fill="#2563EB" stroke="#2563EB" stroke-width="0"/>
+<text x="106" y="259" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="start"><tspan x="106" dy="0">输入来源</tspan></text>
+<text x="106" y="289" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="106" dy="0">Claude Code / Cursor</tspan><tspan x="106" dy="18.75">CLI prompt / files</tspan><tspan x="106" dy="18.75">历史画板 JSON</tspan></text>
+<rect x="360" y="210" width="220" height="132" rx="0" fill="#F7F9FC" stroke="#172033" stroke-width="2"/>
+<rect x="360" y="210" width="10" height="132" rx="0" fill="#2563EB" stroke="#2563EB" stroke-width="0"/>
+<text x="386" y="259" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="start"><tspan x="386" dy="0">意图识别</tspan></text>
+<text x="386" y="289" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="386" dy="0">图类型判断</tspan><tspan x="386" dy="18.75">信息层级抽取</tspan><tspan x="386" dy="18.75">约束与风格选择</tspan></text>
+<rect x="640" y="210" width="220" height="132" rx="0" fill="#DCFCE7" stroke="#172033" stroke-width="2"/>
+<rect x="640" y="210" width="10" height="132" rx="0" fill="#2563EB" stroke="#2563EB" stroke-width="0"/>
+<text x="666" y="259" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="start"><tspan x="666" dy="0">结构规划</tspan></text>
+<text x="666" y="289" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="666" dy="0">泳道 / 矩阵 / 架构</tspan><tspan x="666" dy="18.75">节点与连线生成</tspan><tspan x="666" dy="18.75">布局坐标计算</tspan></text>
+<rect x="920" y="210" width="220" height="132" rx="0" fill="#F7F9FC" stroke="#172033" stroke-width="2"/>
+<rect x="920" y="210" width="10" height="132" rx="0" fill="#2563EB" stroke="#2563EB" stroke-width="0"/>
+<text x="946" y="259" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="start"><tspan x="946" dy="0">画板渲染</tspan></text>
+<text x="946" y="289" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="946" dy="0">Excalidraw elements</tspan><tspan x="946" dy="18.75">正式几何 profile</tspan><tspan x="946" dy="18.75">自动保存到本地</tspan></text>
+<rect x="1200" y="210" width="220" height="132" rx="0" fill="#FDE68A" stroke="#172033" stroke-width="2"/>
+<rect x="1200" y="210" width="10" height="132" rx="0" fill="#2563EB" stroke="#2563EB" stroke-width="0"/>
+<text x="1226" y="259" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="start"><tspan x="1226" dy="0">交付输出</tspan></text>
+<text x="1226" y="289" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="1226" dy="0">浏览器手动编辑</tspan><tspan x="1226" dy="18.75">JSON / SVG / PNG</tspan><tspan x="1226" dy="18.75">可回灌给 agent</tspan></text>
+<path d="M 300 276 L 360 276" fill="none" stroke="#2563EB" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+<path d="M 580 276 L 640 276" fill="none" stroke="#2563EB" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+<path d="M 860 276 L 920 276" fill="none" stroke="#2563EB" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+<path d="M 1140 276 L 1200 276" fill="none" stroke="#2563EB" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+<rect x="90" y="392" width="1350" height="86" rx="0" fill="#2563EB" stroke="#2563EB" stroke-width="0"/>
+<text x="126" y="435" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700" text-anchor="start"><tspan x="126" dy="0">Scene Model · 单一结构化中间层</tspan></text>
+<text x="126" y="458" fill="#EAF1FF" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="500" text-anchor="start"><tspan x="126" dy="0">elements + appState + files + styleId；provider 可替换，但 agent 只面向稳定 JSON 合约。</tspan></text>
+<text x="1240" y="433.25" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="500" text-anchor="middle"><tspan x="1240" dy="0">contract first</tspan><tspan x="1240" dy="23.75">editable output</tspan></text>
+<rect x="88" y="535" width="424" height="132" rx="0" fill="#EDE9FE" stroke="#172033" stroke-width="2"/>
+<text x="116" y="588" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="start"><tspan x="116" dy="0">Style / Geometry Profile</tspan></text>
+<text x="116" y="619" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="start"><tspan x="116" dy="0">palette · formality · roughness · font · roundness · arrow type</tspan></text>
+<path d="M 300 535 L 300 478" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+<rect x="552" y="535" width="424" height="132" rx="0" fill="#DCFCE7" stroke="#172033" stroke-width="2"/>
+<text x="580" y="588" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="start"><tspan x="580" dy="0">Layout Engine</tspan></text>
+<text x="580" y="619" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="start"><tspan x="580" dy="0">columns · swimlanes · bus · matrix · dependency graph · spacing rules</tspan></text>
+<path d="M 764 535 L 764 478" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+<rect x="1016" y="535" width="424" height="132" rx="0" fill="#FFE4E6" stroke="#172033" stroke-width="2"/>
+<text x="1044" y="588" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="500" text-anchor="start"><tspan x="1044" dy="0">Control &amp; Persistence</tspan></text>
+<text x="1044" y="619" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="start"><tspan x="1044" dy="0">local server · debounced save · tolerant JSON parser · exports</tspan></text>
+<path d="M 1228 535 L 1228 478" fill="none" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+<rect x="88" y="690" width="640" height="44" rx="0" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+<text x="112" y="719" fill="#475569" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="112" dy="0">生成器原则：复杂关系优先分区表达，跨区依赖用总线或表格说明，避免长斜线穿越画布。</tspan></text>
+<rect x="800" y="690" width="640" height="44" rx="0" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+<text x="824" y="719" fill="#475569" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="824" dy="0">编辑原则：每个模块都是独立元素；连线只连接相邻层级，用户拖动后仍容易修正。</tspan></text>
+<text x="88" y="798" fill="#2563EB" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="700" text-anchor="start"><tspan x="88" dy="0">复杂图能力覆盖</tspan></text>
+<rect x="88" y="852" width="1352" height="16" rx="0" fill="#2563EB" stroke="#2563EB" stroke-width="0"/>
+<text x="116" y="835" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="116" dy="0">能力</tspan></text>
+<text x="350" y="835" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="start"><tspan x="350" dy="0">说明</tspan></text>
+<text x="1330" y="835" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="500" text-anchor="middle"><tspan x="1330" dy="0">状态</tspan></text>
+<rect x="88" y="868" width="1352" height="38" rx="0" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1"/>
+<text x="116" y="893" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="start"><tspan x="116" dy="0">信息架构</tspan></text>
+<text x="350" y="893" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="start"><tspan x="350" dy="0">标题、分组、泳道、矩阵、注释条</tspan></text>
+<text x="1300" y="893" fill="#15803D" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle"><tspan x="1300" dy="0">已覆盖</tspan></text>
+<rect x="88" y="914" width="1352" height="38" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<text x="116" y="939" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="start"><tspan x="116" dy="0">流程表达</tspan></text>
+<text x="350" y="939" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="start"><tspan x="350" dy="0">单向流、双向订阅、总线、跨层依赖</tspan></text>
+<text x="1300" y="939" fill="#15803D" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle"><tspan x="1300" dy="0">已覆盖</tspan></text>
+<rect x="88" y="960" width="1352" height="38" rx="0" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="1"/>
+<text x="116" y="985" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="start"><tspan x="116" dy="0">视觉风格</tspan></text>
+<text x="350" y="985" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="start"><tspan x="350" dy="0">正式方正 / 轻白板 / 高对比主题</tspan></text>
+<text x="1300" y="985" fill="#B45309" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle"><tspan x="1300" dy="0">进行中</tspan></text>
+<rect x="88" y="1006" width="1352" height="38" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<text x="116" y="1031" fill="#172033" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="start"><tspan x="116" dy="0">可编辑性</tspan></text>
+<text x="350" y="1031" fill="#64748B" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="start"><tspan x="350" dy="0">所有形状/文字/箭头均是 Excalidraw 元素</tspan></text>
+<text x="1300" y="1031" fill="#15803D" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle"><tspan x="1300" dy="0">已覆盖</tspan></text>
+<rect x="88" y="1071" width="1352" height="58" rx="0" fill="#FFF7ED" stroke="#F97316" stroke-width="2"/>
+<text x="118" y="1107" fill="#9A3412" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="500" text-anchor="start"><tspan x="118" dy="0">下一步重点：让 agent 生成时选择图模板（流程 / 分层 / 矩阵 / 总线），再按 style profile 自动套用正式或白板化视觉。</tspan></text>
+</svg>

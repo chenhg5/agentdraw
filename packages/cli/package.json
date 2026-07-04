@@ -1,0 +1,20 @@
+{
+  "name": "@agentdraw/cli",
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "agentdraw": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "tsx src/index.ts",
+    "typecheck": "pnpm --filter @agentdraw/server build && tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@agentdraw/scene": "workspace:*",
+    "@agentdraw/server": "workspace:*"
+  },
+  "devDependencies": {
+    "tsx": "^4.22.3"
+  }
+}
