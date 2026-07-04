@@ -66,8 +66,8 @@ try {
   );
 
   if (!dryRun) {
-    const latest = npmView(`${packageName}@latest`, ["version"], npmrcPath);
-    if (!latest.ok || latest.stdout.trim().replace(/^"|"$/g, "") !== version) {
+    const latest = verifyLatest(packageName, version, npmrcPath);
+    if (!latest.ok) {
       fail(`Published ${version}, but npm latest did not verify. Output: ${latest.stdout || latest.stderr}`);
     }
     console.log(`${packageName}@${version} published and verified as latest.`);
@@ -88,6 +88,20 @@ function npmView(spec, fields, npmrcPath) {
     env: npmEnv(npmrcPath),
     quiet: true,
   });
+}
+
+function verifyLatest(packageName, version, npmrcPath) {
+  let latest = { ok: false, stdout: "", stderr: "" };
+  for (let attempt = 1; attempt <= 6; attempt += 1) {
+    latest = npmView(`${packageName}@latest`, ["version"], npmrcPath);
+    if (latest.ok && latest.stdout.trim().replace(/^"|"$/g, "") === version) {
+      return latest;
+    }
+    if (attempt < 6) {
+      spawnSync("sleep", ["3"], { stdio: "ignore" });
+    }
+  }
+  return latest;
 }
 
 function run(command, commandArgs, options = {}) {

@@ -20,7 +20,7 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
     const apiRef = useRef<ExcalidrawImperativeAPI | null>(null);
     const [apiReady, setApiReady] = useState(false);
     const replayEnabled = replay?.enabled === true && scene.elements.length > 0;
-    const suppressChangeRef = useRef(replayEnabled);
+    const suppressChangeRef = useRef(true);
     const fitSceneKeyRef = useRef<string | null>(null);
     const normalizedElements = useMemo(
       () => normalizeElementsForExcalidraw(scene.elements, style),
@@ -126,9 +126,14 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
     useEffect(() => {
       const api = apiRef.current;
       if (!api || !apiReady || replayEnabled || normalizedElements.length === 0) {
+        if (api && apiReady && !replayEnabled && normalizedElements.length === 0) {
+          window.setTimeout(() => {
+            suppressChangeRef.current = false;
+          }, 350);
+        }
         return;
       }
-      if (fitSceneKeyRef.current) {
+      if (fitSceneKeyRef.current === sceneKey) {
         return;
       }
       fitSceneKeyRef.current = sceneKey;
@@ -155,7 +160,7 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
           if (!cancelled) {
             suppressChangeRef.current = false;
           }
-        }, 250),
+        }, 900),
       );
 
       return () => {

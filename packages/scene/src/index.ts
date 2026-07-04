@@ -101,18 +101,48 @@ export const mergeSceneSnapshot = (
 const coerceScene = (
   input: Partial<AgentDrawScene>,
   fallbackTitle: string,
-): AgentDrawScene => ({
-  type: "agentdraw/scene",
-  version: 1,
-  id: typeof input.id === "string" ? input.id : randomUUID(),
-  title: typeof input.title === "string" ? input.title : fallbackTitle,
-  styleId: typeof input.styleId === "string" ? input.styleId : "cut-bloom",
-  providerId: typeof input.providerId === "string" ? input.providerId : "excalidraw",
-  updatedAt: typeof input.updatedAt === "string" ? input.updatedAt : new Date().toISOString(),
-  elements: Array.isArray(input.elements) ? input.elements : [],
-  appState: input.appState && typeof input.appState === "object" ? input.appState : {},
-  files: input.files && typeof input.files === "object" ? input.files : {},
-});
+): AgentDrawScene => {
+  const nestedScene =
+    "scene" in input && input.scene && typeof input.scene === "object"
+      ? (input.scene as Partial<AgentDrawScene>)
+      : {};
+  return {
+    type: "agentdraw/scene",
+    version: 1,
+    id: typeof input.id === "string" ? input.id : randomUUID(),
+    title: typeof input.title === "string" ? input.title : fallbackTitle,
+    styleId:
+      typeof input.styleId === "string"
+        ? input.styleId
+        : typeof nestedScene.styleId === "string"
+          ? nestedScene.styleId
+          : "cut-bloom",
+    providerId:
+      typeof input.providerId === "string"
+        ? input.providerId
+        : typeof nestedScene.providerId === "string"
+          ? nestedScene.providerId
+          : "excalidraw",
+    updatedAt: typeof input.updatedAt === "string" ? input.updatedAt : new Date().toISOString(),
+    elements: Array.isArray(input.elements)
+      ? input.elements
+      : Array.isArray(nestedScene.elements)
+        ? nestedScene.elements
+        : [],
+    appState:
+      input.appState && typeof input.appState === "object"
+        ? input.appState
+        : nestedScene.appState && typeof nestedScene.appState === "object"
+          ? nestedScene.appState
+          : {},
+    files:
+      input.files && typeof input.files === "object"
+        ? input.files
+        : nestedScene.files && typeof nestedScene.files === "object"
+          ? nestedScene.files
+          : {},
+  };
+};
 
 const isMissingFileError = (error: unknown) =>
   typeof error === "object" &&

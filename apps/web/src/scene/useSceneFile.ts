@@ -9,6 +9,7 @@ export const useSceneFile = () => {
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const saveTimer = useRef<number | null>(null);
   const latestSaveId = useRef(0);
+  const loadedAt = useRef<number | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -16,6 +17,7 @@ export const useSceneFile = () => {
       .then((envelope) => {
         if (!cancelled) {
           setScene(envelope.scene);
+          loadedAt.current = Date.now();
           setError(null);
         }
       })
@@ -38,6 +40,11 @@ export const useSceneFile = () => {
       providerId?: string,
     ) => {
       if (!scene) {
+        return;
+      }
+      const loadedRecently =
+        loadedAt.current !== null && Date.now() - loadedAt.current < 2500;
+      if (loadedRecently && scene.elements.length > 0 && elements.length === 0) {
         return;
       }
       if (saveTimer.current) {
