@@ -234,6 +234,11 @@ pnpm typecheck
 pnpm build
 ```
 
+## Agent Skill
+
+其它 agent 应该先读 [`SKILL.md`](./SKILL.md)，再通过 [`CATALOG.md`](./CATALOG.md) 选择设计系统，
+然后只加载选中的 `packages/styles/designs/<style-id>/design.md` 来生成 scene。
+
 开发模式同时启动 web 和 API：
 
 ```bash

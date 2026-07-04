@@ -248,6 +248,12 @@ pnpm typecheck
 pnpm build
 ```
 
+## Agent Skill
+
+Agents should start from [`SKILL.md`](./SKILL.md), use [`CATALOG.md`](./CATALOG.md) to choose a
+design system, then read the selected `packages/styles/designs/<style-id>/design.md` before
+generating a scene.
+
 Run the web app and API in development mode:
 
 ```bash
