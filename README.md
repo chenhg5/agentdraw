@@ -245,6 +245,7 @@ Validate a generated scene:
 pnpm validate:scene examples/complex-agentdraw-workbench.agentdraw.json
 pnpm agentdraw validate examples/complex-agentdraw-workbench.agentdraw.json --format json
 pnpm agentdraw validate examples/complex-agentdraw-workbench.agentdraw.json --style system-formal --format json
+pnpm agentdraw repair examples/complex-agentdraw-workbench.agentdraw.json --style system-formal --write --format json
 pnpm agentdraw quality examples/complex-agentdraw-workbench.agentdraw.json --style system-formal --format json
 pnpm agentdraw export examples/complex-agentdraw-workbench.agentdraw.json --format png --out .agentdraw/complex.preview.png --json
 ```
@@ -254,8 +255,14 @@ the command. Style-contract drift is reported as warnings so agents can repair w
 blocking intentionally custom boards. A typical agent loop should be:
 
 ```text
-choose style -> load design guide + contract -> generate scene -> validate scene -> score quality -> export preview when quality matters -> repair reported element ids -> open board
+choose style -> load design guide + contract + patterns -> generate scene -> validate scene -> repair deterministic display defaults -> score quality -> export preview when quality matters -> repair reported element ids -> open board
 ```
+
+Use `agentdraw guide patterns --json` before generating Excalidraw-backed scenes. It gives agents
+copyable centered-label and edge-arrow primitives, which prevents common failures such as text
+sticking to the top of a box, Chinese text using a handwritten font, or connector colors drifting
+from the selected style. `agentdraw repair` can normalize these deterministic defaults after
+generation; it skips writing if the repaired scene would validate worse than the original.
 
 ## Scene Format
 
@@ -301,6 +308,7 @@ Agents should load both the narrative guide and the machine-readable contract:
 ```bash
 agentdraw guide style system-formal --format text
 agentdraw guide contract system-formal --json
+agentdraw guide patterns --json
 agentdraw validate-style system-formal --json
 ```
 
@@ -367,6 +375,9 @@ for version-matched guidance:
 agentdraw guide styles --json
 agentdraw guide style system-formal --format text
 agentdraw guide contract system-formal --json
+agentdraw guide patterns --json
+agentdraw validate .agentdraw/board.agentdraw.json --style system-formal --json
+agentdraw repair .agentdraw/board.agentdraw.json --style system-formal --write --json
 agentdraw quality .agentdraw/board.agentdraw.json --style system-formal --json
 agentdraw guide quality --format text
 ```

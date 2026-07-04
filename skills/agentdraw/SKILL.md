@@ -15,6 +15,7 @@ Prefer the npm runtime. Use the globally installed `agentdraw` command when pres
 npx @aidraw/agentdraw@latest --help
 npx @aidraw/agentdraw@latest guide --format text
 npx @aidraw/agentdraw@latest guide quality --format text
+npx @aidraw/agentdraw@latest guide patterns --json
 npx @aidraw/agentdraw@latest guide styles --json
 npx @aidraw/agentdraw@latest guide contract system-formal --json
 ```
@@ -31,11 +32,13 @@ agentdraw doctor --json
 1. Run `agentdraw guide` or `npx @aidraw/agentdraw@latest guide` for the current workflow.
 2. Run `agentdraw guide styles --json` and choose one style id by audience, density, and tone.
 3. Run `agentdraw guide style <style-id> --format text` and `agentdraw guide contract <style-id> --json`. Follow the design guide and treat the contract as hard constraints.
-4. Create or patch a `.agentdraw.json` scene using editable primitives.
-5. Run `agentdraw validate <file> --style <style-id> --format json` and repair reported element ids until validation passes.
-6. Run `agentdraw quality <file> --style <style-id> --format json`. Use it as preflight, then self-check task fit against the original prompt.
-7. When the user asks for higher quality or when the board is complex, run `agentdraw export <file> --format png --out <preview.png> --json` and inspect the rendered preview before opening.
-8. If a local browser is available, run `agentdraw open <file> --background --open --format json`. On a remote or headless host, run `agentdraw open <file> --background --no-open --format json` and return the printed URL to the user.
+4. Run `agentdraw guide patterns --json` and reuse the centered-label and edge-arrow patterns instead of hand-calculating Excalidraw text layout.
+5. Create or patch a `.agentdraw.json` scene using editable primitives.
+6. Run `agentdraw validate <file> --style <style-id> --format json` and repair reported element ids until validation passes.
+7. If text, font, or connector defaults are inconsistent, run `agentdraw repair <file> --style <style-id> --write --format json`, then validate again. Repair is conservative and skips writes when it would make validation worse.
+8. Run `agentdraw quality <file> --style <style-id> --format json`. Use it as preflight, then self-check task fit against the original prompt.
+9. When the user asks for higher quality or when the board is complex, run `agentdraw export <file> --format png --out <preview.png> --json` and inspect the rendered preview before opening.
+10. If a local browser is available, run `agentdraw open <file> --background --open --format json`. On a remote or headless host, run `agentdraw open <file> --background --no-open --format json` and return the printed URL to the user.
 
 ## Quality Bar
 
@@ -62,11 +65,13 @@ If the result looks generic or weak, run `agentdraw guide quality --format text`
 agentdraw schema --json
 agentdraw guide quality
 agentdraw guide scene
+agentdraw guide patterns --json
 agentdraw guide rules
 agentdraw guide style system-formal --format text
 agentdraw guide contract system-formal --json
 agentdraw init .agentdraw/board.agentdraw.json
 agentdraw validate .agentdraw/board.agentdraw.json --style system-formal --format json
+agentdraw repair .agentdraw/board.agentdraw.json --style system-formal --write --format json
 agentdraw quality .agentdraw/board.agentdraw.json --style system-formal --format json
 agentdraw export .agentdraw/board.agentdraw.json --format png --out .agentdraw/board.preview.png --json
 agentdraw validate-style system-formal --json
@@ -79,7 +84,8 @@ agentdraw open .agentdraw/board.agentdraw.json --background --no-open --format j
 - Do not make screenshots when an editable board is expected.
 - Do not use a design style as a palette swap; load its guide and contract before generating.
 - Keep text editable and generously sized.
-- For Excalidraw text, include `text`, `originalText`, `fontSize`, `fontFamily`, `lineHeight`, `baseline`, `textAlign`, `verticalAlign`, and `autoResize`.
+- For centered text inside a shape, use `agentdraw guide patterns --json`: inset the text box by 12-20px, set `textAlign: "center"`, `verticalAlign: "middle"`, `autoResize: false`, `fontFamily: 2`, and `lineHeight: 1.25`.
+- Do not place contained text at the container top-left with `autoResize: true`; this often renders as top-aligned or cramped text.
 - Use the font family required by `agentdraw guide contract <style-id> --json`. Default AgentDraw themes use Excalidraw `fontFamily: 2` sans text; avoid `fontFamily: 1` for Chinese or multilingual boards unless the user explicitly asks for a hand-drawn look.
 - Do not persist viewport runtime fields such as `scrollX`, `scrollY`, `zoom`, `width`, `height`, `offsetTop`, `selectedElementIds`, or `editingTextElement`.
 - Run validation before opening or delivering the scene.

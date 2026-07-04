@@ -2,6 +2,7 @@ import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 
+export { repairScene, type SceneRepairChange, type SceneRepairOptions } from "./repair.js";
 export { validateScene, type SceneValidationIssue, type SceneValidationResult } from "./validate.js";
 
 export type AgentDrawScene = {
@@ -36,7 +37,7 @@ export const createEmptyScene = (title = "Untitled board"): AgentDrawScene => ({
   elements: [],
   appState: {
     viewBackgroundColor: "#ffffff",
-    currentItemFontFamily: 1,
+    currentItemFontFamily: 2,
   },
   files: {},
 });

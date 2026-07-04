@@ -7,9 +7,11 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   normalizeScenePath,
+  repairScene,
   readOrCreateSceneFile,
   readSceneFile,
   validateScene,
+  writeSceneFile,
   type AgentDrawScene,
   type SceneValidationIssue,
 } from "@agentdraw/scene";
@@ -59,6 +61,12 @@ type InitOptions = GlobalOptions & {
 type ValidateOptions = GlobalOptions & {
   filePaths: string[];
   styleId?: string;
+};
+
+type RepairOptions = GlobalOptions & {
+  filePath: string;
+  styleId?: string;
+  write: boolean;
 };
 
 type QualityOptions = GlobalOptions & {
@@ -201,6 +209,9 @@ const main = async () => {
     case "validate":
       await validateCommand(parseValidateOptions(args, context.globals));
       return;
+    case "repair":
+      await repairCommand(parseRepairOptions(args, context.globals));
+      return;
     case "quality":
       await qualityCommand(parseQualityOptions(args, context.globals));
       return;
@@ -324,6 +335,60 @@ const validateCommand = async (options: ValidateOptions) => {
   writeOutput(payload, formatValidationText(results, errorCount, warningCount), options);
 
   if (errorCount > 0) {
+    process.exitCode = EXIT_GENERAL_ERROR;
+  }
+};
+
+const repairCommand = async (options: RepairOptions) => {
+  const filePath = resolveScenePath(options.filePath, options.cwd);
+  const scene = await readSceneFile(filePath);
+  const contract = getDesignContract(options.styleId ?? scene.styleId ?? "system-formal");
+  const beforeValidation = validateSceneWithContract(scene, options.styleId);
+  const repaired = repairScene(scene, {
+    fontFamily: excalidrawFontFamily(contract.typography.fontFamily),
+    connectorColor: contract.palette.muted,
+    connectorStrokeWidth: contract.connectors.minStrokeWidth,
+  });
+  const afterValidation = validateSceneWithContract(repaired.scene, options.styleId);
+  const skippedWrite = options.write && isValidationWorse(afterValidation, beforeValidation);
+  const wroteChanges = options.write && !skippedWrite;
+  const validation = skippedWrite ? beforeValidation : afterValidation;
+
+  if (wroteChanges) {
+    await writeSceneFile(filePath, repaired.scene);
+  }
+
+  writeOutput(
+    {
+      ok: validation.errorCount === 0,
+      command: "repair",
+      filePath,
+      styleId: contract.id,
+      requestedWrite: options.write,
+      written: wroteChanges,
+      skippedWrite,
+      changeCount: repaired.changes.length,
+      changes: repaired.changes,
+      beforeValidation: {
+        errorCount: beforeValidation.errorCount,
+        warningCount: beforeValidation.warningCount,
+      },
+      afterValidation: {
+        errorCount: afterValidation.errorCount,
+        warningCount: afterValidation.warningCount,
+        issues: afterValidation.issues,
+      },
+      validation: {
+        errorCount: validation.errorCount,
+        warningCount: validation.warningCount,
+        issues: validation.issues,
+      },
+    },
+    formatRepairText(filePath, wroteChanges, skippedWrite, repaired.changes.length, validation),
+    options,
+  );
+
+  if (validation.errorCount > 0) {
     process.exitCode = EXIT_GENERAL_ERROR;
   }
 };
@@ -593,6 +658,27 @@ const parseValidateOptions = (
     ...globals,
     filePaths: values.positionals,
     styleId: values.valueFlags["--style"],
+  };
+};
+
+const parseRepairOptions = (args: string[], globals: GlobalOptions): RepairOptions => {
+  const values = parseCommandFlags(args, {
+    booleanFlags: ["--write", "--dry-run"],
+    valueFlags: ["--style"],
+  });
+  assertNoUnknownFlags(values.unknownFlags, "repair");
+  if (values.positionals.length !== 1) {
+    throw new CliError("missing_argument", "The repair command requires one scene file.", {
+      exitCode: EXIT_USAGE_ERROR,
+      suggestion: "Run: agentdraw repair <file> --write",
+      input: { args },
+    });
+  }
+  return {
+    ...globals,
+    filePath: values.positionals[0],
+    styleId: values.valueFlags["--style"],
+    write: values.booleanFlags.has("--dry-run") ? false : values.booleanFlags.has("--write"),
   };
 };
 
@@ -934,6 +1020,23 @@ const validateSceneWithContract = (scene: AgentDrawScene, styleId?: string) => {
   };
 };
 
+const excalidrawFontFamily = (fontFamily: "hand" | "sans" | "mono") => {
+  if (fontFamily === "sans") {
+    return 2;
+  }
+  if (fontFamily === "mono") {
+    return 3;
+  }
+  return 1;
+};
+
+const isValidationWorse = (
+  after: { errorCount: number; warningCount: number },
+  before: { errorCount: number; warningCount: number },
+) =>
+  after.errorCount > before.errorCount ||
+  (after.errorCount === before.errorCount && after.warningCount > before.warningCount);
+
 const scoreSceneQuality = (
   filePath: string,
   scene: AgentDrawScene,
@@ -1205,6 +1308,24 @@ const formatValidationText = (
   return lines.join("\n");
 };
 
+const formatRepairText = (
+  filePath: string,
+  written: boolean,
+  skippedWrite: boolean,
+  changeCount: number,
+  validation: { errorCount: number; warningCount: number },
+) =>
+  [
+    `Scene repair ${written ? "wrote changes" : skippedWrite ? "skipped write" : "dry run"}: ${filePath}`,
+    `Changes: ${changeCount}`,
+    `Validation after repair: ${validation.errorCount} error(s), ${validation.warningCount} warning(s)`,
+    skippedWrite
+      ? "Repair would make validation worse, so the file was left unchanged."
+      : validation.errorCount > 0
+      ? "Repair fixed deterministic display defaults, but layout/content issues remain. Run validate and fix reported element ids."
+      : "Repair completed with zero validation errors.",
+  ].join("\n");
+
 const formatQualityText = (results: QualitySummary[]) => {
   const lines = [
     `Quality check completed: ${results.length} file(s)`,
@@ -1277,6 +1398,7 @@ const guidePayload = (topic: string, detail?: string) => {
           "Run agentdraw guide style <style-id> and agentdraw guide contract <style-id> to load the selected design system and machine-readable contract.",
           "Create or patch a .agentdraw.json scene with editable primitives.",
           "Run agentdraw validate <file> --format json and repair reported element ids.",
+          "If common display defaults are wrong, run agentdraw repair <file> --style <style-id> --write, then validate again.",
           "Run agentdraw quality <file> --style <style-id> --format json, then self-check task fit against the original prompt.",
           "For higher-quality review, run agentdraw export <file> --format png --out <preview.png> and inspect the rendered preview before opening.",
           "Run agentdraw open <file> --background --open --format json when a local browser is available. On a remote or headless host, use --background --no-open and return the printed local URL.",
@@ -1289,6 +1411,7 @@ const guidePayload = (topic: string, detail?: string) => {
           style: "agentdraw guide style system-formal",
           contract: "agentdraw guide contract system-formal --json",
           validate: "agentdraw validate .agentdraw/board.agentdraw.json --format json",
+          repair: "agentdraw repair .agentdraw/board.agentdraw.json --style system-formal --write --format json",
           qualityCheck: "agentdraw quality .agentdraw/board.agentdraw.json --style system-formal --format json",
           exportPreview: "agentdraw export .agentdraw/board.agentdraw.json --format png --out .agentdraw/board.preview.png --json",
           validateStyle: "agentdraw validate-style system-formal --format json",
@@ -1382,6 +1505,77 @@ const guidePayload = (topic: string, detail?: string) => {
           "Keep style guidance in the design system, not as extra metadata in the scene.",
         ],
       };
+    case "patterns":
+      return {
+        topic,
+        rules: [
+          "Prefer these primitive patterns over hand-calculating Excalidraw text layout.",
+          "For a centered label inside a shape, create a rectangle and a separate text element inset by 12-20px, with textAlign center, verticalAlign middle, autoResize false, fontFamily 2, and lineHeight 1.25.",
+          "Do not set text x/y equal to the container top-left unless the text box is intentionally full-height and autoResize is false.",
+          "For multilingual boards, use fontFamily 2 unless the selected contract explicitly requires mono or hand lettering.",
+          "For arrows, route from edge center to edge center, keep at least 16px from text boxes, use the contract muted or ink color, and avoid crossing headers.",
+        ],
+        centeredLabel: {
+          rectangle: {
+            id: "card",
+            type: "rectangle",
+            x: 100,
+            y: 100,
+            width: 260,
+            height: 88,
+            strokeColor: "#172033",
+            backgroundColor: "#F7F9FC",
+            fillStyle: "solid",
+            strokeWidth: 2,
+            roughness: 0,
+            roundness: { type: 2 },
+            boundElements: [{ id: "card-label", type: "text" }],
+          },
+          text: {
+            id: "card-label",
+            type: "text",
+            x: 116,
+            y: 116,
+            width: 228,
+            height: 56,
+            text: "Centered label",
+            originalText: "Centered label",
+            fontSize: 16,
+            fontFamily: 2,
+            lineHeight: 1.25,
+            baseline: 34,
+            textAlign: "center",
+            verticalAlign: "middle",
+            autoResize: false,
+            containerId: "card",
+            strokeColor: "#172033",
+            backgroundColor: "transparent",
+            fillStyle: "solid",
+            roughness: 0,
+          },
+        },
+        edgeArrow: {
+          id: "arrow-a-b",
+          type: "arrow",
+          x: 360,
+          y: 144,
+          width: 120,
+          height: 0,
+          points: [
+            [0, 0],
+            [120, 0],
+          ],
+          strokeColor: "#64748B",
+          backgroundColor: "transparent",
+          fillStyle: "solid",
+          strokeWidth: 2,
+          roughness: 0,
+          startArrowhead: null,
+          endArrowhead: "arrow",
+          startBinding: null,
+          endBinding: null,
+        },
+      };
     case "rules":
       return {
         topic,
@@ -1392,6 +1586,7 @@ const guidePayload = (topic: string, detail?: string) => {
           "Keep text editable and generously sized.",
           "Do not rely on saved zoom or scroll state for presentation; AgentDraw fits the board on open.",
           "Run validation before opening or delivering the scene.",
+          "Run repair before a second validation pass when text fields, fonts, or connector colors are inconsistent.",
           "Mark intentional shadows or decorative shapes with customData.role set to shadow or decoration.",
         ],
       };
@@ -1581,6 +1776,35 @@ const formatGuideText = (topic: string, detail?: string) => {
     ].join("\n");
   }
 
+  if (topic === "patterns") {
+    const patternsGuide = guidePayload("patterns") as {
+      rules: string[];
+      centeredLabel: Record<string, unknown>;
+      edgeArrow: Record<string, unknown>;
+    };
+    return [
+      "# AgentDraw Primitive Patterns",
+      "",
+      "Use these patterns when generating Excalidraw-backed AgentDraw scenes. They reduce common model errors around vertical centering, text clipping, fonts, and connectors.",
+      "",
+      "## Rules",
+      "",
+      ...patternsGuide.rules.map((rule) => `- ${rule}`),
+      "",
+      "## Centered Label",
+      "",
+      "```json",
+      JSON.stringify(patternsGuide.centeredLabel, null, 2),
+      "```",
+      "",
+      "## Edge Arrow",
+      "",
+      "```json",
+      JSON.stringify(patternsGuide.edgeArrow, null, 2),
+      "```",
+    ].join("\n");
+  }
+
   if (topic === "rules") {
     const rulesGuide = guidePayload("rules") as { rules: string[] };
     return [
@@ -1690,6 +1914,7 @@ const helpText = (command: string | undefined) => {
         "  agentdraw open board.agentdraw.json --background --open",
         "  agentdraw open board.agentdraw.json --background --no-open --format json",
         "  agentdraw validate board.agentdraw.json --format json",
+        "  agentdraw repair board.agentdraw.json --style system-formal --write --format json",
         "  agentdraw quality board.agentdraw.json --style system-formal --format json",
         "  agentdraw export board.agentdraw.json --format png --out board.preview.png --json",
         "  agentdraw validate-style system-formal --format json",
@@ -1699,6 +1924,7 @@ const helpText = (command: string | undefined) => {
         "  open       Start the local editor for a scene file.",
         "  init       Create a scene file without starting the editor.",
         "  validate   Validate one or more scene files.",
+        "  repair     Normalize deterministic scene display defaults, then validate.",
         "  quality    Score scene quality against the AgentDraw rubric.",
         "  export     Export a rendered SVG or PNG preview for visual review.",
         "  validate-style",
@@ -1782,6 +2008,28 @@ const helpText = (command: string | undefined) => {
         "Exit codes:",
         "  0 all files passed, 1 validation/runtime error, 2 invalid arguments.",
       ].join("\n");
+    case "repair":
+      return [
+        "Normalize deterministic AgentDraw scene display defaults, then validate.",
+        "",
+        "Examples:",
+        "  agentdraw repair board.agentdraw.json --style system-formal --write",
+        "  agentdraw repair board.agentdraw.json --style system-formal --dry-run --json",
+        "",
+        "Usage:",
+        "  agentdraw repair <file> [--style <style-id>] [--write|--dry-run]",
+        "",
+        "Arguments:",
+        "  file                Required scene path.",
+        "",
+        "Flags:",
+        "  --style <style-id>  Repair against a specific design contract instead of scene.styleId.",
+        "  --write             Persist repaired scene changes.",
+        "  --dry-run           Report changes without writing. This is the default unless --write is present.",
+        "",
+        "Notes:",
+        "  Repair fixes fonts, contained text box geometry, vertical centering fields, and connector defaults. It does not redesign crowded layouts.",
+      ].join("\n");
     case "quality":
       return [
         "Score AgentDraw scene quality against the AgentDraw rubric.",
@@ -1860,11 +2108,12 @@ const helpText = (command: string | undefined) => {
         "  agentdraw guide styles --json",
         "  agentdraw guide style system-formal",
         "  agentdraw guide contract system-formal --json",
+        "  agentdraw guide patterns --json",
         "  agentdraw guide scene",
         "  agentdraw guide rules",
         "",
         "Usage:",
-        "  agentdraw guide [workflow|quality|styles|style|contract|scene|rules] [style-id]",
+        "  agentdraw guide [workflow|quality|styles|style|contract|scene|patterns|rules] [style-id]",
         "",
         "Notes:",
         "  Use this from SKILL.md so the installed skill stays thin and the CLI provides current guidance.",
@@ -1935,6 +2184,26 @@ const commandSchema = (commandPath: string[]) => {
         "agentdraw validate board.agentdraw.json",
         "agentdraw validate board.agentdraw.json --style system-formal --format json",
         "agentdraw validate examples/*.agentdraw.json --format json",
+      ],
+    },
+    repair: {
+      description: "Normalize deterministic scene display defaults, then validate.",
+      usage: "agentdraw repair <file> [--style <style-id>] [--write|--dry-run]",
+      arguments: [{ name: "file", required: true }],
+      flags: [
+        { name: "--style", type: "string", required: false },
+        { name: "--write", type: "boolean", required: false },
+        { name: "--dry-run", type: "boolean", required: false },
+        { name: "--format", type: "enum", values: ["json", "text"], required: false },
+        { name: "--json", type: "boolean", required: false },
+      ],
+      examples: [
+        "agentdraw repair board.agentdraw.json --style system-formal --write",
+        "agentdraw repair board.agentdraw.json --style system-formal --dry-run --json",
+      ],
+      notes: [
+        "Repair fixes deterministic defaults such as text font family, contained text boxes, vertical centering fields, and connector color/stroke width.",
+        "Repair does not redesign crowded layouts; run validate after repair and fix remaining element ids.",
       ],
     },
     quality: {
@@ -2014,7 +2283,7 @@ const commandSchema = (commandPath: string[]) => {
           name: "topic",
           required: false,
           default: "workflow",
-          values: ["workflow", "quality", "styles", "style", "contract", "scene", "rules"],
+          values: ["workflow", "quality", "styles", "style", "contract", "scene", "patterns", "rules"],
         },
         { name: "style-id", required: false },
       ],
@@ -2028,6 +2297,7 @@ const commandSchema = (commandPath: string[]) => {
         "agentdraw guide styles --json",
         "agentdraw guide style system-formal",
         "agentdraw guide contract system-formal --json",
+        "agentdraw guide patterns --json",
       ],
     },
   };
