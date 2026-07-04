@@ -1,0 +1,118 @@
+#!/usr/bin/env node
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { readFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
+import path from "node:path";
+import { spawnSync } from "node:child_process";
+
+const args = new Set(process.argv.slice(2));
+const dryRun = args.has("--dry-run");
+const skipPack = args.has("--skip-pack");
+const root = process.cwd();
+const packageJsonPath = path.join(root, "packages/cli/package.json");
+const packageJson = JSON.parse(await readFile(packageJsonPath, "utf8"));
+const packageName = packageJson.name;
+const version = packageJson.version;
+const tarballName = `${packageName.replace(/^@/, "").replace("/", "-")}-${version}.tgz`;
+const tarballPath = path.join(root, "npm", tarballName);
+const token = process.env.NPM_TOKEN;
+
+if (!token) {
+  fail(
+    "NPM_TOKEN is required. Run this from an interactive shell, for example: NPM_TOKEN=\"$(shrike get NPM_TOKEN --reveal)\" pnpm npm:publish",
+  );
+}
+
+const tempDir = mkdtempSync(path.join(tmpdir(), "agentdraw-npm-"));
+const npmrcPath = path.join(tempDir, ".npmrc");
+
+try {
+  writeFileSync(
+    npmrcPath,
+    [
+      "registry=https://registry.npmjs.org/",
+      `//registry.npmjs.org/:_authToken=${token}`,
+      "",
+    ].join("\n"),
+    { mode: 0o600 },
+  );
+
+  if (!skipPack) {
+    run("pnpm", ["npm:pack"]);
+  }
+
+  run("npm", ["whoami"], { env: npmEnv(npmrcPath) });
+
+  const alreadyPublished = npmView(`${packageName}@${version}`, ["version"], npmrcPath);
+  if (alreadyPublished.ok) {
+    if (dryRun) {
+      console.log(`${packageName}@${version} is already published; dry-run verified npm auth and tarball path only.`);
+      process.exit(0);
+    } else {
+      fail(`${packageName}@${version} is already published. Bump packages/cli/package.json first.`);
+    }
+  }
+
+  run(
+    "npm",
+    [
+      "publish",
+      tarballPath,
+      "--access",
+      "public",
+      ...(dryRun ? ["--dry-run"] : []),
+    ],
+    { env: npmEnv(npmrcPath) },
+  );
+
+  if (!dryRun) {
+    const latest = npmView(`${packageName}@latest`, ["version"], npmrcPath);
+    if (!latest.ok || latest.stdout.trim().replace(/^"|"$/g, "") !== version) {
+      fail(`Published ${version}, but npm latest did not verify. Output: ${latest.stdout || latest.stderr}`);
+    }
+    console.log(`${packageName}@${version} published and verified as latest.`);
+  }
+} finally {
+  rmSync(tempDir, { recursive: true, force: true });
+}
+
+function npmEnv(npmrcPath) {
+  return {
+    ...process.env,
+    NPM_CONFIG_USERCONFIG: npmrcPath,
+  };
+}
+
+function npmView(spec, fields, npmrcPath) {
+  return runResult("npm", ["view", spec, ...fields, "--json"], {
+    env: npmEnv(npmrcPath),
+    quiet: true,
+  });
+}
+
+function run(command, commandArgs, options = {}) {
+  const result = runResult(command, commandArgs, options);
+  if (!result.ok) {
+    fail(`Command failed: ${command} ${commandArgs.join(" ")}`);
+  }
+  return result;
+}
+
+function runResult(command, commandArgs, options = {}) {
+  const result = spawnSync(command, commandArgs, {
+    cwd: root,
+    env: options.env ?? process.env,
+    encoding: "utf8",
+    stdio: options.quiet ? "pipe" : "inherit",
+  });
+  return {
+    ok: result.status === 0,
+    stdout: result.stdout ?? "",
+    stderr: result.stderr ?? "",
+  };
+}
+
+function fail(message) {
+  console.error(message);
+  process.exit(1);
+}
