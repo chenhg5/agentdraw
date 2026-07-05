@@ -205,7 +205,7 @@ open for a human to edit.
 - Restricted SVG importer for `rect`, `circle`, `ellipse`, `line`, `polyline`, `polygon`, `text/tspan`, groups,
   and arrow markers.
 - Excalidraw-based editable canvas.
-- 44 bundled styles, including formal diagram styles and palettes adapted from
+- 45 bundled styles, including formal diagram styles and palettes adapted from
   `beautiful-feishu-whiteboard`.
 - CLI for opening and validating scenes.
 - Machine-readable design contracts for palette, typography, geometry, spacing, connector rules,
@@ -401,8 +401,8 @@ Additional palette presets are grouped as:
 - restrained: `archive-shelf`, `avocado-press`, `espresso-paper`, `grove`, `inkline`, `jade-lens`,
   `long-table`, `manual-cream`, `papier-bleu`, `runtime-doc`, `salmon-stamp`, `slate-notes`
 - balanced: `apricot-arc`, `berry-pop`, `bold-poster`, `checker-bloom`, `cobalt-bloom`, `coral`,
-  `cut-bloom`, `editorial-forest`, `incident-dark`, `lime-slab`, `linen-cut`, `pin-and-paper`,
-  `raw-grid`, `riptide-cobalt`, `soft-editorial`, `soft-pop`, `violet-marker`
+  `cut-bloom`, `editorial-forest`, `incident-dark`, `lime-slab`, `linen-cut`, `chalk-lesson`,
+  `pin-and-paper`, `raw-grid`, `riptide-cobalt`, `soft-editorial`, `soft-pop`, `violet-marker`
 - bold: `block-frame`, `burst-panel`, `confetti-wedge`, `court-press`, `crayon-stack`,
   `grove-block`, `mint-brut`, `neo-grid-bold`, `neon-grid`, `riso-brut`, `specimen-bold`,
   `stencil-tablet`

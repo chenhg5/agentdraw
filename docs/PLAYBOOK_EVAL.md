@@ -44,7 +44,7 @@ Run at least one task from each category before judging a playbook change.
 | Technical article | Explain a technical source document for engineers | `layered-architecture` or `article-visual` | `runtime-doc`, `raw-grid`, `system-formal` | Turns into generic boxes |
 | PPT / executive | Create one slide visual for leadership | `ppt-visual` | `boardroom`, `long-table`, `soft-editorial` | Too much text, no assertion |
 | Self-media article | Make a public explainer visual | `article-visual` | `soft-editorial`, `riso-brut`, `bold-poster` | Too dense or too technical |
-| Teaching | Explain a concept step by step | `teaching-board` | `crayon-stack`, `pin-and-paper`, `manual-cream` | Looks like formal architecture |
+| Teaching | Explain a concept step by step | `teaching-board` | `chalk-lesson`, `crayon-stack`, `manual-cream` | Looks like a generic card board |
 | Technical flow | Show process logic or decisions | `technical-flowchart` | `system-formal`, `blueprint-formal`, `inkline` | Bad connectors or no decisions |
 | System architecture | Explain product/platform structure | `layered-architecture` | `system-formal`, `blueprint-formal`, `runtime-doc` | Missing boundary or layer logic |
 
@@ -99,15 +99,18 @@ Expected behavior:
 
 ```text
 Create a teaching board that explains why a small prompt prefix change can invalidate an LLM cache.
-Assume the reader is a developer learning the concept for the first time.
+Assume the reader is a developer learning the concept for the first time. Prefer a Khan-style
+worked lesson with examples, annotations, and a rule of thumb, not a card wall.
 ```
 
 Expected behavior:
 
 - Chooses `teaching-board`.
+- Usually chooses `chalk-lesson` unless the user asked for another visual tone.
 - Uses stages or a worked example.
 - Highlights the one changed token.
 - Ends with a rule of thumb.
+- Does not turn the lesson into three equal cards or a product whiteboard.
 
 ### Technical Flow
 

@@ -36,7 +36,7 @@ const evalCases = {
     source: join(evalCaseRoot, "teaching-cache.md"),
     expectedPlaybook: "teaching-board",
     prompt:
-      "Create a step-by-step teaching board for developers learning prompt prefix cache invalidation.",
+      "Create a Khan-style teaching board for developers learning prompt prefix cache invalidation. It should feel like a worked lesson with examples, chalk annotations, and a rule of thumb, not a card wall.",
   },
   flow: {
     id: "flow",
