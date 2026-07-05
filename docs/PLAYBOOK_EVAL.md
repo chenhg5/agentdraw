@@ -12,6 +12,29 @@ Evaluate whether a fresh agent can:
 - produce a board with a strong information structure;
 - validate, export, inspect, and revise the result.
 
+## Quick Run
+
+Prepare all built-in cases without running an agent:
+
+```bash
+pnpm eval:design
+```
+
+Run one case:
+
+```bash
+pnpm eval:design -- --case teaching --agent codex
+pnpm eval:design -- --case flow --agent claude
+```
+
+Run all cases:
+
+```bash
+pnpm eval:design -- --case all --agent codex
+```
+
+The script writes each run to `.agentdraw/evals/<run-name>/` with source documents, the exact prompt, rubric, and an `outputs/` directory. Omit `--agent` when you only want to generate the prompt package and run it yourself.
+
 ## Eval Matrix
 
 Run at least one task from each category before judging a playbook change.
@@ -155,4 +178,3 @@ Each run should produce:
 - PNG preview;
 - validate/quality JSON output;
 - short self-critique.
-

@@ -6,6 +6,51 @@ The goal is not to prove that a generated board is perfect. The goal is to catch
 make quality discussable: task fit, structure, visual design, readability, connector quality, and
 validation.
 
+## One-Command Playbook Eval
+
+Prepare the full built-in eval suite without running an agent:
+
+```bash
+pnpm eval:design
+```
+
+Run one case with Codex:
+
+```bash
+pnpm eval:design -- --case teaching --agent codex
+```
+
+Run the full suite with Claude:
+
+```bash
+pnpm eval:design -- --case all --agent claude
+```
+
+Built-in cases:
+
+- `technical-article`: technical article / engineering explainer
+- `ppt`: executive slide visual
+- `self-media`: public article illustration
+- `teaching`: step-by-step teaching board
+- `flow`: professional flowchart
+- `architecture`: system architecture board
+- `all`: every case above
+
+Each run writes a self-contained folder under `.agentdraw/evals/<run-name>/`:
+
+- `input/`: source articles and briefs for the agent
+- `prompt.md`: the exact prompt to run manually if desired
+- `rubric.md`: human scoring rubric
+- `outputs/`: expected location for SVG, `.agentdraw.json`, PNG previews, and notes
+
+Without `--agent`, the script prints ready-to-run `codex` and `claude` commands using the generated prompt. This is useful when you want to inspect or edit the prompt first.
+
+For a custom source document:
+
+```bash
+pnpm eval:design -- --source ./path/to/article.md --agent codex
+```
+
 ## How To Run A Manual Eval
 
 1. Start from a clean working directory.
