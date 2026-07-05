@@ -24,4 +24,8 @@ export type SceneSnapshot = {
   files: Record<string, unknown>;
 };
 
+export type SaveSceneOptions = {
+  force?: boolean;
+};
+
 export type SaveState = "idle" | "saving" | "saved" | "error";

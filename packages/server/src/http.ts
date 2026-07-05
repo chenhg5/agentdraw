@@ -86,22 +86,28 @@ const handleApi = async (
       filePath?: string;
       scene?: SceneSnapshot;
       baseUpdatedAt?: string;
+      force?: boolean;
     }>(request);
     const filePath = normalizeScenePath(body.filePath ?? "", cwd);
     const current = await readOrCreateSceneFile(filePath);
-    if (!isCurrentSave(body.baseUpdatedAt, current.updatedAt)) {
+    void body.baseUpdatedAt;
+    if (!body.scene) {
+      sendJson(response, 400, { error: "Missing scene payload." });
+      return;
+    }
+    if (
+      !body.force &&
+      current.elements.length > 0 &&
+      Array.isArray(body.scene.elements) &&
+      body.scene.elements.length === 0
+    ) {
       sendJson(response, 409, {
-        error:
-          "Scene file changed after this browser tab loaded it. Refresh before saving to avoid overwriting newer content.",
+        error: "Refusing to overwrite a non-empty scene with an empty scene.",
         currentUpdatedAt: current.updatedAt,
       });
       return;
     }
-    const next = mergeSceneSnapshot(current, body.scene ?? {
-      elements: [],
-      appState: {},
-      files: {},
-    });
+    const next = mergeSceneSnapshot(current, body.scene);
     const scene = await writeSceneFile(filePath, next);
     sendJson(response, 200, { filePath, scene });
     return;
@@ -109,9 +115,6 @@ const handleApi = async (
 
   sendJson(response, 404, { error: "Unknown API route." });
 };
-
-const isCurrentSave = (baseUpdatedAt: unknown, currentUpdatedAt: string) =>
-  typeof baseUpdatedAt === "string" && baseUpdatedAt === currentUpdatedAt;
 
 const readJsonBody = async <T>(request: IncomingMessage): Promise<T> => {
   const chunks: Buffer[] = [];

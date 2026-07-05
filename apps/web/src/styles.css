@@ -34,6 +34,15 @@ button:hover {
   background: #f7f8fa;
 }
 
+.action-button--label {
+  width: auto;
+  min-width: 78px;
+  gap: 6px;
+  padding: 0 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
 .icon-link {
   width: 34px;
   height: 34px;

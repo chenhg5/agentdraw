@@ -213,11 +213,13 @@ export const Editor = ({
             <FileJson size={17} />
           </button>
           <button
+            className="action-button action-button--label"
             type="button"
             onClick={() => importInputRef.current?.click()}
             title="Import JSON"
           >
             <Upload size={17} />
+            <span>Import</span>
           </button>
           <input
             ref={importInputRef}

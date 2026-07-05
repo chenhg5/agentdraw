@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { loadScene, saveScene } from "./api";
+import { loadScene, saveScene, SceneApiError } from "./api";
 import type { AgentDrawScene, SaveState } from "./types";
 
 export const useSceneFile = () => {
@@ -9,10 +9,9 @@ export const useSceneFile = () => {
   const [saveState, setSaveState] = useState<SaveState>("idle");
   const saveTimer = useRef<number | null>(null);
   const latestSaveId = useRef(0);
-  const loadedAt = useRef<number | null>(null);
   const baseUpdatedAt = useRef<string | null>(null);
   const saveInFlight = useRef(false);
-  const pendingSave = useRef<{ scene: AgentDrawScene; saveId: number } | null>(null);
+  const pendingSave = useRef<{ scene: AgentDrawScene; saveId: number; force: boolean } | null>(null);
   const lastSavedKey = useRef<string | null>(null);
   const lastQueuedKey = useRef<string | null>(null);
 
@@ -25,7 +24,6 @@ export const useSceneFile = () => {
           baseUpdatedAt.current = envelope.scene.updatedAt;
           lastSavedKey.current = saveKey(envelope.scene);
           lastQueuedKey.current = lastSavedKey.current;
-          loadedAt.current = Date.now();
           setError(null);
         }
       })
@@ -58,6 +56,7 @@ export const useSceneFile = () => {
         files: pending.scene.files,
       },
       saveBaseUpdatedAt,
+      { force: pending.force },
     )
       .then((envelope) => {
         baseUpdatedAt.current = envelope.scene.updatedAt;
@@ -71,6 +70,16 @@ export const useSceneFile = () => {
       })
       .catch((saveError) => {
         lastQueuedKey.current = lastSavedKey.current;
+        if (saveError instanceof SceneApiError && saveError.status === 409) {
+          if (saveError.currentUpdatedAt) {
+            baseUpdatedAt.current = saveError.currentUpdatedAt;
+          }
+          if (latestSaveId.current === pending.saveId) {
+            setSaveState("idle");
+            setError(null);
+          }
+          return;
+        }
         if (latestSaveId.current === pending.saveId) {
           setSaveState("error");
           setError(saveError instanceof Error ? saveError.message : "Failed to save scene.");
@@ -111,9 +120,7 @@ export const useSceneFile = () => {
       if (nextSaveKey === lastSavedKey.current || nextSaveKey === lastQueuedKey.current) {
         return;
       }
-      const loadedRecently =
-        loadedAt.current !== null && Date.now() - loadedAt.current < 2500;
-      if (loadedRecently && scene.elements.length > 0 && elements.length === 0) {
+      if (!options?.replace && scene.elements.length > 0 && elements.length === 0) {
         return;
       }
       if (saveTimer.current) {
@@ -129,7 +136,7 @@ export const useSceneFile = () => {
       }
 
       saveTimer.current = window.setTimeout(() => {
-        pendingSave.current = { scene: nextScene, saveId };
+        pendingSave.current = { scene: nextScene, saveId, force: options?.replace === true };
         flushPendingSave();
       }, 500);
     },
