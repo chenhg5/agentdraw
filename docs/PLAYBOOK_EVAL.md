@@ -1,11 +1,14 @@
 # AgentDraw Playbook Evaluation
 
-Use this eval to test whether scene playbooks improve output quality beyond visual style selection.
+Use this eval to test whether scene playbooks improve AgentDraw's core job: turning articles,
+documents, notes, and review briefs into editable visual explanations.
 
 ## Goal
 
 Evaluate whether a fresh agent can:
 
+- extract the source's core message;
+- choose a visual expression pattern before drawing;
 - identify the right communication scenario;
 - choose a scene playbook before choosing a style;
 - state why the playbook and style were selected;
@@ -41,8 +44,8 @@ Run at least one task from each category before judging a playbook change.
 
 | Category | User Intent | Expected Playbook | Example Styles | Main Risk |
 | --- | --- | --- | --- | --- |
-| Technical article | Explain a technical source document for engineers | `layered-architecture` or `article-visual` | `runtime-doc`, `raw-grid`, `system-formal` | Turns into generic boxes |
-| PPT / executive | Create one slide visual for leadership | `ppt-visual` | `boardroom`, `long-table`, `soft-editorial` | Too much text, no assertion |
+| Technical article | Create an editable article image for engineers | `article-visual`, adapting `layered-architecture` only if needed | `runtime-doc`, `raw-grid`, `system-formal` | Turns into generic boxes |
+| Review visual | Create one discussion image for leadership or review | `article-visual` | `boardroom`, `long-table`, `soft-editorial` | Becomes a generic slide |
 | Self-media article | Make a public explainer visual | `article-visual` | `soft-editorial`, `riso-brut`, `bold-poster` | Too dense or too technical |
 | Teaching | Explain a concept step by step | `teaching-board` | `chalk-lesson`, `crayon-stack`, `manual-cream` | Looks like a generic card board |
 | Technical flow | Show process logic or decisions | `technical-flowchart` | `system-formal`, `blueprint-formal`, `inkline` | Bad connectors or no decisions |
@@ -76,7 +79,7 @@ AI-generated diagrams. It should feel executive and presentation-ready, not like
 
 Expected behavior:
 
-- Chooses `ppt-visual`.
+- Uses `ppt-visual` only because the prompt explicitly asks for a slide-like leadership deck page.
 - Uses an assertion headline.
 - Uses 2-4 support pillars.
 - Keeps text short and slide-friendly.

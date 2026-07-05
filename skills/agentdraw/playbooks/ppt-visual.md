@@ -1,7 +1,11 @@
 # Playbook: PPT Visual
 
-Use this for slide-like visuals, executive summaries, strategy decks, sales narratives, board
-updates, and presentation sections.
+Use this only when the user explicitly asks for a slide-like visual, executive deck page, strategy
+slide, sales narrative, board update, or presentation section.
+
+Do not use this as the default for article images or review visuals. Most article/doc/review inputs
+should start with `article-visual.md`, because AgentDraw's primary goal is an editable visual
+explanation, not a general slide-design workflow.
 
 ## Communication Job
 
@@ -108,4 +112,3 @@ Risks: too much text; keep each pillar to one short proof line
 - Every card supports the headline.
 - There is one visual hierarchy: title, pillars, implication.
 - It would fit naturally inside a slide deck.
-

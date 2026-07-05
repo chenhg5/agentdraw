@@ -1,18 +1,35 @@
 ---
 name: agentdraw
-description: Use AgentDraw when the user wants a local editable whiteboard, diagram, system map, journey map, process chart, architecture board, research synthesis wall, roadmap, or styled visual board that an agent can draft as SVG, convert into an editable browser board, validate, manually edit, and export as JSON/SVG/PNG.
+description: Use AgentDraw when the user wants to turn an article, document, technical note, review brief, or idea into a local editable visual explanation: article images, concept diagrams, architecture explainers, mechanism diagrams, flowcharts, or teaching boards that can be validated, opened, edited, and exported.
 ---
 
 # AgentDraw
 
-AgentDraw is a local editable whiteboard workflow for coding agents. Use Mermaid import for
-standard flowcharts and decision flows; use SVG import for high-design boards, architecture maps,
-matrices, and custom layouts.
+AgentDraw is a local workflow for helping agents turn writing into editable visual explanations.
+The core job is not "make any design" or "make a slide deck"; it is to create one useful drawing
+that captures the meaning of an article, document, technical note, review brief, or idea.
+
+Best-fit work:
+
+- article and blog images that explain the core idea;
+- technical article diagrams, mechanism maps, and architecture explainers;
+- review visuals that make a proposal easier to discuss;
+- flowcharts when the article needs process logic;
+- teaching boards when the article needs a worked example.
+
+Poor-fit work:
+
+- full landing pages, reports, posters, marketing pages, or general HTML design;
+- complete slide decks;
+- decorative illustrations where editability and structure do not matter.
+
+Use Mermaid import for standard flowcharts and decision flows. Use SVG import for high-design
+editable visual explanations, architecture maps, mechanism diagrams, and custom layouts.
 
 The primary workflow is:
 
 ```text
-prompt -> scene playbook -> design system -> Mermaid or restricted SVG -> import -> editable .agentdraw.json -> validate/repair/export/open
+source text -> core message -> visual expression pattern -> scene playbook -> design system -> Mermaid or restricted SVG -> import -> editable .agentdraw.json -> validate/repair/export/open
 ```
 
 Do not start new boards by hand-writing `.agentdraw.json`. Write a clean Mermaid flowchart or SVG
@@ -20,25 +37,32 @@ source first, inspect it, then convert it into an editable AgentDraw board.
 
 ## Expression Strategy First
 
-Do not treat visual style as the same thing as the diagram type. AgentDraw has two independent
-dimensions:
+Do not treat visual style as the same thing as the diagram type. For AgentDraw, the most important
+decision is the visual explanation strategy: what idea should the reader remember, and what visual
+structure makes that idea obvious?
 
+AgentDraw has three independent dimensions:
+
+- Visual expression pattern: the article's argument shape, such as contrast, mechanism, loop,
+  ladder, stack, map, matrix, or timeline.
 - Scene playbook: how the information should be organized so the reader understands it.
 - Design style: how the board should look and feel.
 
-Always choose the playbook first, then choose a style.
+Always extract the message first, then choose the expression pattern and playbook, then choose a
+style.
 
 Before generating, read `method/drawing-method.md`. Then load the closest playbook:
 
-- `playbooks/layered-architecture.md`: product, platform, system, agent, runtime, or capability architecture.
-- `playbooks/technical-flowchart.md`: process logic, decisions, validation, user registration/login, runbooks.
-- `playbooks/article-visual.md`: blog posts, newsletters, self-media explainers, public idea graphics.
-- `playbooks/ppt-visual.md`: slide-like visuals, executive summaries, deck pages, strategy narratives.
-- `playbooks/teaching-board.md`: live education, concept walkthroughs, tutoring, step-by-step lessons.
+- `playbooks/article-visual.md`: default for articles, docs, review briefs, newsletters, and idea visuals.
+- `playbooks/layered-architecture.md`: use only when the core article idea is system structure.
+- `playbooks/technical-flowchart.md`: use only when the core article idea is process logic or decisions.
+- `playbooks/teaching-board.md`: use only when the core article idea is best taught through a worked example.
+- `playbooks/ppt-visual.md`: secondary; use only when the user explicitly asks for a slide-like visual.
 
-If none fits exactly, use `method/drawing-method.md` to create a short scene plan and adapt the
-nearest playbook. A style guide may recommend suitable scenarios, but no style is locked to one
-scenario.
+If the user gives an article, document, or long-form source and does not explicitly ask for a
+standard chart type, start from `article-visual.md`. Adapt the supporting playbooks only when they
+make the article's core idea clearer. A style guide may recommend suitable scenarios, but no style is
+locked to one scenario.
 
 ## Runtime
 
@@ -79,14 +103,16 @@ agentdraw doctor --json
 
 1. Run `agentdraw guide` for the current workflow.
 2. Read `method/drawing-method.md`.
-3. Select and read one scene playbook. State the playbook choice and reason in one short sentence.
-4. Run `agentdraw guide styles --json` and choose one style id by audience, density, and tone.
-5. State the style choice and reason in one short sentence before generating. If the user did not express a visual preference and the choice is not obvious, run `agentdraw gallery --open --format json` and ask which visual direction they prefer. In headless mode, run `agentdraw gallery --no-open --format json` and return the generated URL or path.
-6. Run `agentdraw guide style <style-id> --format text` and `agentdraw guide contract <style-id> --json`. Follow the guide and treat the contract as hard design constraints.
-7. Write a short layout plan using the template in `method/drawing-method.md`.
-8. Choose the source path. For conventional process diagrams, create `.agentdraw/flow.mmd` with `flowchart TD`, `flowchart TB`, or `flowchart LR`. For high-design boards, create `.agentdraw/board.svg` with the supported SVG subset below.
-9. Inspect the Mermaid/SVG source or export/open it when possible. Fix alignment, text wrapping, connectors, grouping, and hierarchy while it is still source text.
-10. Convert it:
+3. Extract the article's core message in one sentence. If there is no source text, write the user's idea as the core message.
+4. Choose a visual expression pattern: contrast, mechanism, loop, ladder, stack, map, matrix, timeline, or teaching example.
+5. Select and read one scene playbook. Default to `article-visual.md` for article/doc/review visuals unless a supporting playbook clearly fits better. State the playbook choice and reason in one short sentence.
+6. Run `agentdraw guide styles --json` and choose one style id by audience, density, and tone.
+7. State the style choice and reason in one short sentence before generating. If the user did not express a visual preference and the choice is not obvious, run `agentdraw gallery --open --format json` and ask which visual direction they prefer. In headless mode, run `agentdraw gallery --no-open --format json` and return the generated URL or path.
+8. Run `agentdraw guide style <style-id> --format text` and `agentdraw guide contract <style-id> --json`. Follow the guide and treat the contract as hard design constraints.
+9. Write a short layout plan using the template in `method/drawing-method.md`.
+10. Choose the source path. For conventional process diagrams, create `.agentdraw/flow.mmd` with `flowchart TD`, `flowchart TB`, or `flowchart LR`. For high-design article visuals and explanation boards, create `.agentdraw/board.svg` with the supported SVG subset below.
+11. Inspect the Mermaid/SVG source or export/open it when possible. Fix alignment, text wrapping, connectors, grouping, and hierarchy while it is still source text.
+12. Convert it:
 
 ```bash
 agentdraw import-mermaid .agentdraw/flow.mmd --out .agentdraw/board.agentdraw.json --style <style-id> --title "<title>" --format json
@@ -98,8 +124,8 @@ or:
 agentdraw import-svg .agentdraw/board.svg --out .agentdraw/board.agentdraw.json --style <style-id> --title "<title>" --format json
 ```
 
-11. If `import-svg` reports unsupported tags, edit the SVG and import again.
-12. Run:
+13. If `import-svg` reports unsupported tags, edit the SVG and import again.
+14. Run:
 
 ```bash
 agentdraw repair .agentdraw/board.agentdraw.json --style <style-id> --write --format json
@@ -107,13 +133,13 @@ agentdraw validate .agentdraw/board.agentdraw.json --style <style-id> --format j
 agentdraw quality .agentdraw/board.agentdraw.json --style <style-id> --format json
 ```
 
-13. For important boards, export and inspect a preview before opening:
+15. For important boards, export and inspect a preview before opening:
 
 ```bash
 agentdraw export .agentdraw/board.agentdraw.json --format png --out .agentdraw/board.preview.png --json
 ```
 
-14. Open the editable board:
+16. Open the editable board:
 
 ```bash
 agentdraw open .agentdraw/board.agentdraw.json --background --open --format json
@@ -188,6 +214,8 @@ A successful board is editable, structured, readable, visually intentional, and 
 Before delivering:
 
 - The board has a clear title and reading path.
+- For article/doc/review visuals, the board has one memorable core message. It should not read like
+  a generic collection of cards.
 - Major sections are grouped into visible regions.
 - In columns, lanes, and comparison panels, inner cards should use the available width deliberately. Avoid tiny centered cards floating inside a large column; target roughly 70-85% of the lane width unless the design intentionally needs small chips.
 - Align repeated cards to a shared x, width, and rhythm. Uneven card widths inside the same lane usually read as weak layout unless they encode data.
@@ -232,6 +260,9 @@ agentdraw open .agentdraw/board.agentdraw.json --background --no-open --format j
 
 - Generate Mermaid or restricted SVG first for new boards.
 - Convert Mermaid with `agentdraw import-mermaid` or SVG with `agentdraw import-svg`; do not hand-write `.agentdraw.json` as the primary generation path.
+- For article, document, or review-brief inputs, extract the core message and visual expression pattern before drawing.
+- Do not turn every source into a card wall. Choose a contrast, mechanism, loop, ladder, map, matrix, timeline, or worked-example structure.
+- Do not use `ppt-visual.md` unless the user explicitly asks for a slide-like visual. A review visual is usually an article visual, not a slide.
 - Do not use a design style as a palette swap; load its guide and contract before generating.
 - Do not silently default to the same style every time. Do not choose `system-formal` just because examples or previous runs used it. State the selected style and reason; if unsure, show the theme gallery and ask.
 - Avoid emoji and decorative pictograms unless the user explicitly requests them.

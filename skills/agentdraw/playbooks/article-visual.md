@@ -1,34 +1,54 @@
 # Playbook: Article Visual
 
-Use this for public articles, newsletters, blog posts, social graphics, explainers, and concept
-illustrations. The goal is not to document every detail; the goal is to make an idea memorable.
+Use this as the default playbook for articles, documents, technical notes, review briefs,
+newsletters, blog posts, explainers, and concept illustrations. The goal is not to document every
+detail; the goal is to make the source's core idea memorable in one editable visual.
 
 ## Communication Job
 
-Help a reader quickly grasp the article's core insight and remember the structure.
+Help a reader quickly grasp the article's core insight, remember the structure, and discuss the idea
+in review or sharing contexts.
+
+This is AgentDraw's primary playbook. Only switch away from it when the article clearly needs a
+standard process diagram, architecture map, or worked teaching example.
 
 ## Information Model
 
 Extract:
 
-- One headline insight.
-- 3-5 supporting ideas.
-- Tension, contrast, or before/after state.
-- A memorable metaphor if the source supports it.
+- One headline insight: what should the reader remember after 5 seconds?
+- The article's tension: old model vs new model, problem vs solution, hidden mechanism, or tradeoff.
+- 2-4 supporting ideas that prove or explain the insight.
+- A visual expression pattern: contrast, mechanism, loop, ladder, stack, map, matrix, timeline, or
+  worked example.
+- A memorable metaphor only if the source naturally supports it.
 - One takeaway or implication.
+
+Do not include every section from the article. A strong visual image is selective.
 
 ## Layout Recipes
 
-### Big Claim Plus Evidence Cards
+### Contrast With Bridge
 
 ```text
-Large headline
-Subclaim
-
-[Evidence 1] [Evidence 2] [Evidence 3]
-
-Takeaway strip
+Left: old / weak / painful state
+Center: key shift, mechanism, or bridge
+Right: new / strong / desired state
+Bottom: why the shift matters
 ```
+
+Use when the article argues that readers should change how they think.
+
+### Center Mechanism
+
+```text
+Top: sharp article claim
+Center: one mechanism, loop, or engine
+Around it: 3-4 causes, effects, controls, or failure modes
+Bottom: practical takeaway
+```
+
+Use when the article explains why something happens.
 
 ### Before / After
 
@@ -39,12 +59,23 @@ Right: new mental model
 Bottom: why it matters
 ```
 
-### Concept Map
+### Loop Or Flywheel
 
 ```text
-Center: core idea
-Around: 4 forces / causes / practices
-Bottom: reader takeaway
+Stage 1 -> Stage 2 -> Stage 3 -> Stage 4 -> back to Stage 1
+Center: what compounds or breaks the loop
+Side: one warning or leverage point
+```
+
+Use when the article describes a quality loop, operating cycle, growth loop, or feedback system.
+
+### Map Or Stack
+
+```text
+Top: headline claim
+Main: landscape zones, layers, or responsibility bands
+Side: reader orientation notes
+Bottom: takeaway / next action
 ```
 
 ## Recommended Styles
@@ -63,6 +94,7 @@ Scene: article-visual
 Audience: technical newsletter readers
 Reader question: Why do agent diagrams still look weak?
 Main message: Output quality depends on expression strategy, not just visual style.
+Expression pattern: contrast
 Reading path: headline -> contrast -> 3-part loop -> takeaway
 Regions:
 - Header: "Style is not strategy"
@@ -100,16 +132,20 @@ Risks: avoid making it look like a technical architecture diagram
 ## Anti-Patterns
 
 - Trying to include every paragraph from the source.
+- Starting with a style or theme before extracting the article's core message.
+- Making a three-card row by default.
 - Dense tables unless the article is explicitly data-heavy.
 - Decorative icons that do not carry meaning.
 - Vague labels such as "Step 1" and "Step 2" instead of reader-facing ideas.
 - A generic architecture layout for an opinion or explanatory article.
+- A slide-like executive layout unless the user explicitly asked for a slide.
 
 ## Quality Checklist
 
 - The board has one sharp headline or central claim.
-- It contains 3-5 supporting ideas, not 12.
+- It has one clear visual expression pattern.
+- It contains 2-4 supporting ideas, not 12.
 - It is legible as a thumbnail.
 - The visual metaphor or contrast supports the article argument.
 - The takeaway is visible without reading every card.
-
+- A reader can explain why this visual belongs to this article specifically.

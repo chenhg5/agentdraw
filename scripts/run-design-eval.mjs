@@ -10,17 +10,17 @@ const evalCases = {
     id: "technical-article",
     title: "Technical article visual for engineers",
     source: join(evalCaseRoot, "technical-article.md"),
-    expectedPlaybook: "layered-architecture or article-visual",
+    expectedPlaybook: "article-visual, adapting layered-architecture only if it improves the article image",
     prompt:
       "Create an editable board that helps engineers understand the local quality loop described in the article.",
   },
   ppt: {
     id: "ppt",
-    title: "Executive slide visual",
+    title: "Review visual with explicit slide request",
     source: join(evalCaseRoot, "ppt-executive.md"),
     expectedPlaybook: "ppt-visual",
     prompt:
-      "Create one slide-like visual for leadership. It should make one assertion and support it with three concise pillars.",
+      "Create one slide-like visual for leadership because this case explicitly asks for a deck page. It should make one assertion and support it with three concise pillars.",
   },
   "self-media": {
     id: "self-media",
@@ -277,6 +277,8 @@ Use freeform restricted SVG as the source. Do not use a fixed template DSL. If n
 
 For each board:
 
+- extract and state the source's one-sentence core message;
+- choose and state the visual expression pattern before choosing style;
 - identify and state the selected scene playbook before choosing style;
 - read \`skills/agentdraw/method/drawing-method.md\` and the selected playbook;
 - write a short layout plan before writing SVG;
@@ -304,6 +306,7 @@ Hard requirements:
 Write \`${join(directory, "outputs", "notes.md")}\` with:
 
 - the playbook selected for each board and why;
+- the source's core message and visual expression pattern for each board;
 - the style selected for each board and why;
 - the layout plan for each board;
 - commands run;
