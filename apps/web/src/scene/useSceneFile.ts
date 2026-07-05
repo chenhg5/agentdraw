@@ -18,11 +18,17 @@ export const useSceneFile = () => {
     force: boolean;
     updateUrl: boolean;
   } | null>(null);
+  const skipLoadForPath = useRef<string | null>(null);
   const lastSavedKey = useRef<string | null>(null);
   const lastQueuedKey = useRef<string | null>(null);
 
   useEffect(() => {
+    if (skipLoadForPath.current === filePath) {
+      skipLoadForPath.current = null;
+      return;
+    }
     let cancelled = false;
+    setSaveState("idle");
     loadScene(filePath)
       .then((envelope) => {
         if (!cancelled) {
@@ -60,6 +66,7 @@ export const useSceneFile = () => {
       {
         styleId: pending.scene.styleId,
         providerId: pending.scene.providerId,
+        title: pending.scene.title,
         elements: pending.scene.elements,
         appState: pending.scene.appState,
         files: pending.scene.files,
@@ -74,6 +81,7 @@ export const useSceneFile = () => {
         if (latestSaveId.current === pending.saveId) {
           setScene(envelope.scene);
           if (pending.updateUrl || pending.filePath !== filePath) {
+            skipLoadForPath.current = envelope.filePath;
             setFilePath(envelope.filePath);
             writeFilePathToUrl(envelope.filePath);
           }
@@ -168,12 +176,33 @@ export const useSceneFile = () => {
     [filePath, flushPendingSave, scene],
   );
 
+  const openFile = useCallback(
+    (nextFilePath: string) => {
+      const trimmed = nextFilePath.trim();
+      if (!trimmed || trimmed === filePath) {
+        return;
+      }
+      if (saveTimer.current) {
+        window.clearTimeout(saveTimer.current);
+        saveTimer.current = null;
+      }
+      pendingSave.current = null;
+      setScene(null);
+      setError(null);
+      setSaveState("idle");
+      setFilePath(trimmed);
+      writeFilePathToUrl(trimmed);
+    },
+    [filePath],
+  );
+
   return {
     filePath,
     scene,
     error,
     saveState,
     queueSave,
+    openFile,
   };
 };
 
@@ -249,6 +278,7 @@ const sanitizeAppState = (appState: Record<string, unknown>) => {
 
 const saveKey = (scene: AgentDrawScene) =>
   stableStringify({
+    title: scene.title,
     styleId: scene.styleId,
     providerId: scene.providerId,
     elements: scene.elements,

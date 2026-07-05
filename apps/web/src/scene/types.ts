@@ -17,6 +17,7 @@ export type SceneEnvelope = {
 };
 
 export type SceneSnapshot = {
+  title?: string;
   styleId?: string;
   providerId?: string;
   elements: readonly unknown[];

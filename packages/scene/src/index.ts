@@ -27,6 +27,7 @@ export type SceneSnapshot = Pick<
   AgentDrawScene,
   "elements" | "appState" | "files"
 > & {
+  title?: string;
   styleId?: string;
   providerId?: string;
 };
@@ -95,6 +96,7 @@ export const mergeSceneSnapshot = (
   snapshot: SceneSnapshot,
 ): AgentDrawScene => ({
   ...current,
+  title: typeof snapshot.title === "string" ? snapshot.title : current.title,
   styleId: typeof snapshot.styleId === "string" ? snapshot.styleId : current.styleId,
   providerId:
     typeof snapshot.providerId === "string" ? snapshot.providerId : current.providerId,

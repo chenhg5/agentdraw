@@ -30,6 +30,7 @@ export const App = () => {
       error={sceneFile.error}
       saveState={sceneFile.saveState}
       onSceneChange={sceneFile.queueSave}
+      onOpenFile={sceneFile.openFile}
     />
   );
 };

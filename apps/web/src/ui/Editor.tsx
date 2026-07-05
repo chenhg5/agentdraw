@@ -3,7 +3,19 @@ import {
   styleGroups,
   type AgentDrawStyle,
 } from "@agentdraw/styles";
-import { Check, Copy, Download, FileJson, Github, Image, Palette, Save, Upload } from "lucide-react";
+import {
+  Check,
+  Copy,
+  Download,
+  FileJson,
+  Github,
+  History,
+  Image,
+  Palette,
+  Save,
+  Upload,
+  X,
+} from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { BoardRenderer } from "../board/BoardRenderer";
 import {
@@ -27,6 +39,7 @@ type EditorProps = {
     providerId?: string,
     options?: SceneChangeOptions,
   ) => void;
+  onOpenFile: (filePath: string) => void;
 };
 
 export const Editor = ({
@@ -35,13 +48,15 @@ export const Editor = ({
   saveState,
   error,
   onSceneChange,
+  onOpenFile,
 }: EditorProps) => {
   const boardRef = useRef<BoardHandle | null>(null);
   const importInputRef = useRef<HTMLInputElement | null>(null);
   const [selectedStyleId, setSelectedStyleId] = useState(() => getStyleById(scene.styleId).id);
-  const [boardInstanceKey, setBoardInstanceKey] = useState(() => scene.id);
   const [copiedPath, setCopiedPath] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [recentBoards, setRecentBoards] = useState<RecentBoard[]>(() => readRecentBoards());
   const [replayProgress, setReplayProgress] = useState<BoardReplayProgress>({
     active: false,
     current: scene.elements.length,
@@ -60,8 +75,7 @@ export const Editor = ({
 
   useEffect(() => {
     setSelectedStyleId(getStyleById(scene.styleId).id);
-    setBoardInstanceKey(scene.id);
-  }, [scene.id, scene.styleId]);
+  }, [scene.styleId]);
 
   useEffect(() => {
     setReplayEnabled(readReplayEnabledFromUrl(filePath));
@@ -71,6 +85,14 @@ export const Editor = ({
       total: scene.elements.length,
     });
   }, [filePath]);
+
+  useEffect(() => {
+    setRecentBoards((current) => writeRecentBoards(addRecentBoard(current, {
+      filePath,
+      title: scene.title,
+      openedAt: Date.now(),
+    })));
+  }, [filePath, scene.title]);
 
   useEffect(() => {
     if (
@@ -151,7 +173,6 @@ export const Editor = ({
       const nextStyleId = imported.styleId ? getStyleById(imported.styleId).id : selectedStyleId;
       const importFilePath = importedFilePath(filePath, file.name);
       setSelectedStyleId(nextStyleId);
-      setBoardInstanceKey(`import:${Date.now()}:${file.name}`);
       setImportError(null);
       onSceneChange(
         imported.elements,
@@ -218,6 +239,14 @@ export const Editor = ({
           <button type="button" onClick={exportJson} title="Export JSON">
             <FileJson size={17} />
           </button>
+          <RecentBoardsPicker
+            open={historyOpen}
+            boards={recentBoards}
+            currentFilePath={filePath}
+            onToggle={() => setHistoryOpen((open) => !open)}
+            onClose={() => setHistoryOpen(false)}
+            onOpenFile={onOpenFile}
+          />
           <button type="button" onClick={() => importInputRef.current?.click()} title="Import JSON">
             <Upload size={17} />
           </button>
@@ -258,7 +287,7 @@ export const Editor = ({
       </header>
       <section className="canvas">
         <BoardRenderer
-          key={boardInstanceKey}
+          key={scene.providerId ?? "excalidraw"}
           ref={boardRef}
           scene={sceneSnapshot}
           style={selectedStyle}
@@ -315,6 +344,75 @@ const Swatches = ({ style }: { style: AgentDrawStyle }) => (
   </div>
 );
 
+const RecentBoardsPicker = ({
+  open,
+  boards,
+  currentFilePath,
+  onToggle,
+  onClose,
+  onOpenFile,
+}: {
+  open: boolean;
+  boards: RecentBoard[];
+  currentFilePath: string;
+  onToggle: () => void;
+  onClose: () => void;
+  onOpenFile: (filePath: string) => void;
+}) => {
+  const openBoard = (filePath: string) => {
+    onClose();
+    if (filePath !== currentFilePath) {
+      onOpenFile(filePath);
+    }
+  };
+
+  return (
+    <>
+      <button type="button" onClick={onToggle} title="Recent boards">
+        <History size={17} />
+      </button>
+      <aside className={`history-drawer${open ? " history-drawer--open" : ""}`}>
+        <div className="history-drawer__header">
+          <div>
+            <h2>Recent Boards</h2>
+            <p>{boards.length} local records</p>
+          </div>
+          <button type="button" onClick={onClose} title="Close recent boards">
+            <X size={17} />
+          </button>
+        </div>
+        <div className="history-list">
+          {boards.length === 0 ? (
+            <div className="history-empty">No recent boards yet.</div>
+          ) : (
+            boards.map((board) => (
+              <button
+                key={board.filePath}
+                className={`history-item${
+                  board.filePath === currentFilePath ? " history-item--active" : ""
+                }`}
+                type="button"
+                onClick={() => openBoard(board.filePath)}
+              >
+                <span>{board.title}</span>
+                <small>{compactPath(board.filePath)}</small>
+              </button>
+            ))
+          )}
+        </div>
+      </aside>
+      {open ? (
+        <button
+          className="history-backdrop"
+          type="button"
+          aria-label="Close recent boards"
+          onClick={onClose}
+        />
+      ) : null}
+    </>
+  );
+};
+
 const readReplayEnabledFromUrl = (filePath: string) => {
   const params = new URLSearchParams(window.location.search);
   const animate = params.get("animate");
@@ -333,6 +431,56 @@ const readReplayEnabledFromUrl = (filePath: string) => {
 };
 
 const replaySessionStorageKey = (filePath: string) => `agentdraw:replayed:${filePath}`;
+
+type RecentBoard = {
+  filePath: string;
+  title: string;
+  openedAt: number;
+};
+
+const recentBoardsStorageKey = "agentdraw:recent-boards";
+const maxRecentBoards = 12;
+
+const readRecentBoards = (): RecentBoard[] => {
+  try {
+    const value = window.localStorage.getItem(recentBoardsStorageKey);
+    if (!value) {
+      return [];
+    }
+    const parsed = JSON.parse(value) as unknown;
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+    return parsed.filter(isRecentBoard).slice(0, maxRecentBoards);
+  } catch {
+    return [];
+  }
+};
+
+const writeRecentBoards = (boards: RecentBoard[]) => {
+  window.localStorage.setItem(recentBoardsStorageKey, JSON.stringify(boards));
+  return boards;
+};
+
+const addRecentBoard = (boards: RecentBoard[], board: RecentBoard) => {
+  const nextBoards = [
+    board,
+    ...boards.filter((existing) => existing.filePath !== board.filePath),
+  ].slice(0, maxRecentBoards);
+  return nextBoards;
+};
+
+const isRecentBoard = (value: unknown): value is RecentBoard => {
+  if (!value || typeof value !== "object") {
+    return false;
+  }
+  const record = value as Record<string, unknown>;
+  return (
+    typeof record.filePath === "string" &&
+    typeof record.title === "string" &&
+    typeof record.openedAt === "number"
+  );
+};
 
 const compactPath = (filePath: string) => {
   const normalized = filePath.replaceAll("\\", "/");
