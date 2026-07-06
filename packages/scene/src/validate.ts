@@ -350,6 +350,16 @@ const findConnectorIssues = (
       continue;
     }
 
+    const pathLength = connectorPathLength(points);
+    if (connector.type === "arrow" && pathLength < 28) {
+      issues.push({
+        severity: "warning",
+        code: "short-connector",
+        message: `Arrow is only ${Math.round(pathLength)}px long; use a longer connector or a continuous axis so the flow reads clearly.`,
+        elementIds: [connector.id ?? "(unknown)"],
+      });
+    }
+
     const startDistance = nearestShapeDistance(points[0], shapes);
     const endDistance = nearestShapeDistance(points[points.length - 1], shapes);
     if (startDistance > 36 || endDistance > 36) {
@@ -503,6 +513,12 @@ const boundsFromPoints = (id: string, type: string, points: Point[]): Bounds => 
 
 const segments = (points: Point[]): Array<[Point, Point]> =>
   points.slice(1).map((point, index) => [points[index], point]);
+
+const connectorPathLength = (points: Point[]) =>
+  segments(points).reduce(
+    (total, [start, end]) => total + Math.hypot(end.x - start.x, end.y - start.y),
+    0,
+  );
 
 const centerY = (bounds: Bounds) => bounds.y + bounds.height / 2;
 

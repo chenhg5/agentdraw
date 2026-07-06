@@ -170,6 +170,16 @@ const walkChildren = (nodes: XmlNode[], context: WalkContext) => {
     } else if (tag === "ellipse") {
       context.elements.push(ellipseElement(attrs, nextContext));
     } else if (tag === "line") {
+      const nextElementIndex = nextRenderableElementIndex(nodes, index);
+      const nextNode = nextElementIndex === null ? null : nodes[nextElementIndex];
+      const arrowElement = nextNode
+        ? lineTriangleArrowElement(attrs, attrsOf(nextNode), tagOf(nextNode), nextContext)
+        : null;
+      if (arrowElement) {
+        context.elements.push(arrowElement);
+        index = nextElementIndex ?? index;
+        continue;
+      }
       context.elements.push(lineElement(attrs, nextContext));
     } else if (tag === "polyline") {
       const element = polylineElement(attrs, nextContext);
@@ -394,6 +404,56 @@ const rectTriangleArrowElement = (
   return null;
 };
 
+const lineTriangleArrowElement = (
+  lineAttrs: XmlNode,
+  polygonAttrs: XmlNode,
+  nextTag: string | null,
+  context: WalkContext,
+) => {
+  if (nextTag !== "polygon" || hasArrowhead(lineAttrs)) {
+    return null;
+  }
+
+  const x1 = num(lineAttrs.x1) + context.transform.x;
+  const y1 = num(lineAttrs.y1) + context.transform.y;
+  const x2 = num(lineAttrs.x2) + context.transform.x;
+  const y2 = num(lineAttrs.y2) + context.transform.y;
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  if (Math.hypot(dx, dy) < 1) {
+    return null;
+  }
+
+  const points = parsePoints(String(polygonAttrs.points ?? "")).map(([x, y]) => [
+    x + context.transform.x,
+    y + context.transform.y,
+  ]);
+  const triangle = triangleArrowGeometry(points);
+  if (!triangle) {
+    return null;
+  }
+
+  const tolerance = Math.max(8, num(lineAttrs["stroke-width"], 2) + 6);
+  if (
+    !near(triangle.baseCenter[0], x2, tolerance) ||
+    !near(triangle.baseCenter[1], y2, tolerance) ||
+    triangle.direction !== vectorDirection(dx, dy)
+  ) {
+    return null;
+  }
+
+  return connectorElement(
+    x1,
+    y1,
+    [
+      [0, 0],
+      [triangle.tip[0] - x1, triangle.tip[1] - y1],
+    ],
+    lineArrowPartStyle(lineAttrs, polygonAttrs, context.style),
+    true,
+  );
+};
+
 const nextRenderableElementIndex = (nodes: XmlNode[], currentIndex: number) => {
   for (let index = currentIndex + 1; index < nodes.length; index += 1) {
     const tag = tagOf(nodes[index]);
@@ -474,6 +534,27 @@ const arrowPartStyle = (rectAttrs: XmlNode, polygonAttrs: XmlNode, parent: Style
     strokeWidth: num(explicitStrokeWidth, shaftWidth),
   };
 };
+
+const lineArrowPartStyle = (lineAttrs: XmlNode, polygonAttrs: XmlNode, parent: Style): Style => {
+  const lineStyle = styleFrom(lineAttrs, parent);
+  const polygonStyle = styleFrom(polygonAttrs, lineStyle);
+  const explicitStrokeWidth = lineAttrs["stroke-width"] ?? polygonAttrs["stroke-width"];
+  return {
+    ...polygonStyle,
+    fill: "transparent",
+    stroke:
+      colorValue(lineAttrs.stroke) ??
+      colorValue(polygonAttrs.stroke) ??
+      colorValue(polygonAttrs.fill) ??
+      lineStyle.stroke ??
+      polygonStyle.stroke ??
+      parent.stroke,
+    strokeWidth: Math.max(1, num(explicitStrokeWidth, lineStyle.strokeWidth ?? 2)),
+  };
+};
+
+const vectorDirection = (dx: number, dy: number): TriangleArrowGeometry["direction"] =>
+  Math.abs(dx) >= Math.abs(dy) ? (dx >= 0 ? "right" : "left") : dy >= 0 ? "down" : "up";
 
 const near = (value: number, target: number, tolerance: number) =>
   Math.abs(value - target) <= tolerance;

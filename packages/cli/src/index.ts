@@ -2090,6 +2090,7 @@ const scoreSceneQuality = (
     "connector-endpoint",
     "connector-endpoint-inside-shape",
     "connector-crosses-text",
+    "short-connector",
   ]);
   const connectorErrorCount = validation.issues.filter(
     (issue) =>
