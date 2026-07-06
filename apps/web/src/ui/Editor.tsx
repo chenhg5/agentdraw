@@ -287,7 +287,7 @@ export const Editor = ({
       </header>
       <section className="canvas">
         <BoardRenderer
-          key={scene.providerId ?? "excalidraw"}
+          key={`${filePath}:${scene.id}:${scene.providerId ?? "excalidraw"}`}
           ref={boardRef}
           scene={sceneSnapshot}
           style={selectedStyle}

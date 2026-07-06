@@ -36,6 +36,7 @@ export const startAgentDrawServer = async (
 
   const server = http.createServer(async (request, response) => {
     try {
+      setBaseHeaders(response);
       if (request.url?.startsWith("/api/")) {
         await handleApi(request, response, cwd);
         return;
@@ -140,8 +141,13 @@ const sendJson = (response: ServerResponse, statusCode: number, payload: unknown
   response.writeHead(statusCode, {
     "content-type": "application/json; charset=utf-8",
     "access-control-allow-origin": "*",
+    "permissions-policy": "unload=self",
   });
   response.end(JSON.stringify(payload));
+};
+
+const setBaseHeaders = (response: ServerResponse) => {
+  response.setHeader("Permissions-Policy", "unload=self");
 };
 
 const defaultWebDistDir = () => {

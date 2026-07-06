@@ -13,6 +13,10 @@ Use Mermaid instead when the source is asking for a standard flowchart, sequence
 diagram, state diagram, ER diagram, journey, or timeline. Use this playbook when the source needs a
 designed explanatory composition.
 
+If the source is a thinking piece, strategy note, concept explanation, or product/agent analysis,
+do not turn it into Mermaid just because the document has sections, numbered ideas, or an implied
+logical order. Extract the claim, tension, mechanism, and takeaway, then design an SVG visual.
+
 ## Information Model
 
 Extract:
@@ -143,6 +147,7 @@ Risks: avoid making it look like a technical architecture diagram
 - Vague labels such as "Step 1" and "Step 2" instead of reader-facing ideas.
 - A generic architecture layout for an opinion or explanatory article.
 - A slide-like executive layout unless the user explicitly asked for a slide.
+- A Mermaid-style flowchart for a conceptual or argumentative document.
 
 ## Quality Checklist
 

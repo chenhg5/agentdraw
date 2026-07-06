@@ -25,11 +25,6 @@ export const renderSceneSvg = (scene: AgentDrawScene, options: RenderOptions = {
 
   return [
     `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="${viewBox.x} ${viewBox.y} ${viewBox.width} ${viewBox.height}" role="img" aria-label="${escapeXml(scene.title)} preview">`,
-    "<defs>",
-    '<marker id="arrowhead" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">',
-    '<path d="M0,0 L10,4 L0,8 Z" fill="context-stroke"/>',
-    "</marker>",
-    "</defs>",
     `<rect x="${viewBox.x}" y="${viewBox.y}" width="${viewBox.width}" height="${viewBox.height}" fill="${canvas}"/>`,
     ...elements.map(renderElement).filter(Boolean),
     "</svg>",
@@ -125,8 +120,48 @@ const renderConnector = (element: ElementRecord) => {
     return "";
   }
   const d = points.map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`).join(" ");
-  const marker = element.endArrowhead ? ' marker-end="url(#arrowhead)"' : "";
-  return `<path d="${d}" fill="none" stroke="${stroke(element)}" stroke-width="${number(element.strokeWidth, 2)}" stroke-linecap="round" stroke-linejoin="round"${marker}/>`;
+  const color = stroke(element);
+  const strokeWidth = number(element.strokeWidth, 2);
+  return [
+    `<path d="${d}" fill="none" stroke="${color}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round"/>`,
+    element.endArrowhead ? renderArrowhead(points, color, strokeWidth) : "",
+  ].join("");
+};
+
+const renderArrowhead = (points: Array<{ x: number; y: number }>, color: string, strokeWidth: number) => {
+  const end = points.at(-1);
+  const previous = [...points].reverse().find((point) => {
+    if (!end) return false;
+    return Math.hypot(end.x - point.x, end.y - point.y) > 0.1;
+  });
+  if (!end || !previous) {
+    return "";
+  }
+
+  const dx = end.x - previous.x;
+  const dy = end.y - previous.y;
+  const length = Math.hypot(dx, dy);
+  if (length <= 0.1) {
+    return "";
+  }
+
+  const unitX = dx / length;
+  const unitY = dy / length;
+  const perpX = -unitY;
+  const perpY = unitX;
+  const size = clampNumber(strokeWidth * 2.4 + 5, 8, 16);
+  const halfBase = size * 0.45;
+  const baseX = end.x - unitX * size;
+  const baseY = end.y - unitY * size;
+  const triangle = [
+    [end.x, end.y],
+    [baseX + perpX * halfBase, baseY + perpY * halfBase],
+    [baseX - perpX * halfBase, baseY - perpY * halfBase],
+  ]
+    .map((point) => point.join(","))
+    .join(" ");
+
+  return `<polygon points="${triangle}" fill="${color}" stroke="${color}" stroke-width="1"/>`;
 };
 
 type ElementRecord = Record<string, unknown> & {

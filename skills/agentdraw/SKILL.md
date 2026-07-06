@@ -9,6 +9,11 @@ AgentDraw is a local workflow for helping agents create editable diagrams and ex
 The core job is not "make any design"; it is to create one useful drawing that can be converted into
 an editable board, validated, opened, adjusted, and exported.
 
+Default bias: when the user asks for "配图", "article image", "document visual", "concept visual",
+"review visual", "思考/观点/概念说明", or "给文档做一些配图画板", use the SVG explanatory visual path.
+Do not route to Mermaid merely because the source document has headings, bullet lists, hierarchy, or
+logical structure.
+
 Best-fit work:
 
 - structured diagrams with clear grammar: flowcharts, sequence diagrams, class diagrams, state
@@ -24,9 +29,9 @@ Poor-fit work:
 - freehand education boards, sketch-notes, and expressive hand-drawn brainstorming boards; these are
   not a core AgentDraw target yet.
 
-Use Mermaid import for structured diagram types that Mermaid can express well. Use SVG import for
-explanatory visuals, architecture maps, structure diagrams, article images, and slide-like single
-page visuals.
+Use Mermaid import only for explicit diagram grammar that Mermaid can express well. Use SVG import
+for explanatory visuals, architecture maps, structure explanations, article images, concept maps,
+argument maps, review visuals, and slide-like single page visuals.
 
 The primary workflow is:
 
@@ -43,13 +48,22 @@ Do not treat visual style as the same thing as the diagram type. Decide the prov
 AgentDraw has two core directions:
 
 1. **Structured diagram direction -> Mermaid.**
-   Use when the requested output has clear diagram grammar and Mermaid supports the type: flowchart,
-   sequence diagram, class diagram, state diagram, ER diagram, journey, timeline, or similar. Mermaid
-   gives stronger structural correctness than hand-authored SVG for these cases.
+   Use when the user explicitly asks for a diagram type with clear grammar, or the source's primary
+   job is to show a real process with ordered steps and branches: flowchart, sequence diagram, class
+   diagram, state diagram, ER diagram, journey, timeline, or similar. Mermaid gives stronger
+   structural correctness than hand-authored SVG for these cases.
 2. **Explanatory visual direction -> SVG.**
-   Use when the requested output is an article image, review visual, architecture explainer,
-   mechanism map, structure explanation, comparison, matrix, or slide-like single visual. SVG gives
-   more control over composition, theme, hierarchy, and custom layout.
+   Use when the requested output is an article image, document illustration, review visual,
+   architecture explainer, mechanism map, structure explanation, comparison, matrix, concept map,
+   argument map, or slide-like single visual. SVG gives more control over composition, theme,
+   hierarchy, and custom layout.
+
+Important distinction:
+
+- "The document is structured" does not mean "use Mermaid".
+- "The requested visual is a formal flow/sequence/class/state/ER/timeline diagram" means "consider Mermaid".
+- If the user asks for several配图 for a document without naming a diagram type, start with
+  `article-visual.md` or `layered-architecture.md`, not `technical-flowchart.md`.
 
 After the provider decision, choose two separate visual layers:
 
@@ -121,11 +135,11 @@ agentdraw doctor --json
 2. Read `method/drawing-method.md`.
 3. Read `method/provider-routing.md`, `method/layout-styles.md`, and `method/quality-levels.md`.
 4. Decide the type direction:
-   - structured diagram: Mermaid-supported flow/sequence/class/state/ER/timeline/journey diagrams;
-   - explanatory visual: article image, architecture/structure explanation, mechanism map, review visual, or slide-like page.
+   - structured diagram: explicit Mermaid-supported flow/sequence/class/state/ER/timeline/journey diagrams;
+   - explanatory visual: article image, concept/argument visual, architecture/structure explanation, mechanism map, review visual, or slide-like page.
 5. Choose the provider:
-   - Mermaid for structured diagram direction;
-   - restricted SVG for explanatory visual direction.
+   - Mermaid only for structured diagram grammar;
+   - restricted SVG for explanatory visual direction and document配图.
 6. Select and read the closest playbook. State the provider and playbook choice with a reason.
 7. Run `agentdraw guide styles --json` and choose one design style by audience, density, and tone.
 8. Choose one layout style from `method/layout-styles.md`, such as `L01 Contrast Split`,

@@ -3,9 +3,15 @@
 Choose the source provider before choosing a visual style. Provider choice is a hard routing
 decision, not a styling preference.
 
+Most document配图 requests are explanatory visual requests. If the user asks to read docs/articles
+and "make some illustrations/boards", choose SVG unless they explicitly ask for a standard diagram
+type or the core content is a real step-by-step process with decisions.
+
 ## Route To Mermaid
 
-Use Mermaid when the requested drawing has a mature diagram grammar:
+Use Mermaid when the requested drawing has a mature diagram grammar. This usually means the user
+explicitly requested the diagram type, or the source's primary message is a process/interaction/data
+model that would be clearer as formal notation:
 
 - flowchart or decision flow;
 - sequence diagram;
@@ -20,6 +26,9 @@ Use Mermaid when the requested drawing has a mature diagram grammar:
 Why: Mermaid gives structure, node types, connection semantics, and layout constraints that are more
 stable than freehand SVG for grammar-heavy diagrams.
 
+Do not use Mermaid just because a document has headings, lists, "five points", "three layers", or a
+clear argument. That is content structure, not diagram grammar.
+
 Mermaid output expectations:
 
 - write a `.mmd` source first;
@@ -33,6 +42,7 @@ Mermaid output expectations:
 Use restricted SVG when the requested drawing is an explanatory visual:
 
 - article/blog/document/review image;
+- concept or argument visual;
 - architecture or structure explanation with custom grouping;
 - mechanism map;
 - layered stack;
@@ -58,6 +68,14 @@ If the user says "architecture diagram":
 
 - choose Mermaid only when they ask for C4, deployment, sequence, class, or standard notation;
 - choose SVG when they want a polished explainer, article image, system map, or review visual.
+
+If the user says "文档配图", "概念", "思考", "观点", "分析文章", or "review material":
+
+- choose SVG by default;
+- use `article-visual.md` for arguments, concepts, lessons, and thinking pieces;
+- use `layered-architecture.md` only when the content is truly about system structure or component
+  responsibilities;
+- use Mermaid only if one selected board is specifically a flowchart/sequence/class/state/ER diagram.
 
 If the user says "PPT" or "slide":
 

@@ -24,6 +24,7 @@ import {
   styleGroups,
   validateDesignGuide,
   validateSceneAgainstDesignContract,
+  type DesignContract,
   type DesignContractIssue,
 } from "@agentdraw/styles";
 import { renderScenePng, renderSceneSvg, type RenderFormat } from "./render.js";
@@ -1335,8 +1336,19 @@ const mermaidFlowchartToScene = (
   const boundElementsByNodeId = new Map<string, Array<{ type: string; id: string }>>();
   const bounds = layoutBounds(layout);
   const margin = 56;
+  const titleY = Math.max(40, bounds.y - margin - 44);
   elements.push(
-    shapeElement(`mermaid-frame-${nextSeed()}`, "rectangle", bounds.x - margin, bounds.y - margin, bounds.width + margin * 2, bounds.height + margin * 2, {
+    textElement(`mermaid-title-${nextSeed()}`, bounds.x - margin, titleY, Math.max(360, bounds.width), 34, options.title, {
+      seed: nextSeed(),
+      fontSize: contract.typography.headingPx[1],
+      fontFamily: excalidrawFontFamily(contract.typography.fontFamily),
+      strokeColor: contract.palette.ink,
+      textAlign: "left",
+      verticalAlign: "middle",
+    }),
+  );
+  elements.push(
+    shapeElement(`mermaid-frame-${nextSeed()}`, "rectangle", bounds.x - margin, bounds.y - margin, bounds.width + margin * 2, bounds.height + margin * 2 + 18, {
       seed: nextSeed(),
       strokeColor: contract.palette.muted,
       backgroundColor: "transparent",
@@ -1382,7 +1394,7 @@ const mermaidFlowchartToScene = (
           seed: nextSeed(),
           fontSize: contract.typography.bodyPx[0],
           fontFamily: excalidrawFontFamily(contract.typography.fontFamily),
-          strokeColor: contract.palette.muted,
+          strokeColor: contract.palette.ink,
           textAlign: "center",
           verticalAlign: "middle",
         }),
@@ -1393,7 +1405,7 @@ const mermaidFlowchartToScene = (
   for (const node of layout) {
     const isDecision = node.shape === "diamond";
     const isTerminal = node.shape === "terminal" || node.shape === "ellipse";
-    const fill = isDecision ? contract.palette.accent2 : isTerminal ? contract.palette.panel : "#FFFFFF";
+    const fill = mermaidNodeFill(node, contract, layout);
     const nodeId = mermaidNodeElementId(node.id);
     const labelId = `mermaid-label-${node.id}`;
     const labelFontSize = contract.typography.bodyPx[1];
@@ -1401,7 +1413,7 @@ const mermaidFlowchartToScene = (
     elements.push(
       shapeElement(nodeId, nodeShapeType(node), node.x, node.y, node.width, node.height, {
         seed: nextSeed(),
-        strokeColor: contract.palette.ink,
+        strokeColor: isDecision || isTerminal ? contract.palette.accent : contract.palette.ink,
         backgroundColor: fill,
         strokeWidth: Math.max(contract.geometry.strokeWidth[0], 2),
         roughness: contract.geometry.roughness[0],
@@ -1495,8 +1507,15 @@ const layoutMermaidNodes = (flowchart: MermaidFlowchart): MermaidLayoutNode[] =>
     groups.set(layer, group);
   }
 
-  const layerGap = flowchart.direction === "LR" ? 282 : 190;
-  const rowGap = flowchart.direction === "LR" ? 154 : 248;
+  const sizeById = new Map(flowchart.nodes.map((node) => [node.id, mermaidNodeSize(node)]));
+  const maxNodeWidth = Math.max(...flowchart.nodes.map((node) => sizeById.get(node.id)?.width ?? 176));
+  const maxNodeHeight = Math.max(...flowchart.nodes.map((node) => sizeById.get(node.id)?.height ?? 82));
+  const layerGap = flowchart.direction === "LR"
+    ? Math.max(330, maxNodeWidth + 132)
+    : Math.max(230, maxNodeHeight + 132);
+  const rowGap = flowchart.direction === "LR"
+    ? Math.max(178, maxNodeHeight + 96)
+    : Math.max(320, maxNodeWidth + 96);
   const originX = 120;
   const originY = 130;
   const maxLayerSize = Math.max(...[...groups.values()].map((group) => group.length));
@@ -1506,7 +1525,7 @@ const layoutMermaidNodes = (flowchart: MermaidFlowchart): MermaidLayoutNode[] =>
     .flatMap(([layer, group]) => {
       const offset = ((maxLayerSize - group.length) * rowGap) / 2;
       return group.map((node, index) => {
-        const size = mermaidNodeSize(node);
+        const size = sizeById.get(node.id) ?? mermaidNodeSize(node);
         return flowchart.direction === "LR"
           ? {
               ...node,
@@ -1529,9 +1548,26 @@ const layoutMermaidNodes = (flowchart: MermaidFlowchart): MermaidLayoutNode[] =>
 const mermaidNodeSize = (node: MermaidNode) => {
   const lines = node.label.split("\n");
   const longest = Math.max(...lines.map((line) => line.length), 4);
-  const width = Math.max(node.shape === "diamond" ? 184 : 176, Math.min(280, longest * 11 + 56));
-  const height = Math.max(node.shape === "diamond" ? 106 : 82, lines.length * 24 + 42);
+  const width = Math.max(node.shape === "diamond" ? 208 : 196, Math.min(340, longest * 12 + 72));
+  const height = Math.max(node.shape === "diamond" ? 126 : 92, lines.length * 25 + 52);
   return { width, height };
+};
+
+const mermaidNodeFill = (
+  node: MermaidLayoutNode,
+  contract: DesignContract,
+  layout: MermaidLayoutNode[],
+) => {
+  if (node.shape === "diamond") {
+    return contract.palette.accent2;
+  }
+  if (node.shape === "terminal" || node.shape === "ellipse") {
+    return contract.palette.accent2;
+  }
+  const sameLayer = layout.filter((candidate) => candidate.layer === node.layer);
+  const indexInLayer = Math.max(0, sameLayer.findIndex((candidate) => candidate.id === node.id));
+  const fills = [contract.palette.panel, contract.palette.accent2];
+  return fills[(node.layer + indexInLayer) % fills.length];
 };
 
 const layoutBounds = (nodes: MermaidLayoutNode[]) => {
@@ -2608,7 +2644,8 @@ const guidePayload = (topic: string, detail?: string) => {
           "Understand the board purpose, audience, density, and tone.",
           "Run agentdraw guide styles --json and choose one style id.",
           "Run agentdraw guide style <style-id> and agentdraw guide contract <style-id> to load the selected design system and machine-readable contract.",
-          "Choose the source path: use Mermaid for conventional flowcharts/decision flows, or restricted SVG for high-design boards, architecture maps, matrices, and custom layouts.",
+          "Choose the source path: use Mermaid only for explicit diagram grammar such as conventional flowcharts, decision flows, sequence/class/state/ER diagrams, or timelines. Use restricted SVG for document illustrations, article images, concept/argument visuals, architecture explainers, matrices, and custom layouts.",
+          "Do not choose Mermaid merely because a document has headings, bullet lists, layered structure, or several concepts. That is content structure, not diagram grammar.",
           "For Mermaid flowcharts, write .agentdraw/flow.mmd with flowchart TD/TB/LR syntax and run agentdraw import-mermaid .agentdraw/flow.mmd --out .agentdraw/board.agentdraw.json --style <style-id> --title <title> --format json.",
           "For SVG boards, create a restricted SVG with visible geometry, grid-aligned layout, real <text>/<tspan> labels, and the selected style rules.",
           "Preview or inspect the SVG/Mermaid source. Fix layout, alignment, text wrapping, arrows, and visual hierarchy while it is still source text.",
@@ -2743,6 +2780,7 @@ const guidePayload = (topic: string, detail?: string) => {
         notes: [
           "The SVG is the source draft; the .agentdraw.json scene is the editable browser output.",
           "Mermaid import is a shortcut for standard flowcharts. Do not use it for custom editorial boards, architecture maps, or theme-heavy compositions.",
+          "For document配图, concept visuals, argument maps, thinking pieces, and review material, default to SVG unless the user explicitly asked for a formal Mermaid-supported diagram type.",
           "Use real SVG text, rectangles, ellipses, lines, and polylines. Keep labels as text/tspan, not outlined paths or screenshots.",
           "Use title-size text for one clear title, heading-size text for sections, and body-size text for details. Hierarchy should come from size, weight, contrast, spacing, and grouping.",
           "Avoid emoji in board text unless the user explicitly asks for them.",

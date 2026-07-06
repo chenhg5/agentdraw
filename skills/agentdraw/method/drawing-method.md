@@ -6,10 +6,14 @@ playbook controls how the information is organized.
 AgentDraw's reliable scope has two directions:
 
 - **Structured diagrams:** use Mermaid when the requested diagram type has clear grammar and
-  Mermaid supports it.
+  Mermaid supports it. This is about diagram grammar, not whether the document itself is organized.
 - **Explanatory visuals:** use restricted SVG when the output is a designed article image,
   architecture/structure explanation, mechanism map, comparison, matrix, or slide-like single-page
   visual.
+
+For document配图, concept explanation, opinion/thinking pieces, and review material, start from the
+explanatory visual direction unless the user explicitly asks for a formal flowchart, sequence
+diagram, class diagram, ER diagram, state diagram, timeline, or similar notation.
 
 Do not treat AgentDraw as a general-purpose poster, web page, slide deck, freehand sketch-note, or
 hand-drawn education board generator.
@@ -34,7 +38,7 @@ See `provider-routing.md` for the full routing rules and ambiguous cases.
 
 ### Mermaid Provider
 
-Use Mermaid when the user asks for, or the content naturally is:
+Use Mermaid when the user asks for, or the content's main job naturally is:
 
 - flowchart;
 - sequence diagram;
@@ -49,11 +53,16 @@ Mermaid is better for these because it enforces diagram grammar, connections, no
 structural consistency. Do not hand-author these as SVG unless the user explicitly needs a custom
 designed composition.
 
+Do not choose Mermaid for an article simply because it has a hierarchy, a list of principles, or a
+sequence of reasoning. Use SVG for concept maps, argument maps, mental models, comparisons, and
+designed document illustrations.
+
 ### SVG Provider
 
 Use restricted SVG when the output is:
 
 - article/blog/document/review visual;
+- concept visual, argument map, or thinking model;
 - architecture or structure explanation that needs custom composition;
 - mechanism map;
 - concept map;
@@ -93,7 +102,7 @@ three parallel supports.
 - Structured flow/process/decision: use Mermaid and `technical-flowchart.md`.
 - Sequence/class/state/ER/timeline/journey: use Mermaid; adapt `technical-flowchart.md` for process
   discipline and quality expectations.
-- Article/doc/review visual: use SVG and `article-visual.md`.
+- Article/doc/review/concept/thinking visual: use SVG and `article-visual.md`.
 - Architecture/structure explanation: use SVG and `layered-architecture.md`, unless Mermaid can
   express the requested architecture cleanly.
 - Slide-like single visual: use SVG and `ppt-visual.md`.
