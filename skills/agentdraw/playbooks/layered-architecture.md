@@ -1,7 +1,8 @@
 # Playbook: Layered Architecture
 
-Use this when the user wants to understand how a product, system, platform, agent, or workflow is
-structured.
+Use this for SVG-based architecture, structure, layer, capability, responsibility, and system
+explanation visuals. Use Mermaid only when the user asks for a Mermaid-supported architecture or C4
+diagram and a standard grammar is more important than custom composition.
 
 ## Communication Job
 
@@ -86,9 +87,11 @@ Bottom: observability, data, governance
 
 ```text
 Scene: layered-architecture
+Provider: SVG because this needs custom layers, boundaries, and explanatory composition
 Audience: engineering leads
 Reader question: How does the local agent drawing loop work end to end?
 Main message: AgentDraw turns prompt intent into validated, editable boards through a local loop.
+Layout style: layered stack
 Reading path: top-down layers
 Regions:
 - Header: title and one-line promise
@@ -135,4 +138,3 @@ Risks: avoid too many cross-layer arrows
 - External systems are visually outside the owned system.
 - Connectors show primary data/control flow only.
 - The diagram still reads as a system when zoomed out.
-

@@ -4,8 +4,8 @@ The local agent drawing runtime converts a user's request into an editable diagr
 repeatable pipeline.
 
 The entry layer receives the prompt, source documents, and optional style preference. It should not
-start by drawing. It first identifies the communication scenario: architecture explanation, technical
-flow, teaching board, article visual, slide visual, or comparison.
+start by drawing. It first decides the type direction: structured Mermaid diagram or explanatory SVG
+visual.
 
 The planning layer chooses a scene playbook and creates a layout plan. The design layer chooses a
 visual style and loads its design contract. These two decisions are independent: the same style can
@@ -22,4 +22,3 @@ JSON file, export PNG/SVG/JSON, and reopen recently viewed boards.
 
 State lives in project-local `.agentdraw.json` files and local browser storage for recent boards.
 External dependencies include the coding agent, npm package, browser, and optional model provider.
-

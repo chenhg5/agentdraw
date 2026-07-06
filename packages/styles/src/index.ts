@@ -102,7 +102,6 @@ export const styles: AgentDrawStyle[] = [
   style("lime-slab", "Lime Slab", "balanced", "medium", "electric, bold, modern SaaS", "#EEFA79", "#0A0A05", "#FFFFF2", "#0A0A05", "#C6D938", "#5F6B0E"),
   style("linen-cut", "Linen Cut", "balanced", "high", "mid century modernist, tasteful, calm", "#E4D2C4", "#1D2620", "#F7EEE7", "#044D99", "#04B24F", "#8C6757"),
   style("pin-and-paper", "Pin & Paper", "balanced", "medium", "clean, graphic, white with yellow and blue pop", "#FFFFFF", "#161616", "#FFFBE1", "#2A3C99", "#F1E84E", "#576196"),
-  style("chalk-lesson", "Chalk Lesson", "balanced", "low", "Khan-style teaching board, dark slate, chalk annotations, worked examples", "#101820", "#F7F3E8", "#182631", "#F4D35E", "#7FDBCA", "#A8B3C1"),
   style("raw-grid", "Raw Grid", "balanced", "medium", "system native, sharp, digital brutalism", "#FFFFFF", "#0A0A0A", "#F8F8F8", "#0A0A0A", "#F2D4CF", "#5B5B5B"),
   style("riptide-cobalt", "Riptide Cobalt", "balanced", "medium", "bold poster, low density, high impact", "#FDF0E0", "#1A2240", "#FFFFFF", "#375DFE", "#DCE4FF", "#6D5A45"),
   style("incident-dark", "Incident Dark", "balanced", "high", "dark operational report, RCA, timeline evidence", "#0D1117", "#E6EDF3", "#161B22", "#58A6FF", "#1C2330", "#9AA7B4"),

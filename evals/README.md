@@ -17,7 +17,7 @@ pnpm eval:design
 Run one case with Codex:
 
 ```bash
-pnpm eval:design -- --case teaching --agent codex
+pnpm eval:design -- --case flow --agent codex
 ```
 
 Run the full suite with Claude:
@@ -28,12 +28,11 @@ pnpm eval:design -- --case all --agent claude
 
 Built-in cases:
 
-- `technical-article`: technical article / engineering explainer
-- `ppt`: executive slide visual
-- `self-media`: public article illustration
-- `teaching`: step-by-step teaching board
-- `flow`: professional flowchart
-- `architecture`: system architecture board
+- `flow`: Mermaid-first professional flowchart
+- `technical-article`: SVG-first technical article / engineering explainer
+- `ppt`: SVG-first slide-like single visual
+- `self-media`: SVG-first public article illustration
+- `architecture`: SVG-first system architecture board
 - `all`: every case above
 
 Each run writes a self-contained folder under `.agentdraw/evals/<run-name>/`:
@@ -41,7 +40,7 @@ Each run writes a self-contained folder under `.agentdraw/evals/<run-name>/`:
 - `input/`: source articles and briefs for the agent
 - `prompt.md`: the exact prompt to run manually if desired
 - `rubric.md`: human scoring rubric
-- `outputs/`: expected location for SVG, `.agentdraw.json`, PNG previews, and notes
+- `outputs/`: expected location for Mermaid/SVG source, `.agentdraw.json`, PNG previews, and notes
 
 Without `--agent`, the script prints ready-to-run `codex` and `claude` commands using the generated prompt. This is useful when you want to inspect or edit the prompt first.
 

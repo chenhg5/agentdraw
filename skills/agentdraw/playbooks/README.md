@@ -1,31 +1,32 @@
 # AgentDraw Scene Playbooks
 
 Scene playbooks describe how to organize information. Design styles describe how the board looks.
-AgentDraw's primary use case is turning articles, documents, technical notes, review briefs, and
-ideas into editable visual explanations. Choose the visual explanation strategy before choosing a
-style.
+AgentDraw has two reliable directions:
+
+- structured diagrams, routed to Mermaid;
+- explanatory visuals, routed to restricted SVG.
+
+Choose provider first, then design style, then layout style.
 
 ## Available Playbooks
 
-- `article-visual.md`: default for articles, documents, review briefs, newsletters, and public idea visuals.
-- `layered-architecture.md`: supporting playbook when the source's core idea is system structure.
-- `technical-flowchart.md`: supporting playbook when the source's core idea is process logic or decisions.
-- `teaching-board.md`: supporting playbook when the source's core idea is best taught through a worked example.
-- `ppt-visual.md`: secondary playbook for explicit slide-like visuals only.
+- `technical-flowchart.md`: Mermaid-first structured processes, flows, decisions, and retry loops.
+- `article-visual.md`: SVG-first article, document, review, and idea visuals.
+- `layered-architecture.md`: SVG-first architecture, structure, and responsibility maps.
+- `ppt-visual.md`: SVG-first slide-like single-page visuals.
 
 ## Routing Rules
 
-- If the user gives an article, document, technical note, or review brief and asks for a good image,
-  illustration, diagram, or visual, start with `article-visual.md`.
-- If the source's main point is "how this system is structured", adapt `layered-architecture.md`.
-- If the source's main point is "what process or decision path happens", adapt `technical-flowchart.md`.
-- If the source's main point is "teach this concept to a learner", adapt `teaching-board.md`.
-- If the user explicitly asks for a slide, deck page, or leadership slide visual, use `ppt-visual.md`.
+- If the user asks for a flowchart, sequence diagram, class diagram, state diagram, ER diagram,
+  journey, or timeline, use Mermaid and the closest structured playbook.
+- If the user asks for a good image for an article, document, technical note, or review brief, use
+  SVG and `article-visual.md`.
+- If the user asks for architecture, structure, layers, capability map, or system explanation, use
+  SVG and `layered-architecture.md` unless Mermaid clearly fits better.
+- If the user asks for a slide-like single visual, use SVG and `ppt-visual.md`.
 
-If two playbooks fit, choose the one that best helps the article image communicate one memorable
-message. For example, "explain cache invalidation in a technical blog" usually starts as
-`article-visual.md` with a mechanism pattern, while "teach cache invalidation to junior engineers"
-should use `teaching-board.md`.
+If two playbooks fit, choose the one that best matches the provider decision. Do not route into
+freehand education/sketch-note work; that is outside the current reliable scope.
 
 ## Provider Bias
 
@@ -34,3 +35,4 @@ should use `teaching-board.md`.
 - Prefer Mermaid for standard flowcharts, sequence diagrams, or state diagrams.
 - Avoid HTML/page design unless the user explicitly says the output does not need to be editable as
   a drawing.
+- Avoid hand-drawn teaching/sketch-note scenarios for now.

@@ -1,11 +1,14 @@
 # Playbook: Technical Flowchart
 
-Use this for process logic, user journeys with decisions, engineering workflows, validation loops,
-and operational runbooks.
+Use this for Mermaid-first process logic, user journeys with decisions, engineering workflows,
+validation loops, operational runbooks, and other structured diagrams when Mermaid supports the
+grammar.
 
 ## Communication Job
 
 Help the reader follow one process from start to finish and understand where decisions branch.
+Prefer Mermaid for this playbook. Use SVG only when the user explicitly needs a custom explanatory
+composition beyond Mermaid's diagram grammar.
 
 ## Information Model
 
@@ -67,9 +70,11 @@ Side connectors: only from decision nodes
 
 ```text
 Scene: technical-flowchart
+Provider: Mermaid because this is a structured flow with standard node and branch grammar
 Audience: backend engineers
 Reader question: What happens during user registration and login?
 Main message: Registration and login share validation, error feedback, and a final session handoff.
+Mermaid type: flowchart TD
 Reading path: top-down with left registration branch and right login branch
 Regions:
 - Top entry: user visits auth page
@@ -127,4 +132,3 @@ flowchart TD
 - Loops return to a meaningful previous step.
 - The happy path is visible without tracing every fallback.
 - Connectors attach to node edges and do not cross text.
-

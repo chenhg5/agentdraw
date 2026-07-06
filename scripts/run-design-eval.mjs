@@ -30,19 +30,11 @@ const evalCases = {
     prompt:
       "Create a public-facing article illustration that makes the core contrast memorable and readable as a blog hero image.",
   },
-  teaching: {
-    id: "teaching",
-    title: "Teaching board",
-    source: join(evalCaseRoot, "teaching-cache.md"),
-    expectedPlaybook: "teaching-board",
-    prompt:
-      "Create a Khan-style teaching board for developers learning prompt prefix cache invalidation. It should feel like a worked lesson with examples, chalk annotations, and a rule of thumb, not a card wall.",
-  },
   flow: {
     id: "flow",
     title: "Technical flowchart",
     source: join(evalCaseRoot, "user-auth-flow.md"),
-    expectedPlaybook: "technical-flowchart",
+    expectedPlaybook: "technical-flowchart with Mermaid provider",
     prompt:
       "Create a professional editable registration/login flowchart with start/end states, decisions, branch labels, and retry loops.",
   },
@@ -65,7 +57,7 @@ if (!sourcePath && selectedCases.length === 0) {
     [
       "Missing eval source document or eval case.",
       "Run the default built-in suite: pnpm eval:design",
-      "Run one case: pnpm eval:design -- --case teaching",
+      "Run one case: pnpm eval:design -- --case flow",
       "Run with an agent: pnpm eval:design -- --case all --agent codex",
       "Or pass --source <local-or-remote-path> for a custom source document.",
     ].join("\n"),
@@ -186,8 +178,6 @@ function caseAlias(value) {
     ppt: "ppt",
     slide: "ppt",
     slides: "ppt",
-    teaching: "teaching",
-    education: "teaching",
     flow: "flow",
     flowchart: "flow",
     auth: "flow",
@@ -273,22 +263,28 @@ ${styleInstruction}
 
 Read the source documents and the AgentDraw skill. ${taskList}
 
-Use freeform restricted SVG as the source. Do not use a fixed template DSL. If no style test plan is provided, pick the most suitable AgentDraw style for each board, or reuse one style if you have a clear reason. State the style choice and reason in your notes.
+Choose the provider before drawing:
+
+- use Mermaid for Mermaid-supported structured diagrams such as flowcharts, sequence diagrams, class diagrams, state diagrams, ER diagrams, timelines, and journeys;
+- use restricted SVG for explanatory visuals, article images, architecture/structure explanations, mechanism maps, matrices, comparisons, and slide-like single-page visuals.
+
+If no style test plan is provided, pick the most suitable AgentDraw style for each board, or reuse one style if you have a clear reason. State the provider, style, and layout-style choices in your notes.
 
 For each board:
 
 - extract and state the source's one-sentence core message;
-- choose and state the visual expression pattern before choosing style;
+- choose and state the provider before choosing style;
 - identify and state the selected scene playbook before choosing style;
 - read \`skills/agentdraw/method/drawing-method.md\` and the selected playbook;
-- write a short layout plan before writing SVG;
-- write a source SVG under the output directory;
-- import it with \`pnpm agentdraw import-svg\`;
+- choose and state one layout style before writing source;
+- write a short layout plan before writing Mermaid or SVG;
+- write a source \`.mmd\` or \`.svg\` under the output directory;
+- import it with \`pnpm agentdraw import-mermaid\` or \`pnpm agentdraw import-svg\`;
 - run \`pnpm agentdraw repair --write\`;
 - run \`pnpm agentdraw validate --format json\`;
 - run \`pnpm agentdraw quality --format json\`;
 - export a PNG preview;
-- revise the source SVG if quality or visual inspection reveals weak layout, misalignment, excessive whitespace, text issues, connector issues, or style-contract drift.
+- revise the Mermaid or SVG source if quality or visual inspection reveals weak layout, misalignment, excessive whitespace, text issues, connector issues, or style-contract drift.
 
 Hard requirements:
 
@@ -306,7 +302,7 @@ Hard requirements:
 Write \`${join(directory, "outputs", "notes.md")}\` with:
 
 - the playbook selected for each board and why;
-- the source's core message and visual expression pattern for each board;
+- the source's core message, provider choice, and layout style for each board;
 - the style selected for each board and why;
 - the layout plan for each board;
 - commands run;
@@ -325,7 +321,7 @@ function taskListForSources(sources) {
 2. **process-or-mechanism**: explain the most important process, mechanism, or decision flow.
 3. **audience-summary**: create either a slide-like or article-like visual for the source's main message.`;
   }
-  return `Create **one polished editable board per source document**. Use the expected playbook as a strong hint, but still state your own playbook choice and reason. Name outputs with each case id, for example \`technical-article.svg\`, \`technical-article.agentdraw.json\`, and \`technical-article.png\`.`;
+  return `Create **one polished editable board per source document**. Use the expected playbook as a strong hint, but still state your own provider, playbook, style, and layout-style choices with reasons. Name outputs with each case id, for example \`flow.mmd\` or \`technical-article.svg\`, plus \`<case>.agentdraw.json\` and \`<case>.png\`.`;
 }
 
 function rubric() {

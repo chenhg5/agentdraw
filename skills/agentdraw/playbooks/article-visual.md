@@ -1,16 +1,17 @@
 # Playbook: Article Visual
 
-Use this as the default playbook for articles, documents, technical notes, review briefs,
-newsletters, blog posts, explainers, and concept illustrations. The goal is not to document every
-detail; the goal is to make the source's core idea memorable in one editable visual.
+Use this for SVG-based article, document, technical note, review brief, newsletter, blog post,
+explainer, and concept visuals. The goal is not to document every detail; the goal is to make the
+source's core idea memorable in one editable visual.
 
 ## Communication Job
 
 Help a reader quickly grasp the article's core insight, remember the structure, and discuss the idea
 in review or sharing contexts.
 
-This is AgentDraw's primary playbook. Only switch away from it when the article clearly needs a
-standard process diagram, architecture map, or worked teaching example.
+Use Mermaid instead when the source is asking for a standard flowchart, sequence diagram, class
+diagram, state diagram, ER diagram, journey, or timeline. Use this playbook when the source needs a
+designed explanatory composition.
 
 ## Information Model
 
@@ -19,8 +20,8 @@ Extract:
 - One headline insight: what should the reader remember after 5 seconds?
 - The article's tension: old model vs new model, problem vs solution, hidden mechanism, or tradeoff.
 - 2-4 supporting ideas that prove or explain the insight.
-- A visual expression pattern: contrast, mechanism, loop, ladder, stack, map, matrix, timeline, or
-  worked example.
+- A layout style: contrast split, center mechanism, loop, stack, map, matrix, timeline, orbit map, or
+  assertion pillars.
 - A memorable metaphor only if the source naturally supports it.
 - One takeaway or implication.
 
@@ -28,7 +29,7 @@ Do not include every section from the article. A strong visual image is selectiv
 
 ## Layout Recipes
 
-### Contrast With Bridge
+### Contrast Split
 
 ```text
 Left: old / weak / painful state
@@ -91,10 +92,11 @@ Bottom: takeaway / next action
 
 ```text
 Scene: article-visual
+Provider: SVG because this is an explanatory article image, not a Mermaid grammar diagram
 Audience: technical newsletter readers
 Reader question: Why do agent diagrams still look weak?
 Main message: Output quality depends on expression strategy, not just visual style.
-Expression pattern: contrast
+Layout style: contrast split
 Reading path: headline -> contrast -> 3-part loop -> takeaway
 Regions:
 - Header: "Style is not strategy"
@@ -143,7 +145,7 @@ Risks: avoid making it look like a technical architecture diagram
 ## Quality Checklist
 
 - The board has one sharp headline or central claim.
-- It has one clear visual expression pattern.
+- It has one clear layout style.
 - It contains 2-4 supporting ideas, not 12.
 - It is legible as a thumbnail.
 - The visual metaphor or contrast supports the article argument.

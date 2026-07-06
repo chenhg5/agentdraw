@@ -1,11 +1,10 @@
 # Playbook: PPT Visual
 
-Use this only when the user explicitly asks for a slide-like visual, executive deck page, strategy
-slide, sales narrative, board update, or presentation section.
+Use this for SVG-based slide-like single-page visuals, executive summary pages, strategy one-pagers,
+sales narrative visuals, board-update visuals, and presentation sections.
 
-Do not use this as the default for article images or review visuals. Most article/doc/review inputs
-should start with `article-visual.md`, because AgentDraw's primary goal is an editable visual
-explanation, not a general slide-design workflow.
+This is still a drawing provider, not a full slide-deck or HTML/PPT generator. Use it when the user
+wants one editable visual page that feels presentation-ready.
 
 ## Communication Job
 
@@ -62,9 +61,11 @@ Short implication
 
 ```text
 Scene: ppt-visual
+Provider: SVG because this is a designed single-page visual, not a structured Mermaid diagram
 Audience: product and engineering leadership
 Reader question: Why invest in editable agent-generated diagrams?
 Main message: Editable diagrams close the gap between fast AI drafts and trusted team artifacts.
+Layout style: assertion pillars
 Reading path: assertion -> three pillars -> investment implication
 Regions:
 - Header: assertion headline

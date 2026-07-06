@@ -1,17 +1,18 @@
 # AgentDraw Playbook Evaluation
 
-Use this eval to test whether scene playbooks improve AgentDraw's core job: turning articles,
-documents, notes, and review briefs into editable visual explanations.
+Use this eval to test whether AgentDraw routes work into the right provider and then produces a good
+editable result. The two supported directions are Mermaid-backed structured diagrams and SVG-backed
+explanatory visuals.
 
 ## Goal
 
 Evaluate whether a fresh agent can:
 
 - extract the source's core message;
-- choose a visual expression pattern before drawing;
+- choose Mermaid or SVG before drawing;
 - identify the right communication scenario;
 - choose a scene playbook before choosing a style;
-- state why the playbook and style were selected;
+- state why the provider, playbook, design style, and layout style were selected;
 - produce a board with a strong information structure;
 - validate, export, inspect, and revise the result.
 
@@ -26,7 +27,7 @@ pnpm eval:design
 Run one case:
 
 ```bash
-pnpm eval:design -- --case teaching --agent codex
+pnpm eval:design -- --case flow --agent codex
 pnpm eval:design -- --case flow --agent claude
 ```
 
@@ -44,12 +45,11 @@ Run at least one task from each category before judging a playbook change.
 
 | Category | User Intent | Expected Playbook | Example Styles | Main Risk |
 | --- | --- | --- | --- | --- |
-| Technical article | Create an editable article image for engineers | `article-visual`, adapting `layered-architecture` only if needed | `runtime-doc`, `raw-grid`, `system-formal` | Turns into generic boxes |
-| Review visual | Create one discussion image for leadership or review | `article-visual` | `boardroom`, `long-table`, `soft-editorial` | Becomes a generic slide |
-| Self-media article | Make a public explainer visual | `article-visual` | `soft-editorial`, `riso-brut`, `bold-poster` | Too dense or too technical |
-| Teaching | Explain a concept step by step | `teaching-board` | `chalk-lesson`, `crayon-stack`, `manual-cream` | Looks like a generic card board |
-| Technical flow | Show process logic or decisions | `technical-flowchart` | `system-formal`, `blueprint-formal`, `inkline` | Bad connectors or no decisions |
-| System architecture | Explain product/platform structure | `layered-architecture` | `system-formal`, `blueprint-formal`, `runtime-doc` | Missing boundary or layer logic |
+| Technical flow | Show process logic or decisions | Mermaid + `technical-flowchart` | `system-formal`, `blueprint-formal`, `inkline` | Uses SVG instead of Mermaid |
+| Technical article | Create an editable article image for engineers | SVG + `article-visual`, adapting `layered-architecture` only if needed | `runtime-doc`, `raw-grid`, `system-formal` | Turns into generic boxes |
+| Review / slide-like visual | Create one discussion image for leadership or review | SVG + `ppt-visual` or `article-visual` | `boardroom`, `long-table`, `soft-editorial` | Becomes a full slide-deck task |
+| Self-media article | Make a public explainer visual | SVG + `article-visual` | `soft-editorial`, `riso-brut`, `bold-poster` | Too dense or too technical |
+| System architecture | Explain product/platform structure | SVG + `layered-architecture` unless Mermaid clearly fits | `system-formal`, `blueprint-formal`, `runtime-doc` | Missing boundary or layer logic |
 
 ## Test Prompts
 
@@ -66,6 +66,7 @@ then generate, validate, export a preview, and open the board.
 Expected behavior:
 
 - Uses `method/drawing-method.md`.
+- Chooses SVG provider for article-style explanatory visuals.
 - Chooses `layered-architecture` when the article describes a system.
 - Chooses `article-visual` when the article argues a thesis.
 - Avoids copying the article as many bullet cards.
@@ -79,6 +80,7 @@ AI-generated diagrams. It should feel executive and presentation-ready, not like
 
 Expected behavior:
 
+- Chooses SVG provider.
 - Uses `ppt-visual` only because the prompt explicitly asks for a slide-like leadership deck page.
 - Uses an assertion headline.
 - Uses 2-4 support pillars.
@@ -93,27 +95,11 @@ scene playbooks." It should be memorable and readable as a blog hero image.
 
 Expected behavior:
 
+- Chooses SVG provider.
 - Chooses `article-visual`.
 - Uses contrast, metaphor, or before/after structure.
 - Produces a strong headline and takeaway.
 - Avoids dense technical architecture.
-
-### Teaching
-
-```text
-Create a teaching board that explains why a small prompt prefix change can invalidate an LLM cache.
-Assume the reader is a developer learning the concept for the first time. Prefer a Khan-style
-worked lesson with examples, annotations, and a rule of thumb, not a card wall.
-```
-
-Expected behavior:
-
-- Chooses `teaching-board`.
-- Usually chooses `chalk-lesson` unless the user asked for another visual tone.
-- Uses stages or a worked example.
-- Highlights the one changed token.
-- Ends with a rule of thumb.
-- Does not turn the lesson into three equal cards or a product whiteboard.
 
 ### Technical Flow
 
@@ -124,6 +110,7 @@ It should be editable and use correct flowchart conventions.
 
 Expected behavior:
 
+- Chooses Mermaid provider.
 - Chooses `technical-flowchart`.
 - Uses start/end ellipses, decision diamonds, action rectangles.
 - Labels branches.
@@ -138,6 +125,7 @@ editable whiteboards through planning, SVG/Mermaid import, validation, preview, 
 
 Expected behavior:
 
+- Usually chooses SVG provider unless the prompt asks for a Mermaid architecture/C4 diagram.
 - Chooses `layered-architecture`.
 - Uses system boundary or layer bands.
 - Separates planning, rendering, quality, and editing.
@@ -150,6 +138,7 @@ Score each board 1-5.
 | Dimension | 1 | 3 | 5 |
 | --- | --- | --- | --- |
 | Playbook fit | Wrong scene type | Mostly right but generic | Clearly matches the communication job |
+| Provider fit | Wrong provider | Provider works but is not ideal | Mermaid/SVG choice matches the task exactly |
 | Style fit | Arbitrary style | Style loosely fits | Style supports audience and intent |
 | Information structure | Scattered items | Some grouping | Strong reading path and regions |
 | Visual design | Palette-only | Acceptable alignment | Deliberate hierarchy, spacing, balance |
