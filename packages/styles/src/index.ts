@@ -235,6 +235,11 @@ export function getDesignContract(styleOrId: AgentDrawStyle | string): DesignCon
       ...(formal
         ? ["For architecture, layered system, and workflow boards, add an outer frame, canvas boundary, or titled system region so the diagram reads as a complete artifact."]
         : []),
+      ...(style.id === "boardroom"
+        ? [
+            "Include at least one dark command panel, dominant statement block, or decision strip using the ink color; light-only card grids do not satisfy the Boardroom style.",
+          ]
+        : []),
       "Keep every label editable and contained inside its visual region.",
       "Run agentdraw validate before opening or delivering the board.",
     ],
@@ -432,7 +437,41 @@ export function validateSceneAgainstDesignContract(
     });
   }
 
+  issues.push(...validateStyleSignature(style, elements));
+
   return issues;
+}
+
+function validateStyleSignature(
+  style: AgentDrawStyle,
+  elements: Array<Record<string, unknown> & { id: string }>,
+): DesignContractIssue[] {
+  if (style.id !== "boardroom") {
+    return [];
+  }
+  const ink = normalizeColor(style.palette.ink);
+  const darkBlocks = elements.filter((element) => {
+    if (element.type !== "rectangle") {
+      return false;
+    }
+    if (normalizeColor(typeof element.backgroundColor === "string" ? element.backgroundColor : "") !== ink) {
+      return false;
+    }
+    const width = numberValue(element.width);
+    const height = numberValue(element.height);
+    return width >= 220 && height >= 56 && width * height >= 24000;
+  });
+  if (darkBlocks.length > 0) {
+    return [];
+  }
+  return [
+    {
+      severity: "warning",
+      code: "missing-style-signature",
+      message:
+        "Boardroom expects at least one dark command panel, dominant statement block, or decision strip using the ink color. A light-only card grid reads as generic.",
+    },
+  ];
 }
 
 function group(level: StyleLevel) {
@@ -506,6 +545,10 @@ function semanticContractColors(style: AgentDrawStyle) {
 
 function normalizeColor(value: string) {
   return value.trim().toUpperCase();
+}
+
+function numberValue(value: unknown) {
+  return typeof value === "number" ? value : 0;
 }
 
 function excalidrawFontFamily(fontFamily: StyleRenderProfile["fontFamily"]) {

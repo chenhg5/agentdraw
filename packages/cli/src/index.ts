@@ -2108,7 +2108,9 @@ const scoreSceneQuality = (
     "font-family-outside-contract",
     "too-many-type-sizes",
     "style-id-mismatch",
+    "missing-style-signature",
   ]);
+  const hasMissingStyleSignature = issueCodes.includes("missing-style-signature");
   const layoutDiagnostics = analyzeLayoutDiagnostics(shapeElements);
 
   const dimensions: QualityDimensionScore[] = [
@@ -2123,7 +2125,7 @@ const scoreSceneQuality = (
       needsReview: true,
     },
     scoreStructure(scene, shapeElements.length, connectorElements.length, sectionLikeShapes.length),
-    scoreVisualDesign(scene, contractIssueCount, layoutDiagnostics),
+    scoreVisualDesign(scene, contractIssueCount, layoutDiagnostics, hasMissingStyleSignature),
     scoreReadability(textIssueCount, hardTextIssueCount),
     scoreConnectorQuality(
       connectorElements.length,
@@ -2187,6 +2189,7 @@ const scoreVisualDesign = (
   scene: AgentDrawScene,
   contractIssueCount: number,
   layoutDiagnostics: LayoutDiagnostics,
+  hasMissingStyleSignature: boolean,
 ): QualityDimensionScore => {
   const issues: string[] = [];
   let score = 4;
@@ -2201,6 +2204,12 @@ const scoreVisualDesign = (
     score = Math.min(score, 3);
     issues.push(`${contractIssueCount} style-contract warning(s) should be reviewed.`);
   }
+  if (hasMissingStyleSignature) {
+    score = Math.min(score, 2);
+    issues.push(
+      "Selected style signature is missing. Boardroom needs a dark command panel, dominant statement block, or decision strip.",
+    );
+  }
   if (layoutDiagnostics.issueCount >= 4) {
     score = Math.min(score, 2);
     issues.push(...layoutDiagnostics.issues.slice(0, 4));
@@ -2214,7 +2223,7 @@ const scoreVisualDesign = (
     score: qualityScore(score),
     maxScore: 4,
     basis: scene.styleId
-      ? `Scene declares styleId "${scene.styleId}", has ${contractIssueCount} contract warning(s), and ${layoutDiagnostics.issueCount} layout warning(s).`
+      ? `Scene declares styleId "${scene.styleId}", has ${contractIssueCount} contract warning(s), ${layoutDiagnostics.issueCount} layout warning(s), and ${hasMissingStyleSignature ? "is missing" : "has"} its style signature.`
       : "No styleId is declared.",
     issues,
   };

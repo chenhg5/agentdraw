@@ -388,6 +388,9 @@ leaving room for user preference.
 If the user names a style, keep the user's style unless it conflicts with the layout's tone. If no
 style is named, choose the default style for the layout and state that choice.
 
+When using `boardroom`, include one dark ink-filled command panel, dominant statement block, target
+state, or decision strip. Do not make a boardroom visual as only light cards with blue borders.
+
 ## Required Layout Plan Line
 
 Before writing SVG, include:

@@ -180,6 +180,8 @@ agentdraw doctor --json
    needs different proportions, but do not remove the layout's defining composition device.
 8. Run `agentdraw guide styles --json` and choose one design style by audience, density, tone, and
    the recommended styles for the chosen layout.
+   If choosing `boardroom`, the board must include a visible dark command panel, dominant statement
+   block, or decision strip. A light-only blue card grid is not enough to satisfy the style.
 9. State the layout system and design style before generating. If the user did not express a visual
    preference and the choice is not obvious, run `agentdraw gallery --open --format json` and ask
    which visual direction they prefer. In headless mode, run `agentdraw gallery --no-open --format json`
