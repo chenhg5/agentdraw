@@ -179,6 +179,30 @@ const palettes = {
     accent2: "#C0F7FE",
     accent3: "#FCC715",
   },
+  "pin-and-paper": {
+    canvas: "#FFFFFF",
+    ink: "#161616",
+    panel: "#FFFBE1",
+    accent: "#2A3C99",
+    accent2: "#F1E84E",
+    accent3: "#576196",
+  },
+  "hatch-whiteboard": {
+    canvas: "#FFFFFF",
+    ink: "#111111",
+    panel: "#FAFAF5",
+    accent: "#9EDAE5",
+    accent2: "#F6D7DE",
+    accent3: "#5A5A5A",
+  },
+  "crayon-stack": {
+    canvas: "#FFFFFF",
+    ink: "#151515",
+    panel: "#FFF3EC",
+    accent: "#FF472B",
+    accent2: "#D3FE79",
+    accent3: "#2F65FF",
+  },
 };
 
 const examples = [
@@ -204,6 +228,9 @@ const examples = [
   ["examples/theme-bold-poster.agentdraw.json", buildBoldPoster],
   ["examples/theme-soft-editorial.agentdraw.json", buildSoftEditorial],
   ["examples/theme-block-frame.agentdraw.json", buildBlockFrame],
+  ["examples/theme-pin-and-paper.agentdraw.json", buildPinAndPaper],
+  ["examples/theme-hatch-whiteboard.agentdraw.json", buildHatchWhiteboard],
+  ["examples/theme-crayon-stack.agentdraw.json", buildCrayonStack],
 ];
 
 await mkdir("examples", { recursive: true });
@@ -563,7 +590,7 @@ function buildRoadmapMint() {
     text("mint-base-text", 208, 552, 758, 20, "Manual edits stay first-class. Agents generate the draft, humans keep control.", 17, p.ink, "center", "middle"),
   );
 
-  return scene("Creator Tool Roadmap", "mint-brut", elements, { roughness: 1, fontFamily: 5 });
+  return scene("Creator Tool Roadmap", "mint-brut", elements, { roughness: 1, currentItemFontFamily: 1 });
 }
 
 function buildCustomerJourney() {
@@ -1058,6 +1085,116 @@ function buildBlockFrame() {
   return scene("Maker Mode Map", "block-frame", elements, { roughness: 1 });
 }
 
+function buildPinAndPaper() {
+  const p = palettes["pin-and-paper"];
+  const elements = [
+    rect("frame", 44, 36, 1188, 650, "transparent", p.ink, 2),
+    text("title", 78, 62, 620, 44, "Workshop Decision Wall", 38, p.ink),
+    text("subtitle", 82, 116, 720, 24, "A pinned-paper board for synthesis, priorities, and next moves.", 17, p.accent3),
+    rect("highlight", 812, 68, 310, 50, p.accent2, p.ink, 2),
+    text("highlight-text", 838, 84, 260, 20, "Decision: prototype first", 18, p.ink, "center", "middle"),
+  ];
+  const notes = [
+    [92, 188, "User signal", "3 repeated pain points", p.panel],
+    [372, 188, "Constraint", "manual edits matter", "#FFFFFF"],
+    [652, 188, "Opportunity", "local editable boards", p.panel],
+    [932, 188, "Risk", "prompt bloat", "#FFFFFF"],
+    [232, 404, "Next", "ship combine command", p.panel],
+    [552, 404, "Owner", "agent workflow docs", "#FFFFFF"],
+    [872, 404, "Proof", "preview before share", p.panel],
+  ];
+  notes.forEach(([x, y, title, body, fill], index) => {
+    elements.push(
+      rect(`pin-note-${index}`, x, y, 230, 140, fill, p.ink, 2),
+      ellipse(`pin-${index}`, x + 104, y - 44, 22, 22, index % 2 ? p.accent2 : p.accent, p.ink, 2),
+      text(`pin-title-${index}`, x + 24, y + 28, 182, 24, title, 21, p.ink, "center", "middle"),
+      text(`pin-body-${index}`, x + 28, y + 72, 174, 40, body, 16, p.accent3, "center", "middle"),
+    );
+  });
+  return scene("Workshop Decision Wall", "pin-and-paper", elements);
+}
+
+function buildHatchWhiteboard() {
+  const p = palettes["hatch-whiteboard"];
+  const fills = ["#E8F7FA", "#FFF3C4", "#FCE7EC", "#E9F7E6"];
+  const elements = [
+    rect("frame", 44, 36, 1188, 650, "transparent", p.ink, 2),
+    text("title", 74, 60, 620, 48, "Data Flow Whiteboard", 40, p.ink),
+    text("subtitle", 78, 118, 760, 24, "A hand-drawn lineage sketch with stage lanes and readable arrows.", 18, p.accent3),
+  ];
+  const lanes = [
+    [82, 178, "Source"],
+    [342, 178, "Transform"],
+    [632, 178, "Model"],
+    [922, 178, "Serve"],
+  ];
+  lanes.forEach(([x, y, label], index) => {
+    elements.push(
+      rect(`hatch-lane-${index}`, x, y, 220, 390, "transparent", p.ink, 2, { customData: { strokeDasharray: "12,10" } }),
+      text(`hatch-lane-label-${index}`, x + 34, y + 330, 150, 34, label, 28, p.ink, "center", "middle"),
+    );
+  });
+  const cards = [
+    [114, 248, "events"],
+    [114, 362, "orders"],
+    [382, 276, "map()"],
+    [382, 416, "group()"],
+    [674, 304, "facts"],
+    [674, 436, "dims"],
+    [964, 340, "dashboard"],
+  ];
+  cards.forEach(([x, y, label], index) => {
+    elements.push(
+      rect(`hatch-card-${index}`, x, y, 138, 62, fills[index % fills.length], p.ink, 2),
+      text(`hatch-card-text-${index}`, x + 18, y + 20, 102, 22, label, 21, p.ink, "center", "middle"),
+    );
+  });
+  elements.push(
+    arrow("hatch-arrow-0", 252, 278, 130, 30, p.accent3, 2),
+    arrow("hatch-arrow-1", 252, 392, 130, 54, p.accent3, 2),
+    arrow("hatch-arrow-2", 520, 306, 154, 28, p.accent3, 2),
+    arrow("hatch-arrow-3", 520, 446, 154, 18, p.accent3, 2),
+    arrow("hatch-arrow-4", 812, 334, 152, 36, p.accent3, 2),
+    arrow("hatch-arrow-5", 812, 466, 152, -72, p.accent3, 2),
+  );
+  return scene("Data Flow Whiteboard", "hatch-whiteboard", elements, {
+    roughness: 2,
+    elementRoughness: 2,
+    currentItemFontFamily: 5,
+    elementFontFamily: 5,
+  });
+}
+
+function buildCrayonStack() {
+  const p = palettes["crayon-stack"];
+  const elements = [
+    rect("frame", 44, 36, 1188, 650, "transparent", p.ink, 4),
+    text("title", 82, 60, 620, 54, "Crayon Idea Stack", 44, p.ink),
+    text("subtitle", 86, 122, 680, 24, "A loud sketch style for playful roadmap and maker-energy boards.", 18, p.ink),
+    rect("top-slab", 820, 70, 300, 72, p.accent2, p.ink, 4),
+    text("top-slab-text", 850, 92, 240, 26, "Make it editable", 24, p.ink, "center", "middle"),
+  ];
+  const stack = [
+    [112, 218, 860, 86, p.accent, "01  Capture the messy idea"],
+    [172, 318, 860, 86, p.accent2, "02  Convert it into structure"],
+    [232, 418, 860, 86, p.accent3, "03  Let the human reshape it"],
+    [292, 518, 860, 86, p.panel, "04  Export a clean article image"],
+  ];
+  stack.forEach(([x, y, width, height, fill, label], index) => {
+    shadow(`crayon-shadow-${index}`, elements, x, y, width, height, p.ink, 9);
+    elements.push(
+      rect(`crayon-layer-${index}`, x, y, width, height, fill, p.ink, 4),
+      text(`crayon-label-${index}`, x + 34, y + 30, width - 70, 30, label, 27, index === 2 ? "#FFFFFF" : p.ink),
+    );
+  });
+  elements.push(
+    arrow("crayon-arrow", 1066, 276, 64, 276, p.ink, 4),
+    ellipse("crayon-dot-a", 1088, 238, 26, 26, p.accent2, p.ink, 4),
+    ellipse("crayon-dot-b", 1110, 572, 26, 26, p.accent, p.ink, 4),
+  );
+  return scene("Crayon Idea Stack", "crayon-stack", elements, { roughness: 2, elementRoughness: 2 });
+}
+
 function scene(title, styleId, elements, overrides = {}) {
   const p = palettes[styleId];
   return {
@@ -1068,7 +1205,13 @@ function scene(title, styleId, elements, overrides = {}) {
     styleId,
     providerId: "excalidraw",
     updatedAt: "2026-07-04T00:00:00.000Z",
-    elements,
+    elements: elements.map((element) => ({
+      ...element,
+      ...(overrides.elementRoughness === undefined ? {} : { roughness: overrides.elementRoughness }),
+      ...(overrides.elementFontFamily === undefined || element.type !== "text"
+        ? {}
+        : { fontFamily: overrides.elementFontFamily }),
+    })),
     appState: {
       viewBackgroundColor: p.canvas,
       currentItemStrokeColor: p.ink,
@@ -1077,7 +1220,7 @@ function scene(title, styleId, elements, overrides = {}) {
       currentItemStrokeWidth: 2,
       currentItemStrokeStyle: "solid",
       currentItemRoughness: overrides.roughness ?? 0,
-      currentItemFontFamily: overrides.fontFamily ?? 2,
+      currentItemFontFamily: overrides.currentItemFontFamily ?? 2,
       currentItemRoundness: overrides.roundness ?? "round",
       currentItemArrowType: "sharp",
       currentItemStartArrowhead: null,
@@ -1105,7 +1248,7 @@ function rect(id, x, y, width, height, backgroundColor, strokeColor, strokeWidth
     fillStyle: "solid",
     strokeWidth,
     strokeStyle: "solid",
-    roughness: 0,
+    roughness: extra.roughness ?? 0,
     roundness: extra.roundness ? { type: 3 } : null,
     customData: extra.customData,
   });

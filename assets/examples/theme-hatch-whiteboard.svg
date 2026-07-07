@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1260" height="722" viewBox="8 0 1260 722" role="img" aria-label="Data Flow Whiteboard preview">
+<defs>
+<marker id="arrowhead" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+<path d="M0,0 L10,4 L0,8 Z" fill="context-stroke"/>
+</marker>
+</defs>
+<rect x="8" y="0" width="1260" height="722" fill="#FFFFFF"/>
+<rect x="44" y="36" width="1188" height="650" rx="0" fill="none" stroke="#111111" stroke-width="2"/>
+<text x="74" y="100" fill="#111111" font-family="Virgil, Comic Sans MS, cursive" font-size="40" font-weight="700" text-anchor="start"><tspan x="74" dy="0">Data Flow Whiteboard</tspan></text>
+<text x="78" y="136" fill="#5A5A5A" font-family="Virgil, Comic Sans MS, cursive" font-size="18" font-weight="500" text-anchor="start"><tspan x="78" dy="0">A hand-drawn lineage sketch with stage lanes and readable arrows.</tspan></text>
+<rect x="82" y="178" width="220" height="390" rx="0" fill="none" stroke="#111111" stroke-width="2"/>
+<text x="191" y="535.5" fill="#111111" font-family="Virgil, Comic Sans MS, cursive" font-size="28" font-weight="700" text-anchor="middle"><tspan x="191" dy="0">Source</tspan></text>
+<rect x="342" y="178" width="220" height="390" rx="0" fill="none" stroke="#111111" stroke-width="2"/>
+<text x="451" y="535.5" fill="#111111" font-family="Virgil, Comic Sans MS, cursive" font-size="28" font-weight="700" text-anchor="middle"><tspan x="451" dy="0">Transform</tspan></text>
+<rect x="632" y="178" width="220" height="390" rx="0" fill="none" stroke="#111111" stroke-width="2"/>
+<text x="741" y="535.5" fill="#111111" font-family="Virgil, Comic Sans MS, cursive" font-size="28" font-weight="700" text-anchor="middle"><tspan x="741" dy="0">Model</tspan></text>
+<rect x="922" y="178" width="220" height="390" rx="0" fill="none" stroke="#111111" stroke-width="2"/>
+<text x="1031" y="535.5" fill="#111111" font-family="Virgil, Comic Sans MS, cursive" font-size="28" font-weight="700" text-anchor="middle"><tspan x="1031" dy="0">Serve</tspan></text>
+<rect x="114" y="248" width="138" height="62" rx="0" fill="#E8F7FA" stroke="#111111" stroke-width="2"/>
+<text x="183" y="286.875" fill="#111111" font-family="Virgil, Comic Sans MS, cursive" font-size="21" font-weight="500" text-anchor="middle"><tspan x="183" dy="0">events</tspan></text>
+<rect x="114" y="362" width="138" height="62" rx="0" fill="#FFF3C4" stroke="#111111" stroke-width="2"/>
+<text x="183" y="400.875" fill="#111111" font-family="Virgil, Comic Sans MS, cursive" font-size="21" font-weight="500" text-anchor="middle"><tspan x="183" dy="0">orders</tspan></text>
+<rect x="382" y="276" width="138" height="62" rx="0" fill="#FCE7EC" stroke="#111111" stroke-width="2"/>
+<text x="451" y="314.875" fill="#111111" font-family="Virgil, Comic Sans MS, cursive" font-size="21" font-weight="500" text-anchor="middle"><tspan x="451" dy="0">map()</tspan></text>
+<rect x="382" y="416" width="138" height="62" rx="0" fill="#E9F7E6" stroke="#111111" stroke-width="2"/>
+<text x="451" y="454.875" fill="#111111" font-family="Virgil, Comic Sans MS, cursive" font-size="21" font-weight="500" text-anchor="middle"><tspan x="451" dy="0">group()</tspan></text>
+<rect x="674" y="304" width="138" height="62" rx="0" fill="#E8F7FA" stroke="#111111" stroke-width="2"/>
+<text x="743" y="342.875" fill="#111111" font-family="Virgil, Comic Sans MS, cursive" font-size="21" font-weight="500" text-anchor="middle"><tspan x="743" dy="0">facts</tspan></text>
+<rect x="674" y="436" width="138" height="62" rx="0" fill="#FFF3C4" stroke="#111111" stroke-width="2"/>
+<text x="743" y="474.875" fill="#111111" font-family="Virgil, Comic Sans MS, cursive" font-size="21" font-weight="500" text-anchor="middle"><tspan x="743" dy="0">dims</tspan></text>
+<rect x="964" y="340" width="138" height="62" rx="0" fill="#FCE7EC" stroke="#111111" stroke-width="2"/>
+<text x="1033" y="378.875" fill="#111111" font-family="Virgil, Comic Sans MS, cursive" font-size="21" font-weight="500" text-anchor="middle"><tspan x="1033" dy="0">dashboard</tspan></text>
+<path d="M 252 278 L 382 308" fill="none" stroke="#5A5A5A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+<path d="M 252 392 L 382 446" fill="none" stroke="#5A5A5A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+<path d="M 520 306 L 674 334" fill="none" stroke="#5A5A5A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+<path d="M 520 446 L 674 464" fill="none" stroke="#5A5A5A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+<path d="M 812 334 L 964 370" fill="none" stroke="#5A5A5A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+<path d="M 812 466 L 964 394" fill="none" stroke="#5A5A5A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+</svg>

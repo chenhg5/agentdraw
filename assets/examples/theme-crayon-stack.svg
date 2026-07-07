@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1260" height="722" viewBox="8 0 1260 722" role="img" aria-label="Crayon Idea Stack preview">
+<defs>
+<marker id="arrowhead" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+<path d="M0,0 L10,4 L0,8 Z" fill="context-stroke"/>
+</marker>
+</defs>
+<rect x="8" y="0" width="1260" height="722" fill="#FFFFFF"/>
+<rect x="44" y="36" width="1188" height="650" rx="0" fill="none" stroke="#151515" stroke-width="4"/>
+<text x="82" y="104" fill="#151515" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="700" text-anchor="start"><tspan x="82" dy="0">Crayon Idea Stack</tspan></text>
+<text x="86" y="140" fill="#151515" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="500" text-anchor="start"><tspan x="86" dy="0">A loud sketch style for playful roadmap and maker-energy boards.</tspan></text>
+<rect x="820" y="70" width="300" height="72" rx="0" fill="#D3FE79" stroke="#151515" stroke-width="4"/>
+<text x="970" y="114" fill="#151515" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700" text-anchor="middle"><tspan x="970" dy="0">Make it editable</tspan></text>
+<rect x="121" y="227" width="860" height="86" rx="0" fill="#151515" stroke="#151515" stroke-width="0"/>
+<rect x="112" y="218" width="860" height="86" rx="0" fill="#FF472B" stroke="#151515" stroke-width="4"/>
+<text x="146" y="275" fill="#151515" font-family="Inter, Arial, sans-serif" font-size="27" font-weight="700" text-anchor="start"><tspan x="146" dy="0">01  Capture the messy idea</tspan></text>
+<rect x="181" y="327" width="860" height="86" rx="0" fill="#151515" stroke="#151515" stroke-width="0"/>
+<rect x="172" y="318" width="860" height="86" rx="0" fill="#D3FE79" stroke="#151515" stroke-width="4"/>
+<text x="206" y="375" fill="#151515" font-family="Inter, Arial, sans-serif" font-size="27" font-weight="700" text-anchor="start"><tspan x="206" dy="0">02  Convert it into structure</tspan></text>
+<rect x="241" y="427" width="860" height="86" rx="0" fill="#151515" stroke="#151515" stroke-width="0"/>
+<rect x="232" y="418" width="860" height="86" rx="0" fill="#2F65FF" stroke="#151515" stroke-width="4"/>
+<text x="266" y="475" fill="#FFFFFF" font-family="Inter, Arial, sans-serif" font-size="27" font-weight="700" text-anchor="start"><tspan x="266" dy="0">03  Let the human reshape it</tspan></text>
+<rect x="301" y="527" width="860" height="86" rx="0" fill="#151515" stroke="#151515" stroke-width="0"/>
+<rect x="292" y="518" width="860" height="86" rx="0" fill="#FFF3EC" stroke="#151515" stroke-width="4"/>
+<text x="326" y="575" fill="#151515" font-family="Inter, Arial, sans-serif" font-size="27" font-weight="700" text-anchor="start"><tspan x="326" dy="0">04  Export a clean article image</tspan></text>
+<path d="M 1066 276 L 1130 552" fill="none" stroke="#151515" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)"/>
+<ellipse cx="1101" cy="251" rx="13" ry="13" fill="#D3FE79" stroke="#151515" stroke-width="4"/>
+<ellipse cx="1123" cy="585" rx="13" ry="13" fill="#FF472B" stroke="#151515" stroke-width="4"/>
+</svg>

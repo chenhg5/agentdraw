@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1260" height="722" viewBox="8 0 1260 722" role="img" aria-label="Workshop Decision Wall preview">
+<defs>
+<marker id="arrowhead" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+<path d="M0,0 L10,4 L0,8 Z" fill="context-stroke"/>
+</marker>
+</defs>
+<rect x="8" y="0" width="1260" height="722" fill="#FFFFFF"/>
+<rect x="44" y="36" width="1188" height="650" rx="0" fill="none" stroke="#161616" stroke-width="2"/>
+<text x="78" y="100" fill="#161616" font-family="Inter, Arial, sans-serif" font-size="38" font-weight="700" text-anchor="start"><tspan x="78" dy="0">Workshop Decision Wall</tspan></text>
+<text x="82" y="133" fill="#576196" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="500" text-anchor="start"><tspan x="82" dy="0">A pinned-paper board for synthesis, priorities, and next moves.</tspan></text>
+<rect x="812" y="68" width="310" height="50" rx="0" fill="#F1E84E" stroke="#161616" stroke-width="2"/>
+<text x="968" y="100.75" fill="#161616" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="500" text-anchor="middle"><tspan x="968" dy="0">Decision: prototype first</tspan></text>
+<rect x="92" y="188" width="230" height="140" rx="0" fill="#FFFBE1" stroke="#161616" stroke-width="2"/>
+<ellipse cx="207" cy="155" rx="11" ry="11" fill="#2A3C99" stroke="#161616" stroke-width="2"/>
+<text x="207" y="235.875" fill="#161616" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="500" text-anchor="middle"><tspan x="207" dy="0">User signal</tspan></text>
+<text x="207" y="286" fill="#576196" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle"><tspan x="207" dy="0">3 repeated pain points</tspan></text>
+<rect x="372" y="188" width="230" height="140" rx="0" fill="#FFFFFF" stroke="#161616" stroke-width="2"/>
+<ellipse cx="487" cy="155" rx="11" ry="11" fill="#F1E84E" stroke="#161616" stroke-width="2"/>
+<text x="487" y="235.875" fill="#161616" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="500" text-anchor="middle"><tspan x="487" dy="0">Constraint</tspan></text>
+<text x="487" y="286" fill="#576196" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle"><tspan x="487" dy="0">manual edits matter</tspan></text>
+<rect x="652" y="188" width="230" height="140" rx="0" fill="#FFFBE1" stroke="#161616" stroke-width="2"/>
+<ellipse cx="767" cy="155" rx="11" ry="11" fill="#2A3C99" stroke="#161616" stroke-width="2"/>
+<text x="767" y="235.875" fill="#161616" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="500" text-anchor="middle"><tspan x="767" dy="0">Opportunity</tspan></text>
+<text x="767" y="286" fill="#576196" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle"><tspan x="767" dy="0">local editable boards</tspan></text>
+<rect x="932" y="188" width="230" height="140" rx="0" fill="#FFFFFF" stroke="#161616" stroke-width="2"/>
+<ellipse cx="1047" cy="155" rx="11" ry="11" fill="#F1E84E" stroke="#161616" stroke-width="2"/>
+<text x="1047" y="235.875" fill="#161616" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="500" text-anchor="middle"><tspan x="1047" dy="0">Risk</tspan></text>
+<text x="1047" y="286" fill="#576196" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle"><tspan x="1047" dy="0">prompt bloat</tspan></text>
+<rect x="232" y="404" width="230" height="140" rx="0" fill="#FFFBE1" stroke="#161616" stroke-width="2"/>
+<ellipse cx="347" cy="371" rx="11" ry="11" fill="#2A3C99" stroke="#161616" stroke-width="2"/>
+<text x="347" y="451.875" fill="#161616" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="500" text-anchor="middle"><tspan x="347" dy="0">Next</tspan></text>
+<text x="347" y="502" fill="#576196" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle"><tspan x="347" dy="0">ship combine command</tspan></text>
+<rect x="552" y="404" width="230" height="140" rx="0" fill="#FFFFFF" stroke="#161616" stroke-width="2"/>
+<ellipse cx="667" cy="371" rx="11" ry="11" fill="#F1E84E" stroke="#161616" stroke-width="2"/>
+<text x="667" y="451.875" fill="#161616" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="500" text-anchor="middle"><tspan x="667" dy="0">Owner</tspan></text>
+<text x="667" y="502" fill="#576196" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle"><tspan x="667" dy="0">agent workflow docs</tspan></text>
+<rect x="872" y="404" width="230" height="140" rx="0" fill="#FFFBE1" stroke="#161616" stroke-width="2"/>
+<ellipse cx="987" cy="371" rx="11" ry="11" fill="#2A3C99" stroke="#161616" stroke-width="2"/>
+<text x="987" y="451.875" fill="#161616" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="500" text-anchor="middle"><tspan x="987" dy="0">Proof</tspan></text>
+<text x="987" y="502" fill="#576196" font-family="Inter, Arial, sans-serif" font-size="16" font-weight="500" text-anchor="middle"><tspan x="987" dy="0">preview before share</tspan></text>
+</svg>

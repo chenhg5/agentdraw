@@ -175,6 +175,46 @@ Theme previews link to the `design.md` system that produced the look.
 <sub><a href="./packages/styles/designs/long-table/design.md"><b>Long Table</b></a> · warm action tables and agendas</sub>
 </td>
 </tr>
+<tr>
+<td width="50%"><a href="./packages/styles/designs/pin-and-paper/design.md"><img src="./assets/examples/theme-pin-and-paper.svg" alt="Workshop Decision Wall preview" /></a><br />
+<sub><a href="./packages/styles/designs/pin-and-paper/design.md"><b>Pin & Paper</b></a> · pinned workshop synthesis boards</sub>
+</td>
+<td width="50%"><a href="./packages/styles/designs/hatch-whiteboard/design.md"><img src="./assets/examples/theme-hatch-whiteboard.svg" alt="Data Flow Whiteboard preview" /></a><br />
+<sub><a href="./packages/styles/designs/hatch-whiteboard/design.md"><b>Hatch Whiteboard</b></a> · hand-drawn data whiteboards</sub>
+</td>
+</tr>
+<tr>
+<td width="50%"><a href="./packages/styles/designs/crayon-stack/design.md"><img src="./assets/examples/theme-crayon-stack.svg" alt="Crayon Idea Stack preview" /></a><br />
+<sub><a href="./packages/styles/designs/crayon-stack/design.md"><b>Crayon Stack</b></a> · playful idea stacks and maker maps</sub>
+</td>
+<td width="50%"></td>
+</tr>
+</table>
+</details>
+
+<details open>
+<summary><b>Data Whiteboard Examples</b> · hand-drawn editable data-flow boards</summary>
+
+These examples use [`Hatch Whiteboard`](./packages/styles/designs/hatch-whiteboard/design.md) and
+the rules in [`data-flow-whiteboard-patterns.md`](./skills/agentdraw/method/data-flow-whiteboard-patterns.md).
+
+<table>
+<tr>
+<td width="50%"><a href="./examples/data-whiteboard/01-transform-lanes.agentdraw.json"><img src="./assets/data-whiteboard/01-transform-lanes.svg" alt="Transform Lanes data whiteboard preview" /></a><br />
+<sub><a href="./examples/data-whiteboard/01-transform-lanes.agentdraw.json"><b>D01 Transform Lanes</b></a> · MapReduce-like staged transforms</sub>
+</td>
+<td width="50%"><a href="./examples/data-whiteboard/02-warehouse-layer-ladder.agentdraw.json"><img src="./assets/data-whiteboard/02-warehouse-layer-ladder.svg" alt="Warehouse Layer Ladder data whiteboard preview" /></a><br />
+<sub><a href="./examples/data-whiteboard/02-warehouse-layer-ladder.agentdraw.json"><b>D02 Warehouse Layer Ladder</b></a> · layered data warehouse lineage</sub>
+</td>
+</tr>
+<tr>
+<td width="50%"><a href="./examples/data-whiteboard/03-spaghetti-to-structure.agentdraw.json"><img src="./assets/data-whiteboard/03-spaghetti-to-structure.svg" alt="Spaghetti To Structure data whiteboard preview" /></a><br />
+<sub><a href="./examples/data-whiteboard/03-spaghetti-to-structure.agentdraw.json"><b>D03 Spaghetti To Structure</b></a> · chaos-to-governed target state</sub>
+</td>
+<td width="50%"><a href="./examples/data-whiteboard/04-governance-swimlanes.agentdraw.json"><img src="./assets/data-whiteboard/04-governance-swimlanes.svg" alt="Governance Swimlanes data whiteboard preview" /></a><br />
+<sub><a href="./examples/data-whiteboard/04-governance-swimlanes.agentdraw.json"><b>D04 Governance Swimlanes</b></a> · trust-building data governance lanes</sub>
+</td>
+</tr>
 </table>
 </details>
 

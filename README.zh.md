@@ -132,6 +132,47 @@ AgentDraw 示例都是真实可编辑 scene。README 里展示的是预览图；
 <sub><a href="./examples/theme-block-frame.agentdraw.json"><b>BlockFrame</b></a> · 创作工作流图</sub>
 </td>
 </tr>
+<tr>
+<td width="50%"><a href="./examples/theme-pin-and-paper.agentdraw.json"><img src="./assets/examples/theme-pin-and-paper.svg" alt="Workshop Decision Wall preview" /></a><br />
+<sub><a href="./examples/theme-pin-and-paper.agentdraw.json"><b>Pin & Paper</b></a> · 研讨会和协作便签板</sub>
+</td>
+<td width="50%"><a href="./examples/theme-hatch-whiteboard.agentdraw.json"><img src="./assets/examples/theme-hatch-whiteboard.svg" alt="Data Flow Whiteboard preview" /></a><br />
+<sub><a href="./examples/theme-hatch-whiteboard.agentdraw.json"><b>Hatch Whiteboard</b></a> · 手绘数据白板</sub>
+</td>
+</tr>
+<tr>
+<td width="50%"><a href="./examples/theme-crayon-stack.agentdraw.json"><img src="./assets/examples/theme-crayon-stack.svg" alt="Crayon Idea Stack preview" /></a><br />
+<sub><a href="./examples/theme-crayon-stack.agentdraw.json"><b>Crayon Stack</b></a> · 玩具感想法堆叠图</sub>
+</td>
+<td width="50%"></td>
+</tr>
+</table>
+</details>
+
+<details open>
+<summary><b>数据白板示例</b> · 手绘风格的可编辑数据流白板</summary>
+
+这些示例使用 [`Hatch Whiteboard`](./packages/styles/designs/hatch-whiteboard/design.md) 和
+[`data-flow-whiteboard-patterns.md`](./skills/agentdraw/method/data-flow-whiteboard-patterns.md)
+里的规则。
+
+<table>
+<tr>
+<td width="50%"><a href="./examples/data-whiteboard/01-transform-lanes.agentdraw.json"><img src="./assets/data-whiteboard/01-transform-lanes.svg" alt="Transform Lanes data whiteboard preview" /></a><br />
+<sub><a href="./examples/data-whiteboard/01-transform-lanes.agentdraw.json"><b>D01 Transform Lanes</b></a> · 类 MapReduce 的分阶段转换</sub>
+</td>
+<td width="50%"><a href="./examples/data-whiteboard/02-warehouse-layer-ladder.agentdraw.json"><img src="./assets/data-whiteboard/02-warehouse-layer-ladder.svg" alt="Warehouse Layer Ladder data whiteboard preview" /></a><br />
+<sub><a href="./examples/data-whiteboard/02-warehouse-layer-ladder.agentdraw.json"><b>D02 Warehouse Layer Ladder</b></a> · 数仓分层血缘图</sub>
+</td>
+</tr>
+<tr>
+<td width="50%"><a href="./examples/data-whiteboard/03-spaghetti-to-structure.agentdraw.json"><img src="./assets/data-whiteboard/03-spaghetti-to-structure.svg" alt="Spaghetti To Structure data whiteboard preview" /></a><br />
+<sub><a href="./examples/data-whiteboard/03-spaghetti-to-structure.agentdraw.json"><b>D03 Spaghetti To Structure</b></a> · 从混乱依赖到治理结构</sub>
+</td>
+<td width="50%"><a href="./examples/data-whiteboard/04-governance-swimlanes.agentdraw.json"><img src="./assets/data-whiteboard/04-governance-swimlanes.svg" alt="Governance Swimlanes data whiteboard preview" /></a><br />
+<sub><a href="./examples/data-whiteboard/04-governance-swimlanes.agentdraw.json"><b>D04 Governance Swimlanes</b></a> · 数据治理泳道图</sub>
+</td>
+</tr>
 </table>
 </details>
 
