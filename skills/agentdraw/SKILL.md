@@ -397,6 +397,7 @@ agentdraw repair .agentdraw/board.agentdraw.json --style <style-id> --write --fo
 agentdraw validate .agentdraw/board.agentdraw.json --style <style-id> --format json
 agentdraw quality .agentdraw/board.agentdraw.json --style <style-id> --format json
 agentdraw export .agentdraw/board.agentdraw.json --format png --out .agentdraw/board.preview.png --json
+agentdraw combine .agentdraw/board-1.agentdraw.json .agentdraw/board-2.agentdraw.json .agentdraw/board-3.agentdraw.json .agentdraw/board-4.agentdraw.json --columns 2 --out .agentdraw/combined.agentdraw.json --format json
 agentdraw open .agentdraw/board.agentdraw.json --background --open --format json
 agentdraw open .agentdraw/board.agentdraw.json --background --no-open --format json
 ```

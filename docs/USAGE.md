@@ -171,8 +171,18 @@ the same canvas as separate panels or frame-like regions:
 - before/after diagrams with a shared legend;
 - a flowchart next to an architecture explainer.
 
-For agents, the recommended approach is to generate one SVG containing multiple clearly separated
-regions, then import it into one `.agentdraw.json`.
+For new multi-panel work, the recommended approach is still to generate one SVG containing multiple
+clearly separated regions, then import it into one `.agentdraw.json`.
+
+When you already have several `.agentdraw.json` boards, combine them into one larger editable scene:
+
+```bash
+agentdraw combine board-a.agentdraw.json board-b.agentdraw.json board-c.agentdraw.json board-d.agentdraw.json --columns 2 --out combined.agentdraw.json --json
+```
+
+`combine` offsets each input board as a whole unit and rewrites element ids, bindings, group ids,
+and file ids to avoid collisions. If `--columns` is omitted, the command uses a near-square grid;
+four boards become `2x2` by default.
 
 ## Example Sources
 

@@ -84,6 +84,15 @@ type ExportOptions = GlobalOptions & {
   scale: number;
 };
 
+type CombineOptions = GlobalOptions & {
+  filePaths: string[];
+  outputPath?: string;
+  title?: string;
+  styleId?: string;
+  columns?: number;
+  gap: number;
+};
+
 type ImportSvgOptions = GlobalOptions & {
   svgPath: string;
   outputPath?: string;
@@ -239,6 +248,9 @@ const main = async () => {
       return;
     case "export":
       await exportCommand(parseExportOptions(args, context.globals));
+      return;
+    case "combine":
+      await combineCommand(parseCombineOptions(args, context.globals));
       return;
     case "import-svg":
       await importSvgCommand(parseImportSvgOptions(args, context.globals));
@@ -493,6 +505,61 @@ const exportCommand = async (options: ExportOptions) => {
     `Exported ${options.renderFormat.toUpperCase()}: ${outputPath}`,
     options,
   );
+};
+
+const combineCommand = async (options: CombineOptions) => {
+  const inputPaths = options.filePaths.map((inputPath) => resolveScenePath(inputPath, options.cwd));
+  const scenes = [];
+  for (const filePath of inputPaths) {
+    scenes.push({
+      filePath,
+      scene: await readSceneFile(filePath),
+    });
+  }
+  const result = combineScenes(
+    scenes.map((entry) => entry.scene),
+    {
+      columns: options.columns,
+      gap: options.gap,
+      title: options.title,
+      styleId: options.styleId,
+    },
+  );
+  const outputPath = resolveCombinedScenePath(options.outputPath, inputPaths[0], options.cwd);
+  await writeSceneFile(outputPath, result.scene);
+  const validation = options.styleId
+    ? validateSceneWithContract(result.scene, options.styleId)
+    : validateScene(result.scene);
+
+  writeOutput(
+    {
+      ok: true,
+      command: "combine",
+      inputPaths,
+      outputPath,
+      title: result.scene.title,
+      styleId: result.scene.styleId,
+      columns: result.columns,
+      rows: result.rows,
+      gap: options.gap,
+      boardCount: scenes.length,
+      elementCount: result.scene.elements.length,
+      placements: result.placements,
+      validationOk: validation.errorCount === 0,
+      validation,
+    },
+    [
+      `Combined ${scenes.length} AgentDraw scene(s): ${outputPath}`,
+      `Grid: ${result.columns} column(s) x ${result.rows} row(s), gap ${options.gap}px`,
+      `Elements: ${result.scene.elements.length}`,
+      `Validation: ${validation.errorCount} error(s), ${validation.warningCount} warning(s)`,
+    ].join("\n"),
+    options,
+  );
+
+  if (validation.errorCount > 0) {
+    process.exitCode = EXIT_GENERAL_ERROR;
+  }
 };
 
 const importSvgCommand = async (options: ImportSvgOptions) => {
@@ -882,6 +949,33 @@ const parseExportOptions = (args: string[], globals: GlobalOptions): ExportOptio
   };
 };
 
+const parseCombineOptions = (args: string[], globals: GlobalOptions): CombineOptions => {
+  const values = parseCommandFlags(args, {
+    booleanFlags: [],
+    valueFlags: ["--out", "--output", "--title", "--style", "--columns", "--cols", "--gap"],
+  });
+  assertNoUnknownFlags(values.unknownFlags, "combine");
+  if (values.positionals.length < 2) {
+    throw new CliError("missing_argument", "The combine command requires at least two scene files.", {
+      exitCode: EXIT_USAGE_ERROR,
+      suggestion: "Run: agentdraw combine <file...> --columns 2 --out combined.agentdraw.json",
+      input: { args },
+    });
+  }
+  return {
+    ...globals,
+    filePaths: values.positionals,
+    outputPath: values.valueFlags["--out"] ?? values.valueFlags["--output"],
+    title: values.valueFlags["--title"],
+    styleId: values.valueFlags["--style"],
+    columns:
+      values.valueFlags["--columns"] || values.valueFlags["--cols"]
+        ? readPositiveInteger(values.valueFlags["--columns"] ?? values.valueFlags["--cols"] ?? "", "--columns")
+        : undefined,
+    gap: readNonNegativeNumber(values.valueFlags["--gap"] ?? "120", "--gap"),
+  };
+};
+
 const parseImportSvgOptions = (args: string[], globals: GlobalOptions): ImportSvgOptions => {
   const values = parseCommandFlags(args, {
     booleanFlags: [],
@@ -1121,6 +1215,30 @@ const readScale = (value: string) => {
   return scale;
 };
 
+const readPositiveInteger = (value: string, flag: string) => {
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed < 1) {
+    throw new CliError("invalid_integer", `${flag} must be a positive integer.`, {
+      exitCode: EXIT_USAGE_ERROR,
+      suggestion: `Use ${flag} 2 for a 2-column grid, or omit it for automatic layout.`,
+      input: { flag, value },
+    });
+  }
+  return parsed;
+};
+
+const readNonNegativeNumber = (value: string, flag: string) => {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed < 0) {
+    throw new CliError("invalid_number", `${flag} must be a non-negative number.`, {
+      exitCode: EXIT_USAGE_ERROR,
+      suggestion: `Use ${flag} 120 or another non-negative pixel gap.`,
+      input: { flag, value },
+    });
+  }
+  return parsed;
+};
+
 const resolveScenePath = (inputPath: string, cwd: string) => {
   const filePath = normalizeScenePath(inputPath, cwd);
   assertSafePath(filePath);
@@ -1140,10 +1258,232 @@ const resolveExportPath = (
   return path.join(parsed.dir, `${parsed.name}.${format}`);
 };
 
+const resolveCombinedScenePath = (
+  outputPath: string | undefined,
+  firstInputPath: string,
+  cwd: string,
+) => {
+  if (outputPath) {
+    return path.isAbsolute(outputPath) ? outputPath : path.resolve(cwd, outputPath);
+  }
+  const parsed = path.parse(firstInputPath);
+  return path.join(parsed.dir, `${parsed.name}.combined.agentdraw.json`);
+};
+
 const defaultImportedScenePath = (svgPath: string) => {
   const parsed = path.parse(svgPath);
   return path.join(parsed.dir, `${parsed.name}.agentdraw.json`);
 };
+
+type CombinedScenePlacement = {
+  index: number;
+  title: string;
+  sourceBounds: LayoutBounds;
+  row: number;
+  column: number;
+  offsetX: number;
+  offsetY: number;
+  elementCount: number;
+};
+
+const combineScenes = (
+  scenes: AgentDrawScene[],
+  options: {
+    columns?: number;
+    gap: number;
+    title?: string;
+    styleId?: string;
+  },
+) => {
+  const columns = options.columns ?? Math.ceil(Math.sqrt(scenes.length));
+  const rows = Math.ceil(scenes.length / columns);
+  const entries = scenes.map((scene, index) => ({
+    index,
+    scene,
+    bounds: sceneBounds(scene) ?? {
+      id: scene.id,
+      x: 0,
+      y: 0,
+      width: 1,
+      height: 1,
+    },
+  }));
+  const columnWidths = Array.from({ length: columns }, (_, column) =>
+    Math.max(
+      1,
+      ...entries
+        .filter((entry) => entry.index % columns === column)
+        .map((entry) => entry.bounds.width),
+    ),
+  );
+  const rowHeights = Array.from({ length: rows }, (_, row) =>
+    Math.max(
+      1,
+      ...entries
+        .filter((entry) => Math.floor(entry.index / columns) === row)
+        .map((entry) => entry.bounds.height),
+    ),
+  );
+  const columnOffsets = cumulativeOffsets(columnWidths, options.gap);
+  const rowOffsets = cumulativeOffsets(rowHeights, options.gap);
+  const elements: unknown[] = [];
+  const files: Record<string, unknown> = {};
+  const placements: CombinedScenePlacement[] = [];
+
+  for (const entry of entries) {
+    const row = Math.floor(entry.index / columns);
+    const column = entry.index % columns;
+    const offsetX = columnOffsets[column] - entry.bounds.x;
+    const offsetY = rowOffsets[row] - entry.bounds.y;
+    const idMap = new Map<string, string>();
+    const prefix = `board${entry.index + 1}`;
+    for (const element of entry.scene.elements) {
+      if (!isElementRecord(element)) {
+        continue;
+      }
+      idMap.set(element.id, `${prefix}-${element.id}`);
+      for (const groupId of readStringArray(element.groupIds)) {
+        idMap.set(groupId, `${prefix}-${groupId}`);
+      }
+    }
+    for (const fileId of Object.keys(entry.scene.files ?? {})) {
+      idMap.set(fileId, `${prefix}-${fileId}`);
+    }
+    for (const element of entry.scene.elements) {
+      if (!isElementRecord(element)) {
+        continue;
+      }
+      elements.push(translateElement(element, offsetX, offsetY, idMap));
+    }
+    for (const [fileId, file] of Object.entries(entry.scene.files ?? {})) {
+      files[`${prefix}-${fileId}`] = file;
+    }
+    placements.push({
+      index: entry.index,
+      title: entry.scene.title,
+      sourceBounds: entry.bounds,
+      row,
+      column,
+      offsetX,
+      offsetY,
+      elementCount: entry.scene.elements.length,
+    });
+  }
+
+  const scene: AgentDrawScene = {
+    type: "agentdraw/scene",
+    version: 1,
+    id: randomUUID(),
+    title: options.title ?? "Combined AgentDraw board",
+    styleId: options.styleId ?? scenes.find((scene) => scene.styleId)?.styleId ?? "system-formal",
+    providerId: "excalidraw",
+    updatedAt: new Date().toISOString(),
+    elements,
+    appState: {
+      ...(scenes[0]?.appState ?? {}),
+      viewBackgroundColor:
+        (scenes[0]?.appState?.viewBackgroundColor as string | undefined) ?? "#ffffff",
+    },
+    files,
+  };
+
+  return { scene, columns, rows, placements };
+};
+
+const cumulativeOffsets = (sizes: number[], gap: number) => {
+  const offsets: number[] = [];
+  let cursor = 0;
+  for (const size of sizes) {
+    offsets.push(cursor);
+    cursor += size + gap;
+  }
+  return offsets;
+};
+
+const sceneBounds = (scene: AgentDrawScene): LayoutBounds | null => {
+  const bounds = scene.elements
+    .map((element) => (isElementRecord(element) ? toLayoutBounds(element) : null))
+    .filter((item): item is LayoutBounds => Boolean(item));
+  if (bounds.length === 0) {
+    return null;
+  }
+  const x = Math.min(...bounds.map((item) => item.x));
+  const y = Math.min(...bounds.map((item) => item.y));
+  const right = Math.max(...bounds.map((item) => item.x + item.width));
+  const bottom = Math.max(...bounds.map((item) => item.y + item.height));
+  return {
+    id: scene.id,
+    x,
+    y,
+    width: right - x,
+    height: bottom - y,
+  };
+};
+
+const translateElement = (
+  element: Record<string, unknown> & { id: string },
+  offsetX: number,
+  offsetY: number,
+  idMap: Map<string, string>,
+) => {
+  const next = deepCloneRecord(element);
+  next.id = idMap.get(element.id) ?? element.id;
+  if (typeof next.x === "number") next.x += offsetX;
+  if (typeof next.y === "number") next.y += offsetY;
+  rewriteElementReferences(next, idMap);
+  return next;
+};
+
+const rewriteElementReferences = (
+  value: unknown,
+  idMap: Map<string, string>,
+  key?: string,
+): unknown => {
+  if (Array.isArray(value)) {
+    for (let index = 0; index < value.length; index += 1) {
+      value[index] = rewriteElementReferences(value[index], idMap);
+    }
+    return value;
+  }
+  if (!value || typeof value !== "object") {
+    if (typeof value === "string" && key && ELEMENT_REFERENCE_KEYS.has(key)) {
+      return idMap.get(value) ?? value;
+    }
+    return value;
+  }
+  const record = value as Record<string, unknown>;
+  for (const [childKey, childValue] of Object.entries(record)) {
+    record[childKey] = rewriteElementReferences(childValue, idMap, childKey);
+  }
+  return record;
+};
+
+const ELEMENT_REFERENCE_KEYS = new Set([
+  "id",
+  "elementId",
+  "containerId",
+  "frameId",
+  "boundElementId",
+  "boundElements",
+  "groupIds",
+  "fileId",
+]);
+
+const deepCloneRecord = (value: Record<string, unknown>) =>
+  JSON.parse(JSON.stringify(value)) as Record<string, unknown>;
+
+const readStringArray = (value: unknown) =>
+  Array.isArray(value) ? value.filter((item): item is string => typeof item === "string") : [];
+
+const isElementRecord = (
+  element: unknown,
+): element is Record<string, unknown> & { id: string } =>
+  Boolean(
+    element &&
+      typeof element === "object" &&
+      typeof (element as { id?: unknown }).id === "string" &&
+      !(element as { isDeleted?: unknown }).isDeleted,
+  );
 
 type MermaidNodeShape = "rectangle" | "rounded" | "terminal" | "diamond" | "ellipse";
 
@@ -3363,6 +3703,7 @@ const helpText = (command: string | undefined) => {
         "  agentdraw repair board.agentdraw.json --style <style-id> --write --format json",
         "  agentdraw quality board.agentdraw.json --style <style-id> --format json",
         "  agentdraw export board.agentdraw.json --format png --out board.preview.png --json",
+        "  agentdraw combine a.agentdraw.json b.agentdraw.json c.agentdraw.json d.agentdraw.json --columns 2 --out combined.agentdraw.json --json",
         "  agentdraw gallery --open --format json",
         "  agentdraw validate-style <style-id> --format json",
         "  agentdraw schema open --format json",
@@ -3374,6 +3715,7 @@ const helpText = (command: string | undefined) => {
         "  repair     Normalize deterministic scene display defaults, then validate.",
         "  quality    Score scene quality against the AgentDraw rubric.",
         "  export     Export a rendered SVG or PNG preview for visual review.",
+        "  combine    Combine multiple scene files into one larger grid scene.",
         "  import-svg Convert a restricted SVG into an editable AgentDraw scene.",
         "  import-mermaid",
         "             Convert a Mermaid flowchart into an editable AgentDraw scene.",
@@ -3549,6 +3891,33 @@ const helpText = (command: string | undefined) => {
         "  Supported transforms: translate(x y) and translate(x,y).",
         "  Avoid foreignObject, image, clipPath, mask, filter, gradients, and arbitrary path geometry.",
         "  The command succeeds when conversion succeeds. Validation errors are returned as advisory data for repair/validate follow-up.",
+      ].join("\n");
+    case "combine":
+      return [
+        "Combine multiple AgentDraw scenes into one larger editable scene.",
+        "",
+        "Examples:",
+        "  agentdraw combine a.agentdraw.json b.agentdraw.json c.agentdraw.json d.agentdraw.json --columns 2 --out combined.agentdraw.json",
+        "  agentdraw combine .agentdraw/*.agentdraw.json --cols 3 --gap 160 --title \"Review boards\" --json",
+        "",
+        "Usage:",
+        "  agentdraw combine <file...> [--out <combined.agentdraw.json>] [--columns <n>] [--gap <px>] [--title <title>] [--style <style-id>]",
+        "",
+        "Arguments:",
+        "  file                Required scene path. Pass at least two files.",
+        "",
+        "Flags:",
+        "  --out <path>        Output AgentDraw JSON path. Default: <first-input>.combined.agentdraw.json",
+        "  --output <path>     Alias for --out.",
+        "  --columns <n>       Number of grid columns. Default: ceil(sqrt(file count)).",
+        "  --cols <n>          Alias for --columns.",
+        "  --gap <px>          Gap between boards in pixels. Default: 120.",
+        "  --title <title>     Combined scene title.",
+        "  --style <style-id>  Combined scene style id. Default: first input style id.",
+        "",
+        "Notes:",
+        "  Combine preserves each board's internal coordinates and offsets boards as whole units.",
+        "  Element ids, bindings, group ids, and file ids are rewritten to avoid cross-board collisions.",
       ].join("\n");
     case "import-mermaid":
       return [
@@ -3761,6 +4130,30 @@ const commandSchema = (commandPath: string[]) => {
       ],
       notes: [
         "Use exported previews when an agent or reviewer needs to inspect rendered output before opening the editor.",
+      ],
+    },
+    combine: {
+      description: "Combine multiple AgentDraw scene files into one larger editable grid scene.",
+      usage: "agentdraw combine <file...> [--out <combined.agentdraw.json>] [--columns <n>] [--gap <px>] [--title <title>] [--style <style-id>]",
+      arguments: [{ name: "file", required: true, repeatable: true }],
+      flags: [
+        { name: "--out", type: "string", required: false },
+        { name: "--output", type: "string", required: false },
+        { name: "--columns", type: "integer", required: false },
+        { name: "--cols", type: "integer", required: false },
+        { name: "--gap", type: "number", required: false, default: 120 },
+        { name: "--title", type: "string", required: false },
+        { name: "--style", type: "string", required: false },
+        { name: "--format", type: "enum", values: ["json", "text"], required: false },
+        { name: "--json", type: "boolean", required: false },
+      ],
+      examples: [
+        "agentdraw combine a.agentdraw.json b.agentdraw.json c.agentdraw.json d.agentdraw.json --columns 2 --out combined.agentdraw.json",
+        "agentdraw combine .agentdraw/*.agentdraw.json --cols 3 --gap 160 --title \"Review boards\" --json",
+      ],
+      notes: [
+        "Default columns are ceil(sqrt(file count)), so four files become a 2x2 grid.",
+        "Element ids, bindings, group ids, and file ids are rewritten to avoid collisions.",
       ],
     },
     "import-svg": {
