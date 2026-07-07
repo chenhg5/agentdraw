@@ -283,6 +283,7 @@ const openCommand = async (options: OpenOptions) => {
     host: options.host,
     port: options.port,
     cwd: options.cwd,
+    webDistDir: cliWebDistDir(),
   });
   const url = `${server.url}/?file=${encodeURIComponent(filePath)}`;
 
@@ -377,11 +378,13 @@ const repairCommand = async (options: RepairOptions) => {
   const beforeValidation = validateSceneWithContract(scene, options.styleId);
   const repaired = repairScene(scene, {
     fontFamily: excalidrawFontFamily(contract.typography.fontFamily),
-    connectorColor: contract.palette.muted,
+    connectorColor: contract.connectors.strokeColor,
+    connectorAllowedColors: contract.connectors.allowedStrokeColors,
     connectorStrokeWidth: contract.connectors.minStrokeWidth,
-    addOuterFrame: contract.formality === "high",
+    addOuterFrame: shouldAddOuterFrame(contract),
     frameColor: contract.palette.muted,
     maxCornerRadiusPx: contract.geometry.cornerRadiusPx[1],
+    roughness: repairRoughness(contract),
     allowedColors: contract.allowedColors,
   });
   const afterValidation = validateSceneWithContract(repaired.scene, options.styleId);
@@ -550,11 +553,13 @@ const importMermaidCommand = async (options: ImportMermaidOptions) => {
   const contract = getDesignContract(scene.styleId ?? "system-formal");
   const repaired = repairScene(scene, {
     fontFamily: excalidrawFontFamily(contract.typography.fontFamily),
-    connectorColor: contract.palette.muted,
+    connectorColor: contract.connectors.strokeColor,
+    connectorAllowedColors: contract.connectors.allowedStrokeColors,
     connectorStrokeWidth: contract.connectors.minStrokeWidth,
     addOuterFrame: false,
     frameColor: contract.palette.muted,
     maxCornerRadiusPx: contract.geometry.cornerRadiusPx[1],
+    roughness: repairRoughness(contract),
     allowedColors: contract.allowedColors,
   });
   await writeSceneFile(outputPath, repaired.scene);
@@ -1369,7 +1374,7 @@ const mermaidFlowchartToScene = (
     elements.push(
       connectorElement(edgeId, connector.x, connector.y, connector.points, {
         seed: nextSeed(),
-        strokeColor: contract.palette.muted,
+        strokeColor: contract.connectors.strokeColor,
         strokeWidth: contract.connectors.minStrokeWidth,
         roughness: contract.geometry.roughness[0],
         arrow: edge.arrow,
@@ -1897,6 +1902,8 @@ const writeOutput = (json: unknown, text: string, options: GlobalOptions) => {
 const outputFormat = (options: GlobalOptions): OutputFormat =>
   options.format ?? (process.stdout.isTTY ? "text" : "json");
 
+const cliWebDistDir = () => path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../web-dist");
+
 const openBackgroundCommand = async (options: OpenOptions, filePath: string) => {
   const url = `${displayBaseUrl(options.host, options.port)}/?file=${encodeURIComponent(filePath)}`;
   if (await isRunningAgentDrawServer(options.host, options.port)) {
@@ -2042,8 +2049,14 @@ const excalidrawFontFamily = (fontFamily: "hand" | "sans" | "mono") => {
   if (fontFamily === "mono") {
     return 3;
   }
-  return 1;
+  return 5;
 };
+
+const repairRoughness = (contract: DesignContract) =>
+  contract.geometry.roughness[0] > 0 ? contract.geometry.roughness[0] : undefined;
+
+const shouldAddOuterFrame = (contract: DesignContract) =>
+  contract.formality === "high" || contract.id === "hatch-whiteboard";
 
 const isValidationWorse = (
   after: { errorCount: number; warningCount: number },
@@ -2077,6 +2090,7 @@ const scoreSceneQuality = (
     "text-overlap",
     "contained-text-box-too-small",
     "vertical-centering",
+    "font-size-below-readable-minimum",
     "font-size-outside-contract",
     "font-family-outside-contract",
     "emoji-text",
@@ -2656,6 +2670,8 @@ const guidePayload = (topic: string, detail?: string) => {
           "Run agentdraw guide style <style-id> and agentdraw guide contract <style-id> to load the selected design system and machine-readable contract.",
           "Choose the source path: use Mermaid only for explicit diagram grammar such as conventional flowcharts, decision flows, sequence/class/state/ER diagrams, or timelines. Use restricted SVG for document illustrations, article images, concept/argument visuals, architecture explainers, matrices, and custom layouts.",
           "Do not choose Mermaid merely because a document has headings, bullet lists, layered structure, or several concepts. That is content structure, not diagram grammar.",
+          "For data lineage, ETL/ELT, warehouse layering, MapReduce-like transforms, or data governance before/after boards, load method/data-flow-whiteboard-patterns.md and choose a Dxx data whiteboard pattern before drawing SVG.",
+          "For cloud, Kubernetes, network/security, service mesh, agent runtime, memory/tool topology, or data-flow diagrams, load method/technical-diagram-patterns.md and choose a Txx technical pattern before drawing SVG.",
           "For Mermaid flowcharts, write .agentdraw/flow.mmd with flowchart TD/TB/LR syntax and run agentdraw import-mermaid .agentdraw/flow.mmd --out .agentdraw/board.agentdraw.json --style <style-id> --title <title> --format json.",
           "For SVG boards, create a restricted SVG with visible geometry, grid-aligned layout, real <text>/<tspan> labels, and the selected style rules.",
           "Preview or inspect the SVG/Mermaid source. Fix layout, alignment, text wrapping, arrows, and visual hierarchy while it is still source text.",
@@ -2791,6 +2807,7 @@ const guidePayload = (topic: string, detail?: string) => {
           "The SVG is the source draft; the .agentdraw.json scene is the editable browser output.",
           "Mermaid import is a shortcut for standard flowcharts. Do not use it for custom editorial boards, architecture maps, or theme-heavy compositions.",
           "For document配图, concept visuals, argument maps, thinking pieces, and review material, default to SVG unless the user explicitly asked for a formal Mermaid-supported diagram type.",
+          "For data governance, data warehouse layering, and lineage visuals, prefer the data-flow whiteboard patterns over generic card grids.",
           "Use real SVG text, rectangles, ellipses, lines, and polylines. Keep labels as text/tspan, not outlined paths or screenshots.",
           "Use title-size text for one clear title, heading-size text for sections, and body-size text for details. Hierarchy should come from size, weight, contrast, spacing, and grouping.",
           "Avoid emoji in board text unless the user explicitly asks for them.",
@@ -2861,6 +2878,8 @@ const guidePayload = (topic: string, detail?: string) => {
           "If you choose a style without asking, state the reason in one sentence before generating.",
           "Formal and square: system-formal, boardroom, blueprint-formal, raw-grid, neo-grid-bold.",
           "Technical documentation: runtime-doc, slate-notes, manual-cream, inkline, blueprint-formal.",
+          "Infrastructure and cloud architecture: infra-dark, blueprint-formal, runtime-doc, system-formal, neon-grid.",
+          "Data lineage and governance whiteboards: hatch-whiteboard, pin-and-paper, runtime-doc, blueprint-formal.",
           "Incident and root-cause analysis: incident-dark, boardroom, raw-grid, inkline.",
           "High-energy technical systems: neon-grid, blueprint-formal, raw-grid.",
           "Friendly product planning: soft-pop, coral, mint-brut, pin-and-paper.",
@@ -2972,6 +2991,8 @@ const formatGuideText = (topic: string, detail?: string) => {
       "",
       "- Formal and square: `system-formal`, `boardroom`, `blueprint-formal`, `raw-grid`, `neo-grid-bold`.",
       "- Technical documentation: `runtime-doc`, `slate-notes`, `manual-cream`, `inkline`, `blueprint-formal`.",
+      "- Infrastructure and cloud architecture: `infra-dark`, `blueprint-formal`, `runtime-doc`, `system-formal`, `neon-grid`.",
+      "- Data lineage and governance whiteboards: `hatch-whiteboard`, `pin-and-paper`, `runtime-doc`, `blueprint-formal`.",
       "- Incident and root-cause analysis: `incident-dark`, `boardroom`, `raw-grid`, `inkline`.",
       "- High-energy technical systems: `neon-grid`, `blueprint-formal`, `raw-grid`.",
       "- Friendly product planning: `soft-pop`, `coral`, `mint-brut`, `pin-and-paper`.",

@@ -99,8 +99,8 @@ const renderText = (element: ElementRecord) => {
       ? (height - lines.length * fontSize * lineHeight) / 2 + fontSize
       : fontSize;
   const family =
-    element.fontFamily === 1
-      ? `${CJK_FONT_STACK}, Virgil, Comic Sans MS, cursive`
+    element.fontFamily === 1 || element.fontFamily === 5
+      ? `Excalifont, Xiaolai, Virgil, Comic Sans MS, Kaiti SC, STKaiti, KaiTi, ${CJK_FONT_STACK}, cursive`
       : element.fontFamily === 3
         ? `${CJK_MONO_FONT_STACK}, Menlo, Consolas, monospace`
         : `${CJK_FONT_STACK}, Inter, Arial, sans-serif`;

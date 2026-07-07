@@ -1,8 +1,9 @@
+import "./excalidraw-assets";
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./ui/App";
-import "./styles.css";
 import "@excalidraw/excalidraw/index.css";
+import "./styles.css";
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

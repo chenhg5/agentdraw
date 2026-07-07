@@ -14,6 +14,8 @@
     "examples:themes": "node scripts/generate-theme-examples.mjs",
     "examples:previews": "node scripts/render-example-previews.mjs",
     "examples:editorial-layouts": "node scripts/generate-editorial-layout-candidates.mjs",
+    "examples:technical-layouts": "node scripts/generate-technical-layout-candidates.mjs",
+    "examples:data-whiteboard-layouts": "node scripts/generate-data-whiteboard-layout-candidates.mjs",
     "eval:design": "node scripts/run-design-eval.mjs",
     "npm:pack": "rm -rf npm/*.tgz && pnpm build && pnpm --filter @aidraw/agentdraw pack --pack-destination npm",
     "npm:publish": "node scripts/publish-npm.mjs"

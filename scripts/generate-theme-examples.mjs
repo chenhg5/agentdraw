@@ -563,7 +563,7 @@ function buildRoadmapMint() {
     text("mint-base-text", 208, 552, 758, 20, "Manual edits stay first-class. Agents generate the draft, humans keep control.", 17, p.ink, "center", "middle"),
   );
 
-  return scene("Creator Tool Roadmap", "mint-brut", elements, { roughness: 1, fontFamily: 1 });
+  return scene("Creator Tool Roadmap", "mint-brut", elements, { roughness: 1, fontFamily: 5 });
 }
 
 function buildCustomerJourney() {

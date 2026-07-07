@@ -58,6 +58,8 @@ export type DesignContract = {
   };
   connectors: {
     preferred: StyleRenderProfile["arrowType"];
+    strokeColor: string;
+    allowedStrokeColors: string[];
     minStrokeWidth: number;
     avoidTextCrossing: boolean;
     avoidHeaderCrossing: boolean;
@@ -102,9 +104,11 @@ export const styles: AgentDrawStyle[] = [
   style("lime-slab", "Lime Slab", "balanced", "medium", "electric, bold, modern SaaS", "#EEFA79", "#0A0A05", "#FFFFF2", "#0A0A05", "#C6D938", "#5F6B0E"),
   style("linen-cut", "Linen Cut", "balanced", "high", "mid century modernist, tasteful, calm", "#E4D2C4", "#1D2620", "#F7EEE7", "#044D99", "#04B24F", "#8C6757"),
   style("pin-and-paper", "Pin & Paper", "balanced", "medium", "clean, graphic, white with yellow and blue pop", "#FFFFFF", "#161616", "#FFFBE1", "#2A3C99", "#F1E84E", "#576196"),
+  style("hatch-whiteboard", "Hatch Whiteboard", "balanced", "low", "hand-drawn data whiteboard, pastel hatch fills, dashed lanes", "#FFFFFF", "#111111", "#FAFAF5", "#9EDAE5", "#F6D7DE", "#5A5A5A"),
   style("raw-grid", "Raw Grid", "balanced", "medium", "system native, sharp, digital brutalism", "#FFFFFF", "#0A0A0A", "#F8F8F8", "#0A0A0A", "#F2D4CF", "#5B5B5B"),
   style("riptide-cobalt", "Riptide Cobalt", "balanced", "medium", "bold poster, low density, high impact", "#FDF0E0", "#1A2240", "#FFFFFF", "#375DFE", "#DCE4FF", "#6D5A45"),
   style("incident-dark", "Incident Dark", "balanced", "high", "dark operational report, RCA, timeline evidence", "#0D1117", "#E6EDF3", "#161B22", "#58A6FF", "#1C2330", "#9AA7B4"),
+  style("infra-dark", "Infra Dark", "balanced", "high", "dark infrastructure map, grid, semantic service colors", "#020617", "#F8FAFC", "#0F172A", "#22D3EE", "#1E293B", "#94A3B8"),
   style("soft-pop", "Soft Pop", "balanced", "medium", "friendly product board, teal and yellow, approachable", "#EFF1F5", "#2D3748", "#FFFFFF", "#73D1C8", "#FCD34D", "#5D6D7E"),
   style("soft-editorial", "Soft Editorial", "balanced", "medium", "warm magazine, soft pastels, gentle", "#ECE9DC", "#202018", "#FFFFFF", "#E2A8CE", "#C9DA4F", "#8A786A"),
   style("violet-marker", "Violet Marker", "balanced", "low", "highlighter, white with violet and lime, modern", "#FFFFFF", "#171717", "#F8F4FF", "#C5A1FF", "#CFEE30", "#5E4A88"),
@@ -140,6 +144,26 @@ export function getStylesByLevel(level: StyleLevel) {
 }
 
 export function getStyleRenderProfile(style: AgentDrawStyle): StyleRenderProfile {
+  if (style.id === "hatch-whiteboard") {
+    return {
+      geometry: "organic",
+      roughness: 2,
+      strokeWidth: 2,
+      roundness: "round",
+      fontFamily: "hand",
+      arrowType: "round",
+    };
+  }
+  if (style.id === "infra-dark") {
+    return {
+      geometry: "formal",
+      roughness: 0,
+      strokeWidth: 2,
+      roundness: "round",
+      fontFamily: "mono",
+      arrowType: "elbow",
+    };
+  }
   if (style.formality === "high") {
     return {
       geometry: "formal",
@@ -199,15 +223,15 @@ export function getDesignContract(styleOrId: AgentDrawStyle | string): DesignCon
     ]),
     typography: {
       fontFamily: profile.fontFamily,
-      titlePx: playful ? [36, 54] : formal ? [34, 44] : [32, 46],
-      headingPx: playful ? [20, 30] : formal ? [20, 26] : [19, 28],
-      bodyPx: playful ? [15, 20] : formal ? [15, 19] : [15, 19],
-      maxTypeSizesPerBoard: ["runtime-doc", "incident-dark"].includes(style.id) ? 8 : formal ? 4 : 5,
+      titlePx: style.id === "infra-dark" ? [38, 48] : playful ? [36, 54] : formal ? [34, 44] : [32, 46],
+      headingPx: style.id === "infra-dark" ? [18, 28] : style.id === "hatch-whiteboard" ? [22, 34] : playful ? [20, 30] : formal ? [20, 26] : [19, 28],
+      bodyPx: style.id === "infra-dark" ? [13, 22] : style.id === "hatch-whiteboard" ? [15, 24] : playful ? [15, 20] : formal ? [15, 19] : [15, 19],
+      maxTypeSizesPerBoard: ["runtime-doc", "incident-dark"].includes(style.id) ? 8 : style.id === "infra-dark" ? 7 : formal ? 4 : 5,
     },
     geometry: {
-      roughness: profile.roughness === 0 ? [0, 0] : [0, 2],
-      strokeWidth: formal ? [1, 3] : playful ? [2, 5] : [1, 4],
-      cornerRadiusPx: profile.roundness === "sharp" ? [0, 6] : playful ? [6, 16] : [4, 12],
+      roughness: style.id === "hatch-whiteboard" ? [2, 2] : profile.roughness === 0 ? [0, 0] : [0, 2],
+      strokeWidth: style.id === "hatch-whiteboard" ? [1, 4] : formal ? [1, 3] : playful ? [2, 5] : [1, 4],
+      cornerRadiusPx: style.id === "infra-dark" ? [0, 12] : profile.roundness === "sharp" ? [0, 6] : playful ? [6, 16] : [4, 12],
       preferredShapes: formal
         ? ["rectangle", "diamond", "line", "arrow"]
         : ["rectangle", "ellipse", "diamond", "line", "arrow"],
@@ -220,6 +244,13 @@ export function getDesignContract(styleOrId: AgentDrawStyle | string): DesignCon
     },
     connectors: {
       preferred: profile.arrowType,
+      strokeColor: style.id === "infra-dark" ? "#CBD5E1" : style.id === "hatch-whiteboard" ? "#5A5A5A" : style.palette.muted,
+      allowedStrokeColors:
+        style.id === "infra-dark"
+          ? ["#CBD5E1", "#E2E8F0", "#22D3EE", "#34D399", "#A78BFA", "#FBBF24", "#FB7185", "#FB923C"]
+          : style.id === "hatch-whiteboard"
+            ? ["#111111", "#5A5A5A", "#374151", "#6B7280", "#9EDAE5", "#F6D7DE", "#F6C85F", "#86D39B", "#BDA8F2", "#F4B27A"]
+          : uniqueColors([style.palette.muted, style.palette.ink, style.palette.accent]),
       minStrokeWidth: 2,
       avoidTextCrossing: true,
       avoidHeaderCrossing: true,
@@ -239,6 +270,13 @@ export function getDesignContract(styleOrId: AgentDrawStyle | string): DesignCon
       ...(style.id === "boardroom"
         ? [
             "Include at least one dark command panel, dominant statement block, or decision strip using the ink color; light-only card grids do not satisfy the Boardroom style.",
+          ]
+        : []),
+      ...(style.id === "infra-dark"
+        ? [
+            "Use semantic infrastructure color buckets consistently: cyan for frontend/edge, emerald for backend/compute, violet for data/storage, amber for cloud/region, rose for security/auth, orange for message/event bus, and slate for external/generic nodes.",
+            "Draw an explicit cloud, cluster, region, or system boundary and place the legend outside that boundary.",
+            "Default to #CBD5E1 for ordinary connector arrows on the dark canvas. You may use a semantic connector color such as cyan, emerald, violet, amber, rose, or orange when it explains the flow role, but keep connector/background contrast high and avoid low-contrast dark gray arrows.",
           ]
         : []),
       "Keep every label editable and contained inside its visual region.",
@@ -365,7 +403,11 @@ export function validateSceneAgainstDesignContract(
       }
     }
 
-    if (typeof element.roughness === "number") {
+    if (
+      typeof element.roughness === "number" &&
+      typeof element.type === "string" &&
+      ["rectangle", "diamond", "ellipse", "arrow", "line"].includes(element.type)
+    ) {
       const [min, max] = contract.geometry.roughness;
       if (element.roughness < min || element.roughness > max) {
         issues.push({
@@ -419,7 +461,14 @@ export function validateSceneAgainstDesignContract(
       const inBodyRange = element.fontSize >= min && element.fontSize <= max;
       const inHeadingRange = element.fontSize >= headingMin && element.fontSize <= headingMax;
       const inTitleRange = element.fontSize >= titleMin && element.fontSize <= titleMax;
-      if (!inBodyRange && !inHeadingRange && !inTitleRange) {
+      if (element.fontSize < min) {
+        issues.push({
+          severity: "error",
+          code: "font-size-below-readable-minimum",
+          message: `Text fontSize ${element.fontSize}px is below the readable minimum ${min}px for ${style.id}. Increase core labels instead of relying on tiny text.`,
+          elementIds: [element.id],
+        });
+      } else if (!inBodyRange && !inHeadingRange && !inTitleRange) {
         issues.push({
           severity: "warning",
           code: "font-size-outside-contract",
@@ -532,6 +581,41 @@ function semanticContractColors(style: AgentDrawStyle) {
       "#06121F",
     ];
   }
+  if (style.id === "infra-dark") {
+    return [
+      "#0B1220",
+      "#111827",
+      "#083344",
+      "#064E3B",
+      "#4C1D95",
+      "#78350F",
+      "#881337",
+      "#431407",
+      "#22D3EE",
+      "#34D399",
+      "#A78BFA",
+      "#FBBF24",
+      "#FB7185",
+      "#FB923C",
+      "#64748B",
+      "#CBD5E1",
+      "#E2E8F0",
+    ];
+  }
+  if (style.id === "hatch-whiteboard") {
+    return [
+      "#F2F2F2",
+      "#F7F7F7",
+      "#E8F7FA",
+      "#FCE7EC",
+      "#FFF3C4",
+      "#E9F7E6",
+      "#EEE7FF",
+      "#FBE6D2",
+      "#6B7280",
+      "#374151",
+    ];
+  }
   if (style.id === "slate-notes") {
     return ["#CBD5E1", "#D4E1EE", "#D5E8DC", "#73A78D", "#F0E0D6", "#CB9B7A"];
   }
@@ -559,7 +643,7 @@ function excalidrawFontFamily(fontFamily: StyleRenderProfile["fontFamily"]) {
   if (fontFamily === "mono") {
     return 3;
   }
-  return 1;
+  return 5;
 }
 
 function isElementRecord(element: unknown): element is Record<string, unknown> & { id: string } {

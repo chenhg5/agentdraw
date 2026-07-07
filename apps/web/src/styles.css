@@ -2,6 +2,19 @@
   box-sizing: border-box;
 }
 
+@font-face {
+  font-family: "Excalifont";
+  src: url("./assets/fonts/Excalifont-Regular.woff2") format("woff2");
+  font-display: swap;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.excalidraw .excalifont {
+  font-family:
+    "Excalifont", "Xiaolai", "Kaiti SC", STKaiti, KaiTi, "Comic Sans MS", cursive;
+}
+
 html,
 body,
 #root {

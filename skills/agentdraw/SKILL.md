@@ -91,6 +91,8 @@ Fast layout routing:
 | User intent / source shape | Provider | Start here |
 | --- | --- | --- |
 | Formal flowchart, sequence, class, state, ER, journey | Mermaid | `playbooks/technical-flowchart.md` |
+| Cloud, Kubernetes, service mesh, network/security, data platform, agent runtime topology | SVG | `playbooks/layered-architecture.md` + `method/technical-diagram-patterns.md` |
+| Data lineage, ETL/ELT, data warehouse layering, data governance before/after | SVG | `method/data-flow-whiteboard-patterns.md` |
 | Architecture, layers, runtime structure, ownership map | SVG | `playbooks/layered-architecture.md` + `method/layout-styles.md` |
 | Article配图, concept visual, thinking note, review visual | SVG | `playbooks/article-visual.md` + `method/editorial-layouts.md` |
 | SWOT, 2x2, option scoring, stakeholder map, timeline with visual emphasis | SVG | `method/editorial-layouts.md` |
@@ -109,6 +111,14 @@ Load these only when relevant:
 
 - `method/layout-styles.md`: formal SVG explanatory structures, architecture maps, matrices,
   pipelines, timelines, and operating models.
+- `method/technical-diagram-patterns.md`: cloud architecture, service mesh, network/security,
+  agent runtime, memory/tool topology, and data-flow diagrams that need technical spacing,
+  semantic colors, boundaries, and connector rules.
+- `method/data-flow-whiteboard-patterns.md`: data lineage, ETL/ELT, warehouse layering,
+  MapReduce-like transforms, and data governance before/after boards inspired by readable
+  hand-drawn whiteboard examples. Use this when the source should feel like a clear data whiteboard:
+  aligned enough to trust, loose enough to feel explanatory, and visually stronger than a generic
+  table of cards.
 - `method/editorial-layouts.md`: magazine-like article images, review visuals, concept visuals,
   SWOT/quadrant boards, editorial timelines, roadmap terraces, scoreboards, ecosystem maps, and
   memorable single-board explanations.
@@ -176,6 +186,12 @@ agentdraw doctor --json
    - restricted SVG for explanatory visual direction and document配图.
 6. Select and read the closest playbook. State the provider and playbook choice with a reason.
 7. Choose one layout system:
+   - for data lineage, data warehouse layering, ETL/ELT, MapReduce-like transforms, and data
+     governance before/after visuals, choose from `method/data-flow-whiteboard-patterns.md`; read
+     that file only for this path;
+   - for cloud architecture, service mesh, network/security topology, data-flow systems, or
+     agent/tool/memory runtime maps, choose from `method/technical-diagram-patterns.md`; read that
+     file only for this path;
    - for architecture, mechanism, matrix, pipeline, timeline, and formal structure maps, choose from
      `method/layout-styles.md`; read that file only for this path;
    - for article配图, concept visuals, thinking notes, executive one-pagers, public-facing review
@@ -194,6 +210,16 @@ agentdraw doctor --json
    generic card wall.
    If choosing `boardroom`, the board must include a visible dark command panel, dominant statement
    block, or decision strip. A light-only blue card grid is not enough to satisfy the style.
+   If drawing cloud, Kubernetes, network, service mesh, data platform, or AI runtime infrastructure,
+   consider `infra-dark`, `blueprint-formal`, `runtime-doc`, `system-formal`, or `neon-grid` before
+   using a generic editorial theme.
+   If drawing data lineage, warehouse layering, ETL/ELT, or governance before/after visuals,
+   consider `hatch-whiteboard`, `pin-and-paper`, `runtime-doc`, or `blueprint-formal` before using a
+   generic card-grid theme.
+   If choosing `hatch-whiteboard`, preserve the whiteboard feel deliberately: use one complete outer
+   frame, dashed lanes or boundaries, pastel hatch fills, readable hand-drawn typography, and short
+   labels. The imported board should use Excalidraw's hand font (`fontFamily: 5`) so CJK text can
+   fall back to Xiaolai; do not manually force old Virgil-style `fontFamily: 1` in generated JSON.
 9. State the layout system and design style before generating. If the user did not express a visual
    preference and the choice is not obvious, run `agentdraw gallery --open --format json` and ask
    which visual direction they prefer. In headless mode, run `agentdraw gallery --no-open --format json`

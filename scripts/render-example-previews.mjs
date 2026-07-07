@@ -96,7 +96,7 @@ function renderText(element) {
   const offsetY = element.verticalAlign === "middle"
     ? (height - lines.length * fontSize * lineHeight) / 2 + fontSize
     : fontSize;
-  const family = element.fontFamily === 1
+  const family = element.fontFamily === 1 || element.fontFamily === 5
     ? "Virgil, Comic Sans MS, cursive"
     : element.fontFamily === 3
       ? "Menlo, Consolas, monospace"

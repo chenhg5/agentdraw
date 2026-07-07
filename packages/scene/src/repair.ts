@@ -3,11 +3,13 @@ import type { AgentDrawScene } from "./index.js";
 export type SceneRepairOptions = {
   fontFamily?: number;
   connectorColor?: string;
+  connectorAllowedColors?: string[];
   connectorStrokeWidth?: number;
   containerPadding?: number;
   addOuterFrame?: boolean;
   frameColor?: string;
   maxCornerRadiusPx?: number;
+  roughness?: number;
   allowedColors?: string[];
 };
 
@@ -46,6 +48,7 @@ type Bounds = {
 
 const SHAPE_TYPES = new Set(["rectangle", "diamond", "ellipse"]);
 const CONNECTOR_TYPES = new Set(["arrow", "line"]);
+const roughnessRepairTypes = new Set([...SHAPE_TYPES, ...CONNECTOR_TYPES]);
 
 export const repairScene = (
   scene: AgentDrawScene,
@@ -54,6 +57,7 @@ export const repairScene = (
   const changes: SceneRepairChange[] = [];
   const fontFamily = options.fontFamily ?? 2;
   const connectorColor = options.connectorColor;
+  const connectorAllowedColors = colorRepairPalette(options.connectorAllowedColors);
   const connectorStrokeWidth = options.connectorStrokeWidth ?? 2;
   const frameColor = options.frameColor ?? connectorColor ?? "#CBD5E1";
   const colorPalette = colorRepairPalette(options.allowedColors);
@@ -72,8 +76,9 @@ export const repairScene = (
       repairTextElement(element, elementById, fontFamily, options.containerPadding, changes);
     }
     repairElementColors(element, colorPalette, changes);
+    repairElementRoughness(element, options.roughness, changes);
     if (CONNECTOR_TYPES.has(element.type ?? "")) {
-      repairConnectorElement(element, connectorColor, connectorStrokeWidth, changes);
+      repairConnectorElement(element, connectorColor, connectorAllowedColors, connectorStrokeWidth, changes);
     }
     if (isFrameLikeElement(element)) {
       repairFrameElement(element, frameColor, changes);
@@ -83,7 +88,7 @@ export const repairScene = (
   }
 
   if (options.addOuterFrame) {
-    addOuterFrame(elements, frameColor, changes);
+    addOuterFrame(elements, frameColor, options.roughness, changes);
     removeRedundantSystemFrames(elements, changes);
   }
 
@@ -100,6 +105,25 @@ export const repairScene = (
     },
     changes,
   };
+};
+
+const repairElementRoughness = (
+  element: ElementRecord,
+  roughness: number | undefined,
+  changes: SceneRepairChange[],
+) => {
+  if (typeof roughness !== "number" || !roughnessRepairTypes.has(element.type ?? "")) {
+    return;
+  }
+  const id = element.id ?? "(unknown)";
+  if (element.roughness !== roughness) {
+    element.roughness = roughness;
+    changes.push({
+      elementId: id,
+      code: "element-roughness",
+      message: `Set roughness to ${roughness} to match the design contract.`,
+    });
+  }
 };
 
 const repairElementColors = (
@@ -316,11 +340,17 @@ const repairTextElement = (
 const repairConnectorElement = (
   element: ElementRecord,
   connectorColor: string | undefined,
+  connectorAllowedColors: string[],
   connectorStrokeWidth: number,
   changes: SceneRepairChange[],
 ) => {
   const id = element.id ?? "(unknown)";
-  if (connectorColor && element.strokeColor !== connectorColor) {
+  const currentColor =
+    typeof element.strokeColor === "string" && /^#[0-9a-f]{6}$/i.test(element.strokeColor)
+      ? element.strokeColor.toUpperCase()
+      : null;
+  const currentAllowed = currentColor !== null && isAllowedColor(currentColor, connectorAllowedColors);
+  if (connectorColor && !currentAllowed && element.strokeColor !== connectorColor) {
     element.strokeColor = connectorColor;
     changes.push({
       elementId: id,
@@ -416,6 +446,7 @@ const toBounds = (element: ElementRecord | undefined): Bounds | null => {
 const addOuterFrame = (
   elements: unknown[],
   frameColor: string,
+  roughness: number | undefined,
   changes: SceneRepairChange[],
 ) => {
   const drawableBounds = elements
@@ -445,7 +476,7 @@ const addOuterFrame = (
     backgroundColor: "transparent",
     fillStyle: "solid",
     strokeWidth: 1,
-    roughness: 0,
+    roughness: roughness ?? 0,
     opacity: 100,
     groupIds: [],
     boundElements: null,

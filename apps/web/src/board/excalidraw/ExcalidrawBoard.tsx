@@ -70,15 +70,22 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
       suppressChangesFor(1200);
       fitSceneKeyRef.current = sceneKey;
 
-      api.updateScene({
-        elements: [],
-        appState: styledAppState as AppState,
-      });
-      replay.onProgress?.({
-        active: true,
-        current: 0,
-        total: orderedElements.length,
-      });
+      const startReplay = async () => {
+        await loadHandwrittenCjkFonts(normalizedElements);
+        if (cancelled) {
+          return;
+        }
+        api.updateScene({
+          elements: [],
+          appState: styledAppState as AppState,
+        });
+        replay.onProgress?.({
+          active: true,
+          current: 0,
+          total: orderedElements.length,
+        });
+        window.setTimeout(revealNextBatch, 240);
+      };
 
       const revealNextBatch = () => {
         if (cancelled) {
@@ -112,7 +119,7 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
         }, 500);
       };
 
-      window.setTimeout(revealNextBatch, 240);
+      void startReplay();
 
       return () => {
         cancelled = true;
@@ -134,10 +141,16 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
       if (fitSceneKeyRef.current === sceneKey) {
         return;
       }
+      let cancelled = false;
       suppressChangesFor(1600);
-      api.updateScene({
-        elements: normalizedElements as readonly ExcalidrawElement[],
-        appState: styledAppState as AppState,
+      void loadHandwrittenCjkFonts(normalizedElements).then(() => {
+        if (cancelled) {
+          return;
+        }
+        api.updateScene({
+          elements: normalizedElements as readonly ExcalidrawElement[],
+          appState: styledAppState as AppState,
+        });
       });
       if (normalizedElements.length === 0) {
         fitSceneKeyRef.current = sceneKey;
@@ -147,7 +160,6 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
         return;
       }
 
-      let cancelled = false;
       const timers: number[] = [];
       const fitWhenReady = () => {
         if (cancelled) {
@@ -712,7 +724,33 @@ const fontFamilyForProfile = (fontFamily: "hand" | "sans" | "mono") => {
   if (fontFamily === "mono") {
     return 3;
   }
-  return 1;
+  return 5;
+};
+
+const loadHandwrittenCjkFonts = async (elements: readonly unknown[]) => {
+  if (!("fonts" in document)) {
+    return;
+  }
+  const chars = new Set<string>();
+  for (const element of elements) {
+    if (!isElementRecord(element) || element.type !== "text" || element.fontFamily !== 5) {
+      continue;
+    }
+    const text = typeof element.text === "string" ? element.text : "";
+    for (const char of text) {
+      if (/[\u3400-\u9fff\uf900-\ufaff]/u.test(char)) {
+        chars.add(char);
+      }
+    }
+  }
+  if (chars.size === 0) {
+    return;
+  }
+  const text = [...chars].join("");
+  await Promise.all([
+    document.fonts.load("16px Xiaolai", text),
+    document.fonts.load("42px Xiaolai", text),
+  ]);
 };
 
 const roundnessForElement = (type: unknown, geometry: "organic" | "clean" | "formal") => {
