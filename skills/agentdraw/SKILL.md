@@ -123,9 +123,8 @@ Load these only when relevant:
   aligned enough to trust, loose enough to feel explanatory, and visually stronger than a generic
   table of cards.
 - `method/editorial-layouts.md`: magazine-like article images, review visuals, concept visuals,
-  SWOT/quadrant boards, editorial timelines, roadmap terraces, scoreboards, ecosystem maps,
-  reference cheatsheets, flow-volume maps, milestone ribbons, and memorable single-board
-  explanations.
+  SWOT/quadrant boards, editorial timelines, roadmap terraces, scoreboards, ecosystem maps, and
+  memorable single-board explanations.
 
 Then load the closest playbook:
 
@@ -204,8 +203,7 @@ agentdraw doctor --json
      `E02 Reading Room Overlap`, `E03 Swiss Statement Grid`, `E04 Editorial Sidebar`,
      `E05 Poster Ledger`, `E06 Reading Room Index`, `E07 Strategic Quadrant`,
      `E08 Editorial Timeline`, `E09 Roadmap Terrace`, `E10 Decision Scoreboard`,
-     `E11 Ecosystem Orbit`, `E12 Pyramid Stack`, `E13 Reference Cheatsheet`,
-     `E14 Flow Volume Map`, or `E15 Milestone Ribbon`; read that file only for this path.
+     `E11 Ecosystem Orbit`, or `E12 Pyramid Stack`; read that file only for this path.
    Treat editorial layouts as adaptable references. Do not copy them mechanically when the source
    needs different proportions, but do not remove the layout's defining composition device.
 8. Run `agentdraw guide styles --json` and choose one design style by audience, density, tone, and

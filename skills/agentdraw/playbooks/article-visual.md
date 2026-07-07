@@ -40,9 +40,6 @@ Good starting layouts:
 - `E06 Reading Room Index`: long document with several memorable anchors.
 - `E08 Editorial Timeline`: evolution, migration, or incident narrative.
 - `E11 Ecosystem Orbit`: stakeholder or force-map article.
-- `E13 Reference Cheatsheet`: API, command, glossary, onboarding, or memory-aid article.
-- `E14 Flow Volume Map`: traffic, funnel, conversion, throughput, or cost movement article.
-- `E15 Milestone Ribbon`: product history, release narrative, or version/model evolution story.
 
 Use `../method/layout-styles.md` only when the article truly needs a formal mechanism map, matrix,
 pipeline, or architecture-like structure.

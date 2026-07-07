@@ -47,9 +47,6 @@ Do not make a wall of equal cards. Choose one memorable composition device:
 - a calm framed poster with large type and strong whitespace.
 - a four-quadrant analysis field with a highlighted strategic move;
 - a timeline that uses scale, bands, or terraces instead of identical milestone cards.
-- a reference sheet with anchored zones and compact example blocks;
-- a flow-volume map where band width, opacity, or lane weight shows relative movement;
-- a milestone ribbon with alternating cards and one dominant release moment.
 
 The board must still pass mechanical quality:
 
@@ -87,13 +84,6 @@ Examples:
   visible time progression and one emphasized inflection point.
 - `E05 Poster Ledger` may change the artifact block position, but it still needs one dominant
   poster claim and ledger-like proof rows.
-- `E13 Reference Cheatsheet` may change the number of modules, but it still needs a strong
-  reference grid, left/top anchors, and at least one practical example block.
-- `E14 Flow Volume Map` may approximate relative volume with editable paths instead of exact
-  Sankey geometry, but it still needs clear sources, stages, outputs, and visible merge/split
-  points.
-- `E15 Milestone Ribbon` may use a curved, stepped, or horizontal ribbon, but it still needs a
-  product/story progression and one highlighted turning point.
 
 If a layout no longer preserves its defining device after adaptation, choose a different layout.
 
@@ -368,82 +358,6 @@ Rules:
 - side rail explains progression or unlocks;
 - use `Layered Stack` instead if the content is technical architecture rather than hierarchy.
 
-### E13 Reference Cheatsheet
-
-Use for: API summaries, command references, framework concepts, onboarding guides, glossary boards,
-technical articles that need a one-page memory aid.
-
-Recommended styles: `infra-dark`, `runtime-doc`, `long-table`, `raw-grid`, `blueprint-formal`.
-
-Structure:
-
-```text
-Outer frame
-Top: title + scope + version/context line
-Left or top anchor rail: 4-6 section labels
-Main: 2-3 dense reference columns with compact command/example cards
-Right or bottom: gotchas, defaults, decision rules, or mini examples
-```
-
-Rules:
-
-- high density is allowed, but the grid must be stricter than a normal article board;
-- show selective memory hooks, not every option from the source;
-- use monospaced or code-like blocks sparingly and keep them readable;
-- include one highlighted "start here", "default path", or "safe choice" region;
-- never let tiny footnotes, legends, or code labels fall below readable size.
-
-### E14 Flow Volume Map
-
-Use for: traffic sources, conversion funnels, user paths, cost/energy/data movement, pipeline
-throughput, allocation flows.
-
-Recommended styles: `boardroom`, `blueprint-formal`, `neon-grid`, `runtime-doc`, `soft-editorial`.
-
-Structure:
-
-```text
-Left: sources or inputs
-Middle: 2-3 transformation / decision / leakage stages
-Right: outputs or outcomes
-Bands: thick editable paths, grouped arrows, or repeated rails showing relative volume
-Side: bottleneck, leakage, or leverage insight
-```
-
-Rules:
-
-- this is not a mathematically exact Sankey; use a real chart when exact quantities dominate;
-- encode relative weight with band width, opacity, lane count, or repeated rails;
-- label every band endpoint and every merge/split point, not every segment;
-- keep crossings rare; merge and split only at stage columns;
-- show one key loss, bottleneck, or leverage point instead of making all flows equal.
-
-### E15 Milestone Ribbon
-
-Use for: product evolution, version roadmap, model family history, company/project timeline,
-release narrative, technology adoption story.
-
-Recommended styles: `reading-room`, `macchiato`, `boardroom`, `riso-brut`, `blueprint-formal`.
-
-Structure:
-
-```text
-Top: timeline thesis
-Main: thick ribbon / rail across the board
-4-7 alternating milestone cards above and below the ribbon
-One highlighted release, turning point, or current state
-Bottom: lesson, risk, or next move
-```
-
-Rules:
-
-- different from `E08 Editorial Timeline`: this should feel like a product/story artifact, not a
-  formal chronology;
-- dates attach to the ribbon; descriptions live in alternating cards;
-- keep normal milestone cards equal, but allow one hero milestone to be larger;
-- use connectors sparingly; the ribbon carries the reading path;
-- do not make plain same-size cards on a thin line.
-
 ## Selection Rules
 
 If the source is an article or thinking note:
@@ -458,10 +372,7 @@ If the source is an article or thinking note:
 - phased roadmap / maturity ladder -> `E09 Roadmap Terrace`;
 - option evaluation / prioritization -> `E10 Decision Scoreboard`;
 - stakeholder / ecosystem / forces map -> `E11 Ecosystem Orbit`;
-- hierarchy / dependency / capability maturity -> `E12 Pyramid Stack`;
-- API reference / command guide / glossary / technical cheat sheet -> `E13 Reference Cheatsheet`;
-- funnel / Sankey-like movement / traffic / conversion / throughput / cost flow -> `E14 Flow Volume Map`;
-- product history / version roadmap / release narrative / model evolution -> `E15 Milestone Ribbon`.
+- hierarchy / dependency / capability maturity -> `E12 Pyramid Stack`.
 
 If the user asks for "more creative" or "magazine-like", do not switch to freeform drawing. Choose
 one of these editorial layouts and state why.
@@ -485,9 +396,6 @@ leaving room for user preference.
 | `E10 Decision Scoreboard` | `long-table` | `boardroom`, `inkline`, `system-formal` | option scoring, prioritization |
 | `E11 Ecosystem Orbit` | `editorial-forest` | `soft-editorial`, `reading-room`, `blueprint-formal` | platform, stakeholder, forces |
 | `E12 Pyramid Stack` | `monochrome` | `macchiato`, `system-formal`, `manual-cream` | hierarchy, foundation, maturity |
-| `E13 Reference Cheatsheet` | `runtime-doc` | `infra-dark`, `long-table`, `raw-grid`, `blueprint-formal` | dense reference, onboarding, memory aid |
-| `E14 Flow Volume Map` | `blueprint-formal` | `boardroom`, `neon-grid`, `runtime-doc`, `soft-editorial` | flow, conversion, throughput, allocation |
-| `E15 Milestone Ribbon` | `reading-room` | `macchiato`, `boardroom`, `riso-brut`, `blueprint-formal` | product history, version story, release narrative |
 
 If the user names a style, keep the user's style unless it conflicts with the layout's tone. If no
 style is named, choose the default style for the layout and state that choice.
@@ -500,9 +408,9 @@ state, or decision strip. Do not make a boardroom visual as only light cards wit
 Before writing SVG, include:
 
 ```text
-Editorial layout: <E01-E15 name> because <reason tied to the source>.
+Editorial layout: <E01-E12 name> because <reason tied to the source>.
 Design style: <style-id> because <tone/audience>.
-Composition device: <giant number / asymmetric sidebar / poster ledger / field-guide index / statement grid / quadrant / timeline rail / terrace / scoreboard / orbit / pyramid / cheatsheet grid / flow bands / milestone ribbon>.
+Composition device: <giant number / asymmetric sidebar / poster ledger / field-guide index / statement grid / quadrant / timeline rail / terrace / scoreboard / orbit / pyramid>.
 ```
 
 ## Anti-Patterns

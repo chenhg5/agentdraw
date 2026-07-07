@@ -37,9 +37,6 @@ Default to `../method/editorial-layouts.md` for stronger presentation compositio
 - `E07 Strategic Quadrant` for 2x2 strategy;
 - `E09 Roadmap Terrace` for staged adoption or maturity;
 - `E10 Decision Scoreboard` for option comparison.
-- `E13 Reference Cheatsheet` for compact API, command, or operating-model reference slides;
-- `E14 Flow Volume Map` for funnel, throughput, or allocation explanation;
-- `E15 Milestone Ribbon` for release, version, or product-evolution narrative.
 
 Use plain pillar layouts only when the content truly has equal peer pillars.
 
