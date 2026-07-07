@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1320" height="900" viewBox="0 0 1320 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 4 L0 8 z" fill="#111"/>
+    </marker>
+  </defs>
+  <rect width="1320" height="900" fill="#EEF3E8"/>
+<text x="82" y="108" font-family="Inter, Arial, sans-serif" font-size="38" font-weight="820" fill="#183027" >THE PRODUCT SITS INSIDE A SYSTEM</text>
+<text x="84" y="148" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="520" fill="#496157" >Use orbit spacing for actors and forces around one center.</text>
+<rect x="78" y="190" width="760" height="590" rx="28" fill="none" stroke="#183027" stroke-width="2" />
+<circle cx="458" cy="485" r="104" fill="#183027" stroke="none" stroke-width="0"/>
+<text x="458" y="470" font-family="Inter, Arial, sans-serif" font-size="31" font-weight="820" fill="#EEF3E8" text-anchor="middle" dominant-baseline="middle">Core</text>
+<text x="458" y="510" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="620" fill="#EEF3E8" text-anchor="middle" dominant-baseline="middle">system</text>
+<circle cx="458" cy="282" r="58" fill="#CFE0C5" stroke="#183027" stroke-width="2"/>
+<text x="458" y="282" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="720" fill="#183027" text-anchor="middle" dominant-baseline="middle">Users</text>
+<line x1="458" y1="340" x2="458" y2="381" stroke="#8AA08F" stroke-width="1.5" />
+<circle cx="650" cy="370" r="58" fill="#CFE0C5" stroke="#183027" stroke-width="2"/>
+<text x="650" y="370" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="720" fill="#183027" text-anchor="middle" dominant-baseline="middle">Data</text>
+<line x1="600" y1="400" x2="565" y2="420" stroke="#8AA08F" stroke-width="1.5" />
+<circle cx="650" cy="600" r="58" fill="#CFE0C5" stroke="#183027" stroke-width="2"/>
+<text x="650" y="600" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="720" fill="#183027" text-anchor="middle" dominant-baseline="middle">Policy</text>
+<line x1="600" y1="570" x2="565" y2="550" stroke="#8AA08F" stroke-width="1.5" />
+<circle cx="458" cy="690" r="58" fill="#CFE0C5" stroke="#183027" stroke-width="2"/>
+<text x="458" y="690" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="720" fill="#183027" text-anchor="middle" dominant-baseline="middle">Ops</text>
+<line x1="458" y1="632" x2="458" y2="589" stroke="#8AA08F" stroke-width="1.5" />
+<circle cx="266" cy="600" r="58" fill="#CFE0C5" stroke="#183027" stroke-width="2"/>
+<text x="266" y="600" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="720" fill="#183027" text-anchor="middle" dominant-baseline="middle">Tools</text>
+<line x1="316" y1="570" x2="351" y2="550" stroke="#8AA08F" stroke-width="1.5" />
+<circle cx="266" cy="370" r="58" fill="#CFE0C5" stroke="#183027" stroke-width="2"/>
+<text x="266" y="370" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="720" fill="#183027" text-anchor="middle" dominant-baseline="middle">Teams</text>
+<line x1="316" y1="400" x2="351" y2="420" stroke="#8AA08F" stroke-width="1.5" />
+<rect x="904" y="244" width="300" height="360" rx="18" fill="#DCE8D5" stroke="#183027" stroke-width="2" />
+<text x="944" y="316" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="780" fill="#183027" >Key tension</text>
+<text x="944" y="380" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="520" fill="#496157" >Every actor wants</text>
+<text x="944" y="418" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="520" fill="#496157" >a different tradeoff.</text>
+<line x1="944" y1="470" x2="1164" y2="470" stroke="#183027" stroke-width="1.5" />
+<text x="944" y="530" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="520" fill="#496157" >Design for the</text>
+<text x="944" y="568" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="520" fill="#496157" >highest-friction edge.</text>
+<rect x="904" y="684" width="300" height="66" rx="14" fill="#183027" stroke="#183027" stroke-width="0" />
+<text x="1054" y="717" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="720" fill="#EEF3E8" text-anchor="middle" dominant-baseline="middle">Best for ecosystem maps.</text>
+</svg>

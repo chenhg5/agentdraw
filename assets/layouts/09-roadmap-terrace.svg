@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1320" height="860" viewBox="0 0 1320 860" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 4 L0 8 z" fill="#111"/>
+    </marker>
+  </defs>
+  <rect width="1320" height="860" fill="#ECE9DC"/>
+<text x="76" y="104" font-family="Inter, Arial, sans-serif" font-size="38" font-weight="820" fill="#1C1A17" >FROM LOCAL DRAFT TO TEAM SYSTEM</text>
+<text x="78" y="144" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="540" fill="#1C1A17" >A roadmap should show rising capability, not just dates.</text>
+<rect x="84" y="610" width="240" height="116" rx="18" fill="#E7C6AD" stroke="#1C1A17" stroke-width="0" />
+<rect x="340" y="540" width="240" height="186" rx="18" fill="#E2A8CE" stroke="#1C1A17" stroke-width="0" />
+<rect x="596" y="430" width="240" height="296" rx="18" fill="#C9DA4F" stroke="#1C1A17" stroke-width="0" />
+<rect x="852" y="300" width="300" height="426" rx="18" fill="#1C1A17" stroke="#1C1A17" stroke-width="0" />
+<text x="124" y="654" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="780" fill="#1C1A17" >01 Draft</text>
+<text x="380" y="596" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="780" fill="#1C1A17" >02 Review</text>
+<text x="636" y="496" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="780" fill="#1C1A17" >03 Validate</text>
+<text x="900" y="374" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="820" fill="#ECE9DC" >04 Standardize</text>
+<text x="124" y="704" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="520" fill="#1C1A17" >One-off output</text>
+<text x="380" y="636" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="520" fill="#1C1A17" >Preview and fix</text>
+<text x="636" y="536" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="520" fill="#1C1A17" >Quality gates</text>
+<text x="900" y="426" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="560" fill="#ECE9DC" >Reusable pattern</text>
+<line x1="196" y1="614" x2="196" y2="250" stroke="#1C1A17" stroke-width="1.6" />
+<line x1="452" y1="524" x2="452" y2="250" stroke="#1C1A17" stroke-width="1.6" />
+<line x1="708" y1="414" x2="708" y2="250" stroke="#1C1A17" stroke-width="1.6" />
+<line x1="1002" y1="284" x2="1002" y2="250" stroke="#1C1A17" stroke-width="1.6" />
+<line x1="196" y1="250" x2="1002" y2="250" stroke="#1C1A17" stroke-width="2" />
+<text x="78" y="796" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="720" fill="#1C1A17" >Best for phased strategy, maturity ladders, rollout plans, and target-state narratives.</text>
+</svg>

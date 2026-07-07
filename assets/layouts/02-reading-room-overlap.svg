@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1320" height="860" viewBox="0 0 1320 860" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 4 L0 8 z" fill="#111"/>
+    </marker>
+  </defs>
+  <rect width="1320" height="860" fill="#F6EBD8"/>
+<rect x="60" y="60" width="1200" height="740" rx="0" fill="none" stroke="#0B0A09" stroke-width="2.5" />
+<text x="96" y="132" font-family="Inter, Arial, sans-serif" font-size="40" font-weight="850" fill="#0B0A09" >THE ARGUMENT HAS A SPINE</text>
+<text x="98" y="172" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="560" fill="#0B0A09" >Use overlapping editorial blocks when hierarchy matters more than sequence.</text>
+<rect x="110" y="292" width="330" height="272" rx="0" fill="#D6C7CC" stroke="#0B0A09" stroke-width="2.5" />
+<rect x="472" y="238" width="386" height="356" rx="0" fill="#F1DAB1" stroke="#0B0A09" stroke-width="2.5" />
+<rect x="890" y="330" width="330" height="234" rx="0" fill="#DE916A" stroke="#0B0A09" stroke-width="2.5" />
+<text x="150" y="332" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="780" fill="#0B0A09" >Context</text>
+<text x="150" y="392" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="560" fill="#0B0A09" >What is changing?</text>
+<text x="150" y="430" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="560" fill="#0B0A09" >What pressure is visible?</text>
+<text x="514" y="324" font-family="Inter, Arial, sans-serif" font-size="36" font-weight="820" fill="#0B0A09" >Central thesis</text>
+<text x="514" y="386" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="600" fill="#0B0A09" >The board should reveal</text>
+<text x="514" y="426" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="600" fill="#0B0A09" >one memorable structure,</text>
+<text x="514" y="466" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="600" fill="#0B0A09" >not summarize everything.</text>
+<text x="930" y="404" font-family="Inter, Arial, sans-serif" font-size="32" font-weight="780" fill="#0B0A09" >Implication</text>
+<text x="930" y="464" font-family="Inter, Arial, sans-serif" font-size="21" font-weight="560" fill="#0B0A09" >What should change next?</text>
+<line x1="236" y1="624" x2="1084" y2="624" stroke="#0B0A09" stroke-width="2" />
+<text x="244" y="684" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="760" fill="#0B0A09" >Best for: strategy essays, review notes, and calm concept explainers.</text>
+</svg>

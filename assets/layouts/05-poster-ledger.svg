@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1320" height="860" viewBox="0 0 1320 860" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 4 L0 8 z" fill="#111"/>
+    </marker>
+  </defs>
+  <rect width="1320" height="860" fill="#FFFFFF"/>
+<text x="86" y="120" font-family="Inter, Arial, sans-serif" font-size="38" font-weight="850" fill="#1C1410" >THE QUALITY GAP IS</text>
+<text x="86" y="204" font-family="Inter, Arial, sans-serif" font-size="58" font-weight="900" fill="#D8000F" >NOT A COLOR PROBLEM</text>
+<line x1="86" y1="254" x2="1234" y2="254" stroke="#1C1410" stroke-width="3" />
+<rect x="86" y="320" width="300" height="270" rx="0" fill="#D8000F" stroke="#1C1410" stroke-width="3" />
+<text x="120" y="400" font-family="Inter, Arial, sans-serif" font-size="60" font-weight="900" fill="#FFFFFF" >01</text>
+<text x="120" y="470" font-family="Inter, Arial, sans-serif" font-size="36" font-weight="850" fill="#FFFFFF" >Layout</text>
+<text x="120" y="520" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="760" fill="#FFFFFF" >comes first</text>
+<line x1="444" y1="320" x2="1200" y2="320" stroke="#1C1410" stroke-width="2" />
+<text x="444" y="366" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="820" fill="#1C1410" >Style</text>
+<text x="704" y="366" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="520" fill="#1C1410" >supports the scene</text>
+<line x1="444" y1="410" x2="1200" y2="410" stroke="#1C1410" stroke-width="2" />
+<text x="444" y="456" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="820" fill="#1C1410" >Spacing</text>
+<text x="704" y="456" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="520" fill="#1C1410" >creates trust</text>
+<line x1="444" y1="500" x2="1200" y2="500" stroke="#1C1410" stroke-width="2" />
+<text x="444" y="546" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="820" fill="#1C1410" >Validation</text>
+<text x="704" y="546" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="520" fill="#1C1410" >closes the loop</text>
+<line x1="444" y1="590" x2="1200" y2="590" stroke="#1C1410" stroke-width="2" />
+<text x="444" y="636" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="820" fill="#1C1410" >Preview</text>
+<text x="704" y="636" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="520" fill="#1C1410" >catches the weak spots</text>
+<line x1="444" y1="680" x2="1200" y2="680" stroke="#1C1410" stroke-width="2" />
+<rect x="86" y="722" width="1114" height="56" rx="0" fill="#F5F2EF" stroke="#1C1410" stroke-width="2" />
+<text x="643" y="750" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="760" fill="#1C1410" text-anchor="middle" dominant-baseline="middle">Use for punchy arguments, launch visuals, and migration narratives.</text>
+</svg>

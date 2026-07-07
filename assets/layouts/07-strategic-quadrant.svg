@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1320" height="900" viewBox="0 0 1320 900" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 4 L0 8 z" fill="#111"/>
+    </marker>
+  </defs>
+  <rect width="1320" height="900" fill="#FFFFFF"/>
+<text x="72" y="92" font-family="Inter, Arial, sans-serif" font-size="38" font-weight="820" fill="#182230" >WHAT SHOULD WE DO NEXT?</text>
+<text x="74" y="132" font-family="Inter, Arial, sans-serif" font-size="19" font-weight="520" fill="#667085" >A quadrant board for SWOT, positioning, and tradeoff analysis.</text>
+<line x1="72" y1="176" x2="1248" y2="176" stroke="#182230" stroke-width="1.5" />
+<text x="116" y="224" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#667085" >Internal</text>
+<text x="1090" y="224" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#667085" >External</text>
+<rect x="132" y="244" width="520" height="236" rx="0" fill="#F8FAFC" stroke="#182230" stroke-width="2" />
+<rect x="652" y="244" width="520" height="236" rx="0" fill="#E7EEF8" stroke="#182230" stroke-width="2" />
+<rect x="132" y="480" width="520" height="236" rx="0" fill="#FFFFFF" stroke="#182230" stroke-width="2" />
+<rect x="652" y="480" width="520" height="236" rx="0" fill="#F8FAFC" stroke="#182230" stroke-width="2" />
+<text x="168" y="306" font-family="Inter, Arial, sans-serif" font-size="31" font-weight="780" fill="#182230" >Strengths</text>
+<text x="688" y="306" font-family="Inter, Arial, sans-serif" font-size="31" font-weight="780" fill="#182230" >Opportunities</text>
+<text x="168" y="542" font-family="Inter, Arial, sans-serif" font-size="31" font-weight="780" fill="#182230" >Weaknesses</text>
+<text x="688" y="542" font-family="Inter, Arial, sans-serif" font-size="31" font-weight="780" fill="#182230" >Threats</text>
+<text x="168" y="360" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="520" fill="#667085" >What is already working</text>
+<text x="168" y="398" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="520" fill="#667085" >Assets we can compound</text>
+<text x="688" y="360" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="520" fill="#667085" >Signals worth exploiting</text>
+<text x="688" y="398" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="520" fill="#667085" >Windows before competitors</text>
+<text x="168" y="596" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="520" fill="#667085" >Friction we must remove</text>
+<text x="168" y="634" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="520" fill="#667085" >Capabilities still missing</text>
+<text x="688" y="596" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="520" fill="#667085" >External pressure</text>
+<text x="688" y="634" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="520" fill="#667085" >Risks that change timing</text>
+<rect x="132" y="758" width="1040" height="82" rx="6" fill="#182230" stroke="#182230" stroke-width="0" />
+<text x="172" y="806" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="780" fill="#FFFFFF" >Strategic move:</text>
+<text x="398" y="806" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="620" fill="#FFFFFF" >Focus the launch story where strengths meet external demand.</text>
+</svg>

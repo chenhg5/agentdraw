@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1320" height="980" viewBox="0 0 1320 980" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 4 L0 8 z" fill="#111"/>
+    </marker>
+  </defs>
+  <rect width="1320" height="980" fill="#F6EBD8"/>
+<rect x="58" y="58" width="1204" height="864" rx="0" fill="none" stroke="#0B0A09" stroke-width="2.5" />
+<text x="96" y="136" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="850" fill="#0B0A09" >FIELD GUIDE TO AGENT DRAWINGS</text>
+<text x="98" y="178" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="560" fill="#0B0A09" >A long-board composition for multiple small boards inside one frame.</text>
+<line x1="96" y1="220" x2="1224" y2="220" stroke="#0B0A09" stroke-width="2" />
+<rect x="96" y="276" width="448" height="210" rx="0" fill="#D6C7CC" stroke="#0B0A09" stroke-width="2.5" />
+<rect x="584" y="276" width="286" height="210" rx="0" fill="#F1DAB1" stroke="#0B0A09" stroke-width="2.5" />
+<rect x="910" y="276" width="314" height="210" rx="0" fill="#DE916A" stroke="#0B0A09" stroke-width="2.5" />
+<rect x="96" y="538" width="330" height="236" rx="0" fill="#F1DAB1" stroke="#0B0A09" stroke-width="2.5" />
+<rect x="468" y="538" width="330" height="236" rx="0" fill="#DE916A" stroke="#0B0A09" stroke-width="2.5" />
+<rect x="840" y="538" width="384" height="236" rx="0" fill="#D6C7CC" stroke="#0B0A09" stroke-width="2.5" />
+<text x="128" y="344" font-family="Inter, Arial, sans-serif" font-size="48" font-weight="850" fill="#0B0A09" >01</text>
+<text x="128" y="408" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="760" fill="#0B0A09" >Core idea</text>
+<text x="128" y="456" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="560" fill="#0B0A09" >One compact note.</text>
+<text x="616" y="344" font-family="Inter, Arial, sans-serif" font-size="48" font-weight="850" fill="#0B0A09" >02</text>
+<text x="616" y="408" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="760" fill="#0B0A09" >Forces</text>
+<text x="616" y="456" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="560" fill="#0B0A09" >One compact note.</text>
+<text x="942" y="344" font-family="Inter, Arial, sans-serif" font-size="48" font-weight="850" fill="#0B0A09" >03</text>
+<text x="942" y="408" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="760" fill="#0B0A09" >Evidence</text>
+<text x="942" y="456" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="560" fill="#0B0A09" >One compact note.</text>
+<text x="128" y="610" font-family="Inter, Arial, sans-serif" font-size="48" font-weight="850" fill="#0B0A09" >04</text>
+<text x="128" y="674" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="760" fill="#0B0A09" >Risks</text>
+<text x="128" y="722" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="560" fill="#0B0A09" >One compact note.</text>
+<text x="500" y="610" font-family="Inter, Arial, sans-serif" font-size="48" font-weight="850" fill="#0B0A09" >05</text>
+<text x="500" y="674" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="760" fill="#0B0A09" >Pattern</text>
+<text x="500" y="722" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="560" fill="#0B0A09" >One compact note.</text>
+<text x="872" y="610" font-family="Inter, Arial, sans-serif" font-size="48" font-weight="850" fill="#0B0A09" >06</text>
+<text x="872" y="674" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="760" fill="#0B0A09" >Decision</text>
+<text x="872" y="722" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="560" fill="#0B0A09" >One compact note.</text>
+<text x="96" y="850" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="760" fill="#0B0A09" >Best for: long documents that need six memorable anchors, not a wall of bullets.</text>
+</svg>

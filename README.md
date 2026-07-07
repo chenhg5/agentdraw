@@ -65,6 +65,63 @@ produced the look.
   <img src="./assets/examples/complex-agentdraw-workbench-en.svg" alt="Complex AgentDraw Workbench preview" />
 </a>
 
+### Layout Examples
+
+These examples show communication layouts, not just color themes. Each image links to an editable
+`.agentdraw.json` scene. The layout rules live in
+[`editorial-layouts.md`](./skills/agentdraw/method/editorial-layouts.md).
+
+<table>
+<tr>
+<td width="50%"><a href="./examples/layouts/01-monochrome-big-number.agentdraw.json"><img src="./assets/layouts/01-monochrome-big-number.svg" alt="Monochrome Big Number layout preview" /></a><br />
+<sub><a href="./skills/agentdraw/method/editorial-layouts.md#e01-monochrome-big-number"><b>E01 Monochrome Big Number</b></a> · three-stage editorial argument</sub>
+</td>
+<td width="50%"><a href="./examples/layouts/02-reading-room-overlap.agentdraw.json"><img src="./assets/layouts/02-reading-room-overlap.svg" alt="Reading Room Overlap layout preview" /></a><br />
+<sub><a href="./skills/agentdraw/method/editorial-layouts.md#e02-reading-room-overlap"><b>E02 Reading Room Overlap</b></a> · calm thesis with staggered panels</sub>
+</td>
+</tr>
+<tr>
+<td width="50%"><a href="./examples/layouts/03-swiss-statement-grid.agentdraw.json"><img src="./assets/layouts/03-swiss-statement-grid.svg" alt="Swiss Statement Grid layout preview" /></a><br />
+<sub><a href="./skills/agentdraw/method/editorial-layouts.md#e03-swiss-statement-grid"><b>E03 Swiss Statement Grid</b></a> · executive claim plus evidence grid</sub>
+</td>
+<td width="50%"><a href="./examples/layouts/04-editorial-sidebar.agentdraw.json"><img src="./assets/layouts/04-editorial-sidebar.svg" alt="Editorial Sidebar layout preview" /></a><br />
+<sub><a href="./skills/agentdraw/method/editorial-layouts.md#e04-editorial-sidebar"><b>E04 Editorial Sidebar</b></a> · asymmetric article visual</sub>
+</td>
+</tr>
+<tr>
+<td width="50%"><a href="./examples/layouts/05-poster-ledger.agentdraw.json"><img src="./assets/layouts/05-poster-ledger.svg" alt="Poster Ledger layout preview" /></a><br />
+<sub><a href="./skills/agentdraw/method/editorial-layouts.md#e05-poster-ledger"><b>E05 Poster Ledger</b></a> · punchy headline with ruled proof rows</sub>
+</td>
+<td width="50%"><a href="./examples/layouts/06-reading-room-index.agentdraw.json"><img src="./assets/layouts/06-reading-room-index.svg" alt="Reading Room Index layout preview" /></a><br />
+<sub><a href="./skills/agentdraw/method/editorial-layouts.md#e06-reading-room-index"><b>E06 Reading Room Index</b></a> · long-form synthesis with several anchors</sub>
+</td>
+</tr>
+<tr>
+<td width="50%"><a href="./examples/layouts/07-strategic-quadrant.agentdraw.json"><img src="./assets/layouts/07-strategic-quadrant.svg" alt="Strategic Quadrant layout preview" /></a><br />
+<sub><a href="./skills/agentdraw/method/editorial-layouts.md#e07-strategic-quadrant"><b>E07 Strategic Quadrant</b></a> · SWOT and positioning analysis</sub>
+</td>
+<td width="50%"><a href="./examples/layouts/08-editorial-timeline.agentdraw.json"><img src="./assets/layouts/08-editorial-timeline.svg" alt="Editorial Timeline layout preview" /></a><br />
+<sub><a href="./skills/agentdraw/method/editorial-layouts.md#e08-editorial-timeline"><b>E08 Editorial Timeline</b></a> · time progression with one inflection point</sub>
+</td>
+</tr>
+<tr>
+<td width="50%"><a href="./examples/layouts/09-roadmap-terrace.agentdraw.json"><img src="./assets/layouts/09-roadmap-terrace.svg" alt="Roadmap Terrace layout preview" /></a><br />
+<sub><a href="./skills/agentdraw/method/editorial-layouts.md#e09-roadmap-terrace"><b>E09 Roadmap Terrace</b></a> · phased roadmap and maturity ladder</sub>
+</td>
+<td width="50%"><a href="./examples/layouts/10-decision-scoreboard.agentdraw.json"><img src="./assets/layouts/10-decision-scoreboard.svg" alt="Decision Scoreboard layout preview" /></a><br />
+<sub><a href="./skills/agentdraw/method/editorial-layouts.md#e10-decision-scoreboard"><b>E10 Decision Scoreboard</b></a> · option comparison and recommendation</sub>
+</td>
+</tr>
+<tr>
+<td width="50%"><a href="./examples/layouts/11-ecosystem-orbit.agentdraw.json"><img src="./assets/layouts/11-ecosystem-orbit.svg" alt="Ecosystem Orbit layout preview" /></a><br />
+<sub><a href="./skills/agentdraw/method/editorial-layouts.md#e11-ecosystem-orbit"><b>E11 Ecosystem Orbit</b></a> · stakeholder and platform force maps</sub>
+</td>
+<td width="50%"><a href="./examples/layouts/12-pyramid-stack.agentdraw.json"><img src="./assets/layouts/12-pyramid-stack.svg" alt="Pyramid Stack layout preview" /></a><br />
+<sub><a href="./skills/agentdraw/method/editorial-layouts.md#e12-pyramid-stack"><b>E12 Pyramid Stack</b></a> · hierarchy, maturity, and dependency levels</sub>
+</td>
+</tr>
+</table>
+
 ### Theme Examples
 
 <table>

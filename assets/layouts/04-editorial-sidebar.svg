@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1280" height="860" viewBox="0 0 1280 860" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 4 L0 8 z" fill="#111"/>
+    </marker>
+  </defs>
+  <rect width="1280" height="860" fill="#ECE9DC"/>
+<rect x="72" y="72" width="660" height="560" rx="28" fill="#C9DA4F" stroke="none" stroke-width="0" />
+<text x="112" y="158" font-family="Inter, Arial, sans-serif" font-size="48" font-weight="800" fill="#1C1A17" >Make the</text>
+<text x="112" y="222" font-family="Inter, Arial, sans-serif" font-size="48" font-weight="800" fill="#1C1A17" >reading path</text>
+<text x="112" y="286" font-family="Inter, Arial, sans-serif" font-size="48" font-weight="800" fill="#1C1A17" >visible.</text>
+<text x="116" y="372" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="560" fill="#1C1A17" >A magazine-style board can be expressive</text>
+<text x="116" y="418" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="560" fill="#1C1A17" >without losing structure.</text>
+<text x="116" y="476" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="760" fill="#1C1A17" >Every decorative move should carry hierarchy.</text>
+<rect x="788" y="102" width="380" height="150" rx="24" fill="#E2A8CE" stroke="none" stroke-width="0" />
+<rect x="830" y="304" width="338" height="150" rx="24" fill="#E7C6AD" stroke="none" stroke-width="0" />
+<rect x="788" y="506" width="380" height="150" rx="24" fill="#E2A8CE" stroke="none" stroke-width="0" />
+<text x="828" y="164" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="780" fill="#1C1A17" >Anchor</text>
+<text x="870" y="366" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="780" fill="#1C1A17" >Contrast</text>
+<text x="828" y="568" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="780" fill="#1C1A17" >Takeaway</text>
+<circle cx="764" cy="176" r="12" fill="#1C1A17" stroke="none" stroke-width="0"/>
+<circle cx="806" cy="378" r="12" fill="#1C1A17" stroke="none" stroke-width="0"/>
+<circle cx="764" cy="580" r="12" fill="#1C1A17" stroke="none" stroke-width="0"/>
+<line x1="767" y1="188" x2="803" y2="366" stroke="#1C1A17" stroke-width="2" />
+<line x1="803" y1="390" x2="767" y2="568" stroke="#1C1A17" stroke-width="2" />
+<rect x="72" y="704" width="1096" height="66" rx="18" fill="#1C1A17" stroke="#1C1A17" stroke-width="0" />
+<text x="620" y="737" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="720" fill="#ECE9DC" text-anchor="middle" dominant-baseline="middle">Best for article graphics where one claim needs supporting notes.</text>
+</svg>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1440" height="810" viewBox="0 0 1440 810" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 4 L0 8 z" fill="#111"/>
+    </marker>
+  </defs>
+  <rect width="1440" height="810" fill="#FFFFFF"/>
+<text x="72" y="88" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="760" fill="#667085" >BOARD SYSTEM · 03</text>
+<line x1="72" y1="118" x2="1368" y2="118" stroke="#182230" stroke-width="1.5" />
+<text x="72" y="218" font-family="Inter, Arial, sans-serif" font-size="56" font-weight="760" fill="#182230" >Less freedom.</text>
+<text x="72" y="304" font-family="Inter, Arial, sans-serif" font-size="56" font-weight="760" fill="#4053D6" >Better boards.</text>
+<text x="76" y="370" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="500" fill="#667085" >A strong layout limits where the model can drift.</text>
+<rect x="746" y="178" width="560" height="370" rx="0" fill="#F8FAFC" stroke="#182230" stroke-width="2" />
+<text x="786" y="236" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="780" fill="#4053D6" >01</text>
+<text x="786" y="288" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="720" fill="#182230" >Bounded canvas</text>
+<line x1="786" y1="314" x2="976" y2="314" stroke="#BEC1C5" stroke-width="1.2" />
+<text x="1050" y="236" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="780" fill="#4053D6" >02</text>
+<text x="1050" y="288" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="720" fill="#182230" >Locked rhythm</text>
+<line x1="1050" y1="314" x2="1240" y2="314" stroke="#BEC1C5" stroke-width="1.2" />
+<text x="786" y="382" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="780" fill="#4053D6" >03</text>
+<text x="786" y="434" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="720" fill="#182230" >Visible hierarchy</text>
+<line x1="786" y1="460" x2="976" y2="460" stroke="#BEC1C5" stroke-width="1.2" />
+<text x="1050" y="382" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="780" fill="#4053D6" >04</text>
+<text x="1050" y="434" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="720" fill="#182230" >Quality gate</text>
+<line x1="1050" y1="460" x2="1240" y2="460" stroke="#BEC1C5" stroke-width="1.2" />
+<rect x="72" y="610" width="1234" height="82" rx="0" fill="#182230" stroke="#182230" stroke-width="0" />
+<text x="689" y="651" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="720" fill="#FFFFFF" text-anchor="middle" dominant-baseline="middle">Use when you need a memorable executive visual, not a dense diagram.</text>
+</svg>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1320" height="860" viewBox="0 0 1320 860" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path d="M0 0 L10 4 L0 8 z" fill="#111"/>
+    </marker>
+  </defs>
+  <rect width="1320" height="860" fill="#FAFADF"/>
+<rect x="56" y="56" width="1208" height="748" rx="0" fill="none" stroke="#1A1A16" stroke-width="2" />
+<text x="92" y="126" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="820" fill="#1A1A16" >HOW AN IDEA BECOMES A BOARD</text>
+<text x="94" y="166" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="560" fill="#5E5E54" >Three editorial beats, each with one proof and one decision.</text>
+<line x1="92" y1="210" x2="1228" y2="210" stroke="#1A1A16" stroke-width="2" />
+<text x="92" y="338" font-family="Inter, Arial, sans-serif" font-size="118" font-weight="820" fill="#1A1A16" >01</text>
+<text x="266" y="292" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="760" fill="#1A1A16" >Frame</text>
+<line x1="92" y1="382" x2="418" y2="382" stroke="#1A1A16" stroke-width="1.6" />
+<text x="96" y="442" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="520" fill="#5E5E54" >Name the reader question</text>
+<text x="96" y="480" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="520" fill="#5E5E54" >before choosing a style.</text>
+<line x1="442" y1="250" x2="442" y2="650" stroke="#8A8A80" stroke-width="1.2" />
+<text x="454" y="338" font-family="Inter, Arial, sans-serif" font-size="118" font-weight="820" fill="#1A1A16" >02</text>
+<text x="628" y="292" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="760" fill="#1A1A16" >Compose</text>
+<line x1="454" y1="382" x2="780" y2="382" stroke="#1A1A16" stroke-width="1.6" />
+<text x="458" y="442" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="520" fill="#5E5E54" >Let one layout pattern</text>
+<text x="458" y="480" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="520" fill="#5E5E54" >carry the information.</text>
+<line x1="804" y1="250" x2="804" y2="650" stroke="#8A8A80" stroke-width="1.2" />
+<text x="816" y="338" font-family="Inter, Arial, sans-serif" font-size="118" font-weight="820" fill="#1A1A16" >03</text>
+<text x="990" y="292" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="760" fill="#1A1A16" >Inspect</text>
+<line x1="816" y1="382" x2="1142" y2="382" stroke="#1A1A16" stroke-width="1.6" />
+<text x="820" y="442" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="520" fill="#5E5E54" >Fix rhythm, text, and</text>
+<text x="820" y="480" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="520" fill="#5E5E54" >connectors before sharing.</text>
+
+<rect x="92" y="682" width="1136" height="72" rx="0" fill="#1A1A16" stroke="#1A1A16" stroke-width="0" />
+<text x="124" y="728" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="760" fill="#FAFADF" >Strong when the content has 3 stages and needs a refined, text-first tone.</text>
+</svg>
