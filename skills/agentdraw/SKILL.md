@@ -96,6 +96,9 @@ Fast layout routing:
 | Architecture, layers, runtime structure, ownership map | SVG | `playbooks/layered-architecture.md` + `method/layout-styles.md` |
 | Article配图, concept visual, thinking note, review visual | SVG | `playbooks/article-visual.md` + `method/editorial-layouts.md` |
 | SWOT, 2x2, option scoring, stakeholder map, timeline with visual emphasis | SVG | `method/editorial-layouts.md` |
+| Cheat sheet, API/command reference, glossary, onboarding memory aid | SVG | `method/editorial-layouts.md` |
+| Funnel, Sankey-like movement, conversion, traffic, throughput, cost flow | SVG | `method/editorial-layouts.md` |
+| Product history, release narrative, version/model evolution | SVG | `method/editorial-layouts.md` |
 | Slide-like one-page visual or executive summary | SVG | `playbooks/ppt-visual.md` + `method/editorial-layouts.md` or `method/layout-styles.md` |
 
 Use progressive loading. Do not load every design document up front. First read only the routing
@@ -120,8 +123,9 @@ Load these only when relevant:
   aligned enough to trust, loose enough to feel explanatory, and visually stronger than a generic
   table of cards.
 - `method/editorial-layouts.md`: magazine-like article images, review visuals, concept visuals,
-  SWOT/quadrant boards, editorial timelines, roadmap terraces, scoreboards, ecosystem maps, and
-  memorable single-board explanations.
+  SWOT/quadrant boards, editorial timelines, roadmap terraces, scoreboards, ecosystem maps,
+  reference cheatsheets, flow-volume maps, milestone ribbons, and memorable single-board
+  explanations.
 
 Then load the closest playbook:
 
@@ -200,7 +204,8 @@ agentdraw doctor --json
      `E02 Reading Room Overlap`, `E03 Swiss Statement Grid`, `E04 Editorial Sidebar`,
      `E05 Poster Ledger`, `E06 Reading Room Index`, `E07 Strategic Quadrant`,
      `E08 Editorial Timeline`, `E09 Roadmap Terrace`, `E10 Decision Scoreboard`,
-     `E11 Ecosystem Orbit`, or `E12 Pyramid Stack`; read that file only for this path.
+     `E11 Ecosystem Orbit`, `E12 Pyramid Stack`, `E13 Reference Cheatsheet`,
+     `E14 Flow Volume Map`, or `E15 Milestone Ribbon`; read that file only for this path.
    Treat editorial layouts as adaptable references. Do not copy them mechanically when the source
    needs different proportions, but do not remove the layout's defining composition device.
 8. Run `agentdraw guide styles --json` and choose one design style by audience, density, tone, and

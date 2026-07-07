@@ -126,6 +126,9 @@ Common editorial layouts:
 - `E10 Decision Scoreboard`
 - `E11 Ecosystem Orbit`
 - `E12 Pyramid Stack`
+- `E13 Reference Cheatsheet`
+- `E14 Flow Volume Map`
+- `E15 Milestone Ribbon`
 
 These are layout recipes, not just example screenshots. Each recipe binds a composition device,
 recommended styles, structural regions, and anti-patterns. When a normal layout would become a wall
@@ -137,6 +140,13 @@ of similar cards, switch to an editorial layout before changing colors.
 - Sequence/class/state/ER/timeline/journey: use Mermaid; adapt `technical-flowchart.md` for process
   discipline and quality expectations.
 - Article/doc/review/concept/thinking visual: use SVG and `article-visual.md`.
+- Reference/cheatsheet/API/command memory aid: use SVG and `article-visual.md`, then select
+  `E13 Reference Cheatsheet`.
+- Funnel/conversion/traffic/throughput/cost-flow visual: use SVG and `article-visual.md`, then
+  select `E14 Flow Volume Map` unless the user asks for a formal Mermaid flowchart.
+- Product/version/model evolution story: use SVG and `article-visual.md`, then select `E15
+  Milestone Ribbon` or `E08 Editorial Timeline` depending on whether the result should feel more
+  story-like or more chronological.
 - Architecture/structure explanation: use SVG and `layered-architecture.md`, unless Mermaid can
   express the requested architecture cleanly.
 - Slide-like single visual: use SVG and `ppt-visual.md`.
@@ -154,8 +164,8 @@ Audience: <engineers / executives / learners / broad readers>
 Reader question: <what should the reader understand in 5 seconds?>
 Main message: <one sentence>
 Layout style: <Lxx name from layout-styles.md>
-Editorial layout: <E01-E06 name, if using editorial-layouts.md>
-Composition device: <giant number / statement grid / asymmetric sidebar / poster ledger / index>
+Editorial layout: <E01-E15 name, if using editorial-layouts.md>
+Composition device: <giant number / statement grid / asymmetric sidebar / poster ledger / index / cheatsheet grid / flow bands / milestone ribbon>
 Reading path: <top-down / left-right / hub-spoke / before-after / timeline>
 Regions:
 - <region name>: <purpose>, <approx width/height>, <items>
@@ -185,8 +195,8 @@ Risks: <likely layout failure to avoid>
   argument is genuinely three parallel pillars.
 - For article, concept, review, and slide-like visuals, make one composition device visible at
   thumbnail size: giant number, asymmetric sidebar, poster ledger, reading-room index, field-guide
-  modules, Swiss statement grid, quadrant, timeline rail, roadmap terrace, scoreboard, orbit, or
-  pyramid.
+  modules, Swiss statement grid, quadrant, timeline rail, roadmap terrace, scoreboard, orbit,
+  pyramid, cheatsheet grid, flow bands, or milestone ribbon.
 
 ## Mermaid Layout Heuristics
 
