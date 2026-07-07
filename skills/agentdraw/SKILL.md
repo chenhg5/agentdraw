@@ -258,7 +258,18 @@ agentdraw import-svg .agentdraw/board.svg --out .agentdraw/board.agentdraw.json 
 ```
 
 15. If `import-svg` reports unsupported tags, edit the SVG and import again.
-16. Run:
+16. When the task needs several related boards in one editable whiteboard, generate each board as a
+    separate `.agentdraw.json` first, validate each one, then combine them into a larger grid scene.
+    Use this for article image sets, review packs, before/after pairs, 2x2 board groups, or any
+    deliverable where the user wants to browse several visuals on one canvas. Do not force unrelated
+    boards into one scene when separate files are easier to review.
+
+```bash
+agentdraw combine .agentdraw/board-1.agentdraw.json .agentdraw/board-2.agentdraw.json .agentdraw/board-3.agentdraw.json .agentdraw/board-4.agentdraw.json --columns 2 --gap 160 --title "<title>" --out .agentdraw/combined.agentdraw.json --format json
+```
+
+17. Run repair, validation, and quality checks on the final deliverable file. If you used
+    `combine`, run these commands on the combined scene as well as on the individual source boards:
 
 ```bash
 agentdraw repair .agentdraw/board.agentdraw.json --style <style-id> --write --format json
@@ -266,14 +277,14 @@ agentdraw validate .agentdraw/board.agentdraw.json --style <style-id> --format j
 agentdraw quality .agentdraw/board.agentdraw.json --style <style-id> --format json
 ```
 
-17. For important boards, export and inspect a preview before opening:
+18. For important boards, export and inspect a preview before opening:
 
 ```bash
 agentdraw export .agentdraw/board.agentdraw.json --format png --out .agentdraw/board.preview.png --json
 ```
 
-18. Apply `method/quality-levels.md`: fix all P0 and P1 issues before delivery.
-19. Open the editable board:
+19. Apply `method/quality-levels.md`: fix all P0 and P1 issues before delivery.
+20. Open the editable board:
 
 ```bash
 agentdraw open .agentdraw/board.agentdraw.json --background --open --format json
