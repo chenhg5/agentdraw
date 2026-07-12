@@ -11,6 +11,7 @@ import {
   Github,
   History,
   Image,
+  Languages,
   Palette,
   Save,
   Upload,
@@ -53,6 +54,7 @@ export const Editor = ({
   const boardRef = useRef<BoardHandle | null>(null);
   const importInputRef = useRef<HTMLInputElement | null>(null);
   const [selectedStyleId, setSelectedStyleId] = useState(() => getStyleById(scene.styleId).id);
+  const [selectedLanguageCode, setSelectedLanguageCode] = useState(readLanguageCode);
   const [copiedPath, setCopiedPath] = useState(false);
   const [importError, setImportError] = useState<string | null>(null);
   const [historyOpen, setHistoryOpen] = useState(false);
@@ -151,6 +153,14 @@ export const Editor = ({
     }
   };
 
+  const selectLanguage = (languageCode: string) => {
+    const nextLanguageCode = supportedLanguageCodes.has(languageCode)
+      ? languageCode
+      : defaultLanguageCode;
+    setSelectedLanguageCode(nextLanguageCode);
+    window.localStorage.setItem(languageStorageKey, nextLanguageCode);
+  };
+
   const paintScene = () => {
     const snapshot = boardRef.current?.applyStyleToBoard(selectedStyle);
     if (snapshot) {
@@ -233,6 +243,20 @@ export const Editor = ({
               ))}
             </select>
           </div>
+          <div className="language-picker">
+            <Languages size={16} />
+            <select
+              value={selectedLanguageCode}
+              onChange={(event) => selectLanguage(event.target.value)}
+              title="Language"
+            >
+              {supportedLanguages.map((language) => (
+                <option key={language.code} value={language.code}>
+                  {language.label}
+                </option>
+              ))}
+            </select>
+          </div>
           <button type="button" onClick={paintScene} title="Apply style to board">
             <Palette size={17} />
           </button>
@@ -291,6 +315,7 @@ export const Editor = ({
           ref={boardRef}
           scene={sceneSnapshot}
           style={selectedStyle}
+          langCode={selectedLanguageCode}
           replay={replayOptions}
           onChange={(snapshot) => saveSnapshot(snapshot)}
         />
@@ -431,6 +456,53 @@ const readReplayEnabledFromUrl = (filePath: string) => {
 };
 
 const replaySessionStorageKey = (filePath: string) => `agentdraw:replayed:${filePath}`;
+
+const defaultLanguageCode = "en";
+const languageStorageKey = "agentdraw:language";
+const supportedLanguages = [
+  { code: "en", label: "English" },
+  { code: "zh-CN", label: "简体中文" },
+  { code: "zh-TW", label: "繁體中文" },
+  { code: "ja-JP", label: "日本語" },
+  { code: "es-ES", label: "Español" },
+  { code: "pt-BR", label: "Português (BR)" },
+  { code: "pt-PT", label: "Português (PT)" },
+] as const;
+const supportedLanguageCodes = new Set<string>(
+  supportedLanguages.map((language) => language.code),
+);
+
+const readLanguageCode = () => {
+  const stored = window.localStorage.getItem(languageStorageKey);
+  if (stored && supportedLanguageCodes.has(stored)) {
+    return stored;
+  }
+  const browserLanguage = navigator.language;
+  if (supportedLanguageCodes.has(browserLanguage)) {
+    return browserLanguage;
+  }
+  const normalizedBrowserLanguage = browserLanguage.toLowerCase();
+  if (
+    normalizedBrowserLanguage === "zh-hk" ||
+    normalizedBrowserLanguage === "zh-mo" ||
+    normalizedBrowserLanguage === "zh-tw"
+  ) {
+    return "zh-TW";
+  }
+  if (normalizedBrowserLanguage.startsWith("zh")) {
+    return "zh-CN";
+  }
+  if (normalizedBrowserLanguage === "pt-pt") {
+    return "pt-PT";
+  }
+  if (normalizedBrowserLanguage.startsWith("pt")) {
+    return "pt-BR";
+  }
+  const prefixMatch = supportedLanguages.find((language) =>
+    normalizedBrowserLanguage.startsWith(language.code.split("-")[0].toLowerCase()),
+  );
+  return prefixMatch?.code ?? defaultLanguageCode;
+};
 
 type RecentBoard = {
   filePath: string;

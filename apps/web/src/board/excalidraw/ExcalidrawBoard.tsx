@@ -16,7 +16,7 @@ import {
 } from "../types";
 
 export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
-  ({ scene, style, onChange, replay }, ref) => {
+  ({ scene, style, langCode = "en", onChange, replay }, ref) => {
     const apiRef = useRef<ExcalidrawImperativeAPI | null>(null);
     const boardRootRef = useRef<HTMLDivElement | null>(null);
     const [apiReady, setApiReady] = useState(false);
@@ -257,6 +257,7 @@ export const ExcalidrawBoard = forwardRef<BoardHandle, BoardProviderProps>(
             apiRef.current = api;
             setApiReady(Boolean(api));
           }}
+          langCode={langCode}
           initialData={initialData}
           onChange={(elements, appState, files) => {
             if (suppressChangeRef.current || Date.now() < suppressChangeUntilRef.current) {

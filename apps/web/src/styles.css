@@ -149,7 +149,8 @@ button:hover {
   flex: 0 0 auto;
 }
 
-.style-picker {
+.style-picker,
+.language-picker {
   height: 34px;
   display: inline-flex;
   align-items: center;
@@ -160,7 +161,14 @@ button:hover {
   background: #ffffff;
 }
 
-.style-picker select {
+.language-picker {
+  gap: 6px;
+  padding: 0 8px;
+  color: #586174;
+}
+
+.style-picker select,
+.language-picker select {
   max-width: 180px;
   border: 0;
   outline: 0;
@@ -168,6 +176,10 @@ button:hover {
   color: #20242c;
   font: inherit;
   font-size: 13px;
+}
+
+.language-picker select {
+  max-width: 132px;
 }
 
 .swatches {
@@ -404,5 +416,9 @@ button:hover {
 
   .style-picker select {
     max-width: 140px;
+  }
+
+  .language-picker select {
+    max-width: 112px;
   }
 }

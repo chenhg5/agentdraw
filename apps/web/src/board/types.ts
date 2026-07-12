@@ -20,6 +20,7 @@ export type BoardHandle = {
 export type BoardProviderProps = {
   scene: BoardSnapshot;
   style: AgentDrawStyle;
+  langCode?: string;
   onChange: (snapshot: BoardSnapshot) => void;
   replay?: BoardReplayOptions;
 };
