@@ -105,6 +105,7 @@ export const styles: AgentDrawStyle[] = [
   style("linen-cut", "Linen Cut", "balanced", "high", "mid century modernist, tasteful, calm", "#E4D2C4", "#1D2620", "#F7EEE7", "#044D99", "#04B24F", "#8C6757"),
   style("pin-and-paper", "Pin & Paper", "balanced", "medium", "clean, graphic, white with yellow and blue pop", "#FFFFFF", "#161616", "#FFFBE1", "#2A3C99", "#F1E84E", "#576196"),
   style("hatch-whiteboard", "Hatch Whiteboard", "balanced", "low", "hand-drawn data whiteboard, pastel hatch fills, dashed lanes", "#FFFFFF", "#111111", "#FAFAF5", "#9EDAE5", "#F6D7DE", "#5A5A5A"),
+  style("marker-lesson", "Marker Lesson", "balanced", "low", "hand-drawn technical teaching board, scenario panels, semantic marker arrows", "#FFFFFF", "#20242C", "#F7FAFC", "#0F7C80", "#EAF8F7", "#6B7280"),
   style("raw-grid", "Raw Grid", "balanced", "medium", "system native, sharp, digital brutalism", "#FFFFFF", "#0A0A0A", "#F8F8F8", "#0A0A0A", "#F2D4CF", "#5B5B5B"),
   style("riptide-cobalt", "Riptide Cobalt", "balanced", "medium", "bold poster, low density, high impact", "#FDF0E0", "#1A2240", "#FFFFFF", "#375DFE", "#DCE4FF", "#6D5A45"),
   style("incident-dark", "Incident Dark", "balanced", "high", "dark operational report, RCA, timeline evidence", "#0D1117", "#E6EDF3", "#161B22", "#58A6FF", "#1C2330", "#9AA7B4"),
@@ -144,7 +145,7 @@ export function getStylesByLevel(level: StyleLevel) {
 }
 
 export function getStyleRenderProfile(style: AgentDrawStyle): StyleRenderProfile {
-  if (style.id === "hatch-whiteboard") {
+  if (style.id === "hatch-whiteboard" || style.id === "marker-lesson") {
     return {
       geometry: "organic",
       roughness: 2,
@@ -224,13 +225,13 @@ export function getDesignContract(styleOrId: AgentDrawStyle | string): DesignCon
     typography: {
       fontFamily: profile.fontFamily,
       titlePx: style.id === "infra-dark" ? [38, 48] : playful ? [36, 54] : formal ? [34, 44] : [32, 46],
-      headingPx: style.id === "infra-dark" ? [18, 28] : style.id === "hatch-whiteboard" ? [22, 34] : playful ? [20, 30] : formal ? [20, 26] : [19, 28],
-      bodyPx: style.id === "infra-dark" ? [13, 22] : style.id === "hatch-whiteboard" ? [15, 24] : playful ? [15, 20] : formal ? [15, 19] : [15, 19],
+      headingPx: style.id === "infra-dark" ? [18, 28] : ["hatch-whiteboard", "marker-lesson"].includes(style.id) ? [22, 34] : playful ? [20, 30] : formal ? [20, 26] : [19, 28],
+      bodyPx: style.id === "infra-dark" ? [13, 22] : ["hatch-whiteboard", "marker-lesson"].includes(style.id) ? [16, 24] : playful ? [15, 20] : formal ? [15, 19] : [15, 19],
       maxTypeSizesPerBoard: ["runtime-doc", "incident-dark"].includes(style.id) ? 8 : style.id === "infra-dark" ? 7 : formal ? 4 : 5,
     },
     geometry: {
-      roughness: style.id === "hatch-whiteboard" ? [2, 2] : profile.roughness === 0 ? [0, 0] : [0, 2],
-      strokeWidth: style.id === "hatch-whiteboard" ? [1, 4] : formal ? [1, 3] : playful ? [2, 5] : [1, 4],
+      roughness: ["hatch-whiteboard", "marker-lesson"].includes(style.id) ? [2, 2] : profile.roughness === 0 ? [0, 0] : [0, 2],
+      strokeWidth: ["hatch-whiteboard", "marker-lesson"].includes(style.id) ? [1, 4] : formal ? [1, 3] : playful ? [2, 5] : [1, 4],
       cornerRadiusPx: style.id === "infra-dark" ? [0, 12] : profile.roundness === "sharp" ? [0, 6] : playful ? [6, 16] : [4, 12],
       preferredShapes: formal
         ? ["rectangle", "diamond", "line", "arrow"]
@@ -244,12 +245,12 @@ export function getDesignContract(styleOrId: AgentDrawStyle | string): DesignCon
     },
     connectors: {
       preferred: profile.arrowType,
-      strokeColor: style.id === "infra-dark" ? "#CBD5E1" : style.id === "hatch-whiteboard" ? "#5A5A5A" : style.palette.muted,
+      strokeColor: style.id === "infra-dark" ? "#CBD5E1" : ["hatch-whiteboard", "marker-lesson"].includes(style.id) ? "#5A5A5A" : style.palette.muted,
       allowedStrokeColors:
         style.id === "infra-dark"
           ? ["#CBD5E1", "#E2E8F0", "#22D3EE", "#34D399", "#A78BFA", "#FBBF24", "#FB7185", "#FB923C"]
-          : style.id === "hatch-whiteboard"
-            ? ["#111111", "#5A5A5A", "#374151", "#6B7280", "#9EDAE5", "#F6D7DE", "#F6C85F", "#86D39B", "#BDA8F2", "#F4B27A"]
+          : ["hatch-whiteboard", "marker-lesson"].includes(style.id)
+            ? ["#111111", "#20242C", "#5A5A5A", "#374151", "#6B7280", "#0F7C80", "#1F8A4C", "#1874B8", "#D33F49", "#D97706", "#9EDAE5", "#F6D7DE", "#F6C85F", "#86D39B", "#F4B27A"]
           : uniqueColors([style.palette.muted, style.palette.ink, style.palette.accent]),
       minStrokeWidth: 2,
       avoidTextCrossing: true,
@@ -614,6 +615,30 @@ function semanticContractColors(style: AgentDrawStyle) {
       "#FBE6D2",
       "#6B7280",
       "#374151",
+    ];
+  }
+  if (style.id === "marker-lesson") {
+    return [
+      "#F2F2F2",
+      "#F7F7F7",
+      "#EAF8F7",
+      "#EEF6FF",
+      "#FFF7E6",
+      "#EAF8EC",
+      "#FFF0F0",
+      "#F7FAFC",
+      "#DCEEF0",
+      "#D8ECFF",
+      "#FFE3B0",
+      "#DDF4E4",
+      "#F9D7D9",
+      "#0F7C80",
+      "#1874B8",
+      "#1F8A4C",
+      "#D33F49",
+      "#D97706",
+      "#374151",
+      "#6B7280",
     ];
   }
   if (style.id === "slate-notes") {

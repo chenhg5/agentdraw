@@ -38,6 +38,7 @@ Prefer `agentdraw guide styles --json` and `agentdraw guide style <style-id> --f
 - [linen-cut](./linen-cut/design.md)
 - [long-table](./long-table/design.md)
 - [manual-cream](./manual-cream/design.md)
+- [marker-lesson](./marker-lesson/design.md)
 - [mint-brut](./mint-brut/design.md)
 - [neo-grid-bold](./neo-grid-bold/design.md)
 - [neon-grid](./neon-grid/design.md)

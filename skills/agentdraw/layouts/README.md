@@ -15,7 +15,8 @@ Choose the provider first, then choose the layout system, then choose the design
   review visuals, concept visuals, SWOT/quadrant boards, editorial timelines, roadmap terraces,
   scoreboards, ecosystem maps, and memorable single-board explanations.
 - [`../method/layout-styles.md`](../method/layout-styles.md): formal SVG explanatory structures,
-  architecture maps, matrices, pipelines, timelines, and operating models.
+  architecture maps, matrices, pipelines, timelines, operating models, and scenario matrix teaching
+  boards.
 - [`../method/technical-diagram-patterns.md`](../method/technical-diagram-patterns.md): cloud
   architecture, service mesh, network/security, agent runtime, memory/tool topology, and technical
   data-flow diagrams.

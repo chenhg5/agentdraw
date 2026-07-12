@@ -184,10 +184,12 @@ Theme previews link to the `design.md` system that produced the look.
 </td>
 </tr>
 <tr>
+<td width="50%"><a href="./packages/styles/designs/marker-lesson/design.md"><img src="./assets/layouts/13-scenario-matrix-whiteboard.svg" alt="Marker Lesson scenario matrix preview" /></a><br />
+<sub><a href="./packages/styles/designs/marker-lesson/design.md"><b>Marker Lesson</b></a> · hand-drawn technical teaching boards</sub>
+</td>
 <td width="50%"><a href="./packages/styles/designs/crayon-stack/design.md"><img src="./assets/examples/theme-crayon-stack.svg" alt="Crayon Idea Stack preview" /></a><br />
 <sub><a href="./packages/styles/designs/crayon-stack/design.md"><b>Crayon Stack</b></a> · playful idea stacks and maker maps</sub>
 </td>
-<td width="50%"></td>
 </tr>
 </table>
 </details>
@@ -271,6 +273,12 @@ The layout rules live in [`editorial-layouts.md`](./skills/agentdraw/method/edit
 <td width="50%"><a href="./examples/layouts/12-pyramid-stack.agentdraw.json"><img src="./assets/layouts/12-pyramid-stack.svg" alt="Pyramid Stack layout preview" /></a><br />
 <sub><a href="./skills/agentdraw/method/editorial-layouts.md#e12-pyramid-stack"><b>E12 Pyramid Stack</b></a> · hierarchy, maturity, and dependency levels</sub>
 </td>
+</tr>
+<tr>
+<td width="50%"><a href="./skills/agentdraw/method/layout-styles.md#l13-scenario-matrix-whiteboard"><img src="./assets/layouts/13-scenario-matrix-whiteboard.svg" alt="Scenario Matrix Whiteboard layout preview" /></a><br />
+<sub><a href="./skills/agentdraw/method/layout-styles.md#l13-scenario-matrix-whiteboard"><b>L13 Scenario Matrix Whiteboard</b></a> · technical cases, failover, routing, and cache lessons</sub>
+</td>
+<td width="50%"></td>
 </tr>
 </table>
 </details>

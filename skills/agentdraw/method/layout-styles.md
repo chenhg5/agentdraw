@@ -251,6 +251,39 @@ Rules:
 - side rail should explain decision criteria;
 - use Mermaid flowchart instead when the task is a formal branching process.
 
+## L13 Scenario Matrix Whiteboard
+
+Use for technical teaching visuals where one mechanism must be explained through several scenarios,
+conditions, cases, failure modes, or traffic/session paths.
+
+Structure:
+
+```text
+Title mechanism
+One-line explanatory subtitle
+2x2, 1x3, or 2x3 scenario panels
+Each panel: numbered scenario title + mini-diagram + Result note
+Bottom rule-of-thumb strip
+```
+
+Rules:
+
+- Use this when the source naturally contains "case 1 / case 2", "if / when", "active/passive vs
+  active/active", "normal vs failover", "hit vs miss", "before vs after", or "what happens when...".
+- Keep scenario panels equal size and aligned to a strict grid.
+- Repeat the same conceptual nodes in roughly the same panel positions so differences are visible.
+- Use path color to encode behavior, not decoration. Recommended semantic mapping with
+  `marker-lesson`: green active/chosen, blue normal/new flow, red failed/old/backup/problem, orange
+  control/DNS/external decision.
+- Every panel must include a `Result:` sentence at the bottom that explains the outcome.
+- The bottom rule strip should summarize the lesson across all scenarios.
+- Prefer `marker-lesson` for teaching-board visuals. Use `hatch-whiteboard` when the subject is
+  specifically data lineage or data governance.
+- Do not use this as a generic card matrix. Each cell needs a real mini-diagram, path, state
+  transition, or topology.
+- Do not use Mermaid unless the user asked for a formal flowchart. This layout is for explanation,
+  not strict diagram grammar.
+
 ## Required Note
 
 Before generating SVG, write:

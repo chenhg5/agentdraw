@@ -101,6 +101,7 @@ Fast layout routing:
 | Formal flowchart, sequence, class, state, ER, journey | Mermaid | `playbooks/technical-flowchart.md` |
 | Cloud, Kubernetes, service mesh, network/security, data platform, agent runtime topology | SVG | `playbooks/layered-architecture.md` + `method/technical-diagram-patterns.md` |
 | Data lineage, ETL/ELT, data warehouse layering, data governance before/after | SVG | `method/data-flow-whiteboard-patterns.md` |
+| Technical teaching cases, scenario comparisons, failover/cache/routing examples | SVG | `method/layout-styles.md` L13 + `designs/marker-lesson/design.md` |
 | Architecture, layers, runtime structure, ownership map | SVG | `playbooks/layered-architecture.md` + `method/layout-styles.md` |
 | Article配图, concept visual, thinking note, review visual | SVG | `playbooks/article-visual.md` + `method/editorial-layouts.md` |
 | SWOT, 2x2, option scoring, stakeholder map, timeline with visual emphasis | SVG | `method/editorial-layouts.md` |
@@ -129,7 +130,7 @@ Always read these method files:
 Load these only when relevant:
 
 - `method/layout-styles.md`: formal SVG explanatory structures, architecture maps, matrices,
-  pipelines, timelines, and operating models.
+  pipelines, timelines, operating models, and scenario matrix teaching boards.
 - `method/technical-diagram-patterns.md`: cloud architecture, service mesh, network/security,
   agent runtime, memory/tool topology, and data-flow diagrams that need technical spacing,
   semantic colors, boundaries, and connector rules.

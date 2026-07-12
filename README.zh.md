@@ -141,10 +141,12 @@ AgentDraw 示例都是真实可编辑 scene。README 里展示的是预览图；
 </td>
 </tr>
 <tr>
+<td width="50%"><a href="./packages/styles/designs/marker-lesson/design.md"><img src="./assets/layouts/13-scenario-matrix-whiteboard.svg" alt="Marker Lesson scenario matrix preview" /></a><br />
+<sub><a href="./packages/styles/designs/marker-lesson/design.md"><b>Marker Lesson</b></a> · 手绘技术教学白板</sub>
+</td>
 <td width="50%"><a href="./examples/theme-crayon-stack.agentdraw.json"><img src="./assets/examples/theme-crayon-stack.svg" alt="Crayon Idea Stack preview" /></a><br />
 <sub><a href="./examples/theme-crayon-stack.agentdraw.json"><b>Crayon Stack</b></a> · 玩具感想法堆叠图</sub>
 </td>
-<td width="50%"></td>
 </tr>
 </table>
 </details>
@@ -229,6 +231,12 @@ AgentDraw 示例都是真实可编辑 scene。README 里展示的是预览图；
 <td width="50%"><a href="./examples/layouts/12-pyramid-stack.agentdraw.json"><img src="./assets/layouts/12-pyramid-stack.svg" alt="Pyramid Stack layout preview" /></a><br />
 <sub><a href="./skills/agentdraw/method/editorial-layouts.md#e12-pyramid-stack"><b>E12 Pyramid Stack</b></a> · 层级、成熟度和依赖关系</sub>
 </td>
+</tr>
+<tr>
+<td width="50%"><a href="./skills/agentdraw/method/layout-styles.md#l13-scenario-matrix-whiteboard"><img src="./assets/layouts/13-scenario-matrix-whiteboard.svg" alt="Scenario Matrix Whiteboard layout preview" /></a><br />
+<sub><a href="./skills/agentdraw/method/layout-styles.md#l13-scenario-matrix-whiteboard"><b>L13 Scenario Matrix Whiteboard</b></a> · 技术案例、故障切换、路由和缓存讲解</sub>
+</td>
+<td width="50%"></td>
 </tr>
 </table>
 </details>
